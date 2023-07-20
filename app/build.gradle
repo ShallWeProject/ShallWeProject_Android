@@ -55,4 +55,15 @@ dependencies {
     //splash
     implementation 'androidx.core:core-splashscreen:1.0.0-alpha01'
 
+    //glide
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+
+    //viewpager2
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
+
+    //lifecycle
+    def lifecycle_version = "2.5.1"
+    // ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
 }
