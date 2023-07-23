@@ -55,4 +55,6 @@ dependencies {
     //splash
     implementation 'androidx.core:core-splashscreen:1.0.0-alpha01'
 
+    //cardview
+    implementation("androidx.cardview:cardview:1.0.0")
 }
