@@ -1,11 +1,11 @@
 package com.shall_we.home
 
-import android.graphics.Color
 import android.graphics.Rect
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,11 +13,13 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.shall_we.ExperienceDetail.ExDetailFragment
+import com.shall_we.ExperienceDetail.ExperienceDetailFragment
 import com.shall_we.R
 import com.shall_we.databinding.FragmentHomeRealtimeBinding
 
 
-class HomeRealtimeFragment : Fragment() {
+class HomeRealtimeFragment : Fragment(), ProductAdapter.OnItemClickListener {
     lateinit var textView : TextView
     lateinit var productAdapter: ProductAdapter
     lateinit var categoryAdapter: CategoryAdapter
@@ -25,9 +27,20 @@ class HomeRealtimeFragment : Fragment() {
     val productData = mutableListOf<ProductData>()
     val categoryData = mutableListOf<CategoryData>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
+
+    override fun onItemClick(item: ProductData) {
+        // 클릭된 아이템의 정보를 사용하여 다른 프래그먼트로 전환하는 로직을 작성
+        val newFragment = ExperienceDetailFragment() // 전환할 다른 프래그먼트 객체 생성
+        val bundle = Bundle()
+        bundle.putString("name", item.name) // 클릭된 아이템의 이름을 "name" 키로 전달
+        newFragment.arguments = bundle
+
+        // 프래그먼트 전환
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.home_layout, newFragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     override fun onCreateView(
@@ -58,6 +71,7 @@ class HomeRealtimeFragment : Fragment() {
 
     private fun initRecycler(rvRealtime: RecyclerView,rvCategory: RecyclerView) {
         productAdapter = ProductAdapter(requireContext())
+        productAdapter.setOnItemClickListener(this)
         val layoutManager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
         rvRealtime.layoutManager = layoutManager
         rvRealtime.adapter = productAdapter
@@ -124,7 +138,10 @@ class HomeRealtimeFragment : Fragment() {
 
             productAdapter.datas = productData
             productAdapter.notifyDataSetChanged()
+
 //            rvRealtime.addItemDecoration(GridSpaceItemDecoration(2, dpToPx(8)))
+
+
         }
 
         categoryAdapter = CategoryAdapter(requireContext())
@@ -148,7 +165,10 @@ class HomeRealtimeFragment : Fragment() {
 
         val spaceDecoration = HomeRecomFragment.HorizontalSpaceItemDecoration(dpToPx(7))
         rvCategory.addItemDecoration(spaceDecoration)
+
     }
+
+
     inner class GridSpaceItemDecoration(private val spanCount: Int, private val space: Int): RecyclerView.ItemDecoration() {
 
         override fun getItemOffsets(
@@ -172,5 +192,7 @@ class HomeRealtimeFragment : Fragment() {
         }
 
     }
+
+
 
 }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
@@ -14,6 +15,19 @@ import com.shall_we.R
 
 class ProductAdapter(private val context: Context) : RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
     var datas = mutableListOf<ProductData>()
+    private var itemClickListener: OnItemClickListener? = null
+
+    // 클릭 리스너 인터페이스 정의
+    interface OnItemClickListener {
+        fun onItemClick(item: ProductData)
+    }
+
+    fun setOnItemClickListener(listener: OnItemClickListener) {
+        itemClickListener = listener
+    }
+
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
         val view = LayoutInflater.from(context).inflate(R.layout.item_product, parent, false)
@@ -32,6 +46,8 @@ class ProductAdapter(private val context: Context) : RecyclerView.Adapter<Produc
 
     }
 
+
+
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val constraintLayout: ConstraintLayout = itemView.findViewById(R.id.constraintLayout)
         val card : CardView = itemView.findViewById(R.id.card)
@@ -49,7 +65,21 @@ class ProductAdapter(private val context: Context) : RecyclerView.Adapter<Produc
             Glide.with(itemView).load(item.img).into(imgProfile)
 
         }
+        init {
+            // itemView를 클릭했을 때 해당 항목의 ProductData를 클릭 리스너를 통해 전달
+            itemView.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    val item = datas[position]
+                    itemClickListener?.onItemClick(item)
+                }
+            }
+        }
+
+
     }
+
+
 
 }
 
