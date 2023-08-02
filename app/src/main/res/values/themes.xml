@@ -21,5 +21,21 @@
 
         // Set the theme of the Activity that directly follows your splash screen.
         <item name="postSplashScreenTheme">@style/Theme.Shall_we</item>  # Required.
+
+
     </style>
+    <style name="tabTextSize" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TabTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/white</item>
+        <!-- 배경 -->
+
+        <item name="android:textColorPrimary">@color/rose600</item>       <!-- 탭바 선택된 텍스트 -->
+        <item name="android:textColorSecondary">#EDA5B2</item>     <!-- 탭바 텍스트 -->
+
+        <item name="colorAccent">@color/rose600</item><!-- 하단 움직이는 바 색-->
+    </style>
+
 </resources>

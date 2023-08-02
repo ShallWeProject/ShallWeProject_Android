@@ -7,11 +7,11 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
-import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout.DrawerListener
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.shall_we.databinding.ActivityMainBinding
+import com.shall_we.home.HomeFragment
 
 
 class MainActivity : AppCompatActivity() {
@@ -39,11 +39,9 @@ class MainActivity : AppCompatActivity() {
             override fun onDrawerOpened(drawerView: View) {}
             override fun onDrawerClosed(drawerView: View) {
                 if (pageFlag == 1) {
-                    supportFragmentManager.beginTransaction().replace(binding.navHostFragment.id, HomeFragment()).commit()
                     binding.navBottom.selectedItemId = R.id.menu_home
                 }
                 else if(pageFlag == 2){
-                    supportFragmentManager.beginTransaction().replace(binding.navHostFragment.id, MypageFragment()).commit()
                     binding.navBottom.selectedItemId = R.id.menu_mypage
 
                 }
@@ -52,6 +50,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.mainDrawerLayout.addDrawerListener(listener)
+
+
     }
 
     private fun transitionNavigationBottomView(bottomView: BottomNavigationView, fragmentManager: FragmentManager){ // 네비게이션 바 프래그먼트 이동
