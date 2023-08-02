@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/Theme.MaterialComponents.Light"
     android:id="@+id/mypage_layout"
+    android:theme="@style/Theme.MaterialComponents"
     tools:context=".MypageFragment">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -18,32 +18,43 @@
         android:id="@+id/appbarlayout">
         <!--        여기 아니면 아래 탭레이아웃에 마진바텀주기-->
         <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:background="@color/white"
             app:tabTextColor="#EDA5B2"
-            app:tabSelectedTextColor="#E31B54"
-            app:tabIndicatorColor="#E31B54"
+            app:tabSelectedTextColor="@color/rose600"
+            app:tabIndicatorColor="@color/rose600"
             app:tabIndicatorFullWidth="false"
             app:tabIndicatorHeight="2dp"
-            app:tabRippleColor="@null"
-            android:id="@+id/tabs"/>
+            app:tabRippleColor="@null"/>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager2.widget.ViewPager2
-        android:layout_width="0dp"
-        android:layout_height="0dp"
         android:id="@+id/viewpager"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/appbarlayout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/appbarlayout"/>
+        app:layout_constraintTop_toBottomOf="@id/appbarlayout"/>
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/fab_album"
+            android:layout_width="124dp"
+            android:layout_height="46dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="27dp"
+            android:layout_marginEnd="16dp"
+            android:text="추억사진첩"
+            android:textSize="14sp"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:textColor="@color/white"
+            app:icon="@drawable/icon_book"
+            app:iconTint="@color/white"
+            android:backgroundTint="#F15F79"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

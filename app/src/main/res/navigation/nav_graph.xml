@@ -21,5 +21,17 @@
         <action
             android:id="@+id/action_mypageFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_mypageFragment_to_myAlbumFragment"
+            app:destination="@id/myAlbumFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/myAlbumFragment"
+        android:name="com.shall_we.mypage.MyAlbumFragment"
+        android:label="fragment_my_album"
+        tools:layout="@layout/fragment_my_album" >
+    <action
+        android:id="@+id/action_myAlbumFragment_to_mypageFragment"
+        app:destination="@id/mypageFragment" />
     </fragment>
 </navigation>

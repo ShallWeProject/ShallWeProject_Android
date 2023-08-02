@@ -5,55 +5,123 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.shall_we.R
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!앨범 첫화면은 오늘, 왼쪽 화살표 누르면 가장 최근의 선물(기록)사진첩 나오고 같은 날에 여러 선물 있으면 날짜는 변경 안하고 내용만 바뀌는
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+import com.shall_we.databinding.FragmentMyAlbumBinding
 
-/**
- * A simple [Fragment] subclass.
- * Use the [MyAlbumFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class MyAlbumFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private lateinit var viewBinding: FragmentMyAlbumBinding
+    private lateinit var adapter: MyAlbumAdapter
+
+    var albumData = mutableListOf<MyAlbumDto>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_album, container, false)
+        viewBinding = FragmentMyAlbumBinding.inflate(inflater, container, false)
+//        (activity as AppCompatActivity).findViewById<ExtendedFloatingActionButton>(R.id.fab_album).show()
+
+        viewBinding.ivLeft.setOnClickListener {
+            // 이전 추억으로 이동
+        }
+
+
+        viewBinding.ivRight.setOnClickListener {
+            // 다음 추억으로 이동
+        }
+        return viewBinding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // RecyclerView에 GridLayoutManager 적용
+        val gridLayoutManager = GridLayoutManager(requireContext(), 2)
+        viewBinding.recyclerAlbumView.layoutManager = gridLayoutManager
+
+        // Adapter 설정
+        adapter = MyAlbumAdapter(requireContext())
+        viewBinding.recyclerAlbumView.adapter = adapter
+        // adapter.datas = // 데이터 리스트 설정
+
+        albumData.apply {
+            add(
+                MyAlbumDto(
+                    R.drawable.add_photo
+                )
+            )
+            add(
+                MyAlbumDto(
+                    R.drawable.person1
+                )
+            )
+            add(
+                MyAlbumDto(
+                    R.drawable.person1
+                )
+            )
+            add(
+                MyAlbumDto(
+                    R.drawable.person1
+                )
+            )
+            add(
+                MyAlbumDto(
+                    R.drawable.person1
+                )
+            )
+            add(
+                MyAlbumDto(
+                    R.drawable.person1
+                )
+            )
+            add(
+                MyAlbumDto(
+                    R.drawable.person1
+                )
+            )
+            add(
+                MyAlbumDto(
+                    R.drawable.person1
+                )
+            )
+            add(
+                MyAlbumDto(
+                    R.drawable.person1
+                )
+            )
+            add(
+                MyAlbumDto(
+                    R.drawable.person1
+                )
+            )
+
+            adapter.datas = albumData
+            adapter.notifyDataSetChanged()
+        }
+
+//        (activity as AppCompatActivity).findViewById<ExtendedFloatingActionButton>(R.id.fab_album).hide()
+
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+//        (activity as AppCompatActivity).findViewById<ExtendedFloatingActionButton>(R.id.fab_album).show()
+    }
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment MyAlbumFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             MyAlbumFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
                 }
             }
     }

@@ -7,19 +7,21 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
+import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.tabs.TabLayoutMediator
 import com.shall_we.databinding.FragmentMypageBinding
 import com.shall_we.mypage.MyAlbumFragment
 import com.shall_we.mypage.MypageVPAdapter
 
 
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
 class MypageFragment : Fragment() {
-    private var param1: String? = null
-    private var param2: String? = null
+    var isTabLayoutVisible = true
 
     private val binding: FragmentMypageBinding by lazy {
         FragmentMypageBinding.inflate(layoutInflater)
@@ -28,11 +30,6 @@ class MypageFragment : Fragment() {
     @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-
 
         val myVPAdapter = super.getActivity()?.let { MypageVPAdapter(fragmentActivity = it) }
         binding.viewpager?.apply {
@@ -48,48 +45,75 @@ class MypageFragment : Fragment() {
             tab.text = tabTitleArray[position]
         }.attach()
 
-        binding.fab.setOnClickListener{
 
-            val myAlbumFragment = MyAlbumFragment() // 전환할 프래그먼트 인스턴스 생성
+        binding.fabAlbum.setOnClickListener {
+
+//            findNavController().navigate(
+//                R.id.myalbum
+//            )
+//            val myAlbumFragment = MyAlbumFragment() // 전환할 프래그먼트 인스턴스 생성
+//            val fragmentTransaction = parentFragmentManager.beginTransaction()
+//            fragmentTransaction.add(R.id.mypage_layout, myAlbumFragment, "get")
+//            fragmentTransaction.addToBackStack(null)
+//            fragmentTransaction.commitAllowingStateLoss()
+//            Log.d("clicked","change")
+
+            if (isTabLayoutVisible) {
+                // TabLayout 숨기기
+                binding.tabs.visibility = View.GONE
+            } else {
+                // TabLayout 보이기
+                binding.tabs.visibility = View.VISIBLE
+            }
+            // 상태 토글
+            isTabLayoutVisible = !isTabLayoutVisible
+
+            binding.fabAlbum.visibility = View.GONE
+            val myAlbumFragment = MyAlbumFragment()
             val fragmentTransaction = parentFragmentManager.beginTransaction()
-            fragmentTransaction.add(R.id.mypage_layout, myAlbumFragment, "get")
+            fragmentTransaction.replace(R.id.mypage_layout, myAlbumFragment, "myAlbumFragment")
             fragmentTransaction.addToBackStack(null)
             fragmentTransaction.commitAllowingStateLoss()
             Log.d("clicked","change")
-
         }
-
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-//        binding.fab.setOnClickListener {
-//            val albumFragment = MyAlbumFragment() // 전환할 프래그먼트 인스턴스 생성
-//            val fragmentTransaction = parentFragmentManager.beginTransaction()
-//            fragmentTransaction.add(R.id.mypageFragment, albumFragment, "album")
-//            fragmentTransaction.addToBackStack(null)
-//            fragmentTransaction.commitAllowingStateLoss()
-//            Log.d("clicked","change")
-//        }
-
+//        binding.fabAlbum.show()
         return binding.root
     }
 
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            MypageFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    private val onBackPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            // 뒤로가기 시 실행할 코드
+            if (!isTabLayoutVisible) {
+                // TabLayout 보이기
+                binding.tabs.visibility = View.VISIBLE
+                isTabLayoutVisible = true
+            } else {
+                requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, this)
+                // 기본 동작 수행 (프래그먼트 종료 또는 이전 상태로 돌아가기)
             }
+        }
     }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+//        binding.fabAlbum.setOnClickListener {
+//            findNavController().navigate(
+//               R.id.action_mypageFragment_to_myAlbumFragment
+//          )
+//        }
+//        binding.fabAlbum.show()
+        // Fragment에서 뒤로가기 버튼 동작 처리
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+//        binding.fabAlbum.hide()
+    }
+
 }
