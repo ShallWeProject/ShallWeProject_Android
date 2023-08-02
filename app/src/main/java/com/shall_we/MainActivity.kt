@@ -39,11 +39,9 @@ class MainActivity : AppCompatActivity() {
             override fun onDrawerOpened(drawerView: View) {}
             override fun onDrawerClosed(drawerView: View) {
                 if (pageFlag == 1) {
-                    supportFragmentManager.beginTransaction().replace(binding.navHostFragment.id, HomeFragment()).commit()
                     binding.navBottom.selectedItemId = R.id.menu_home
                 }
                 else if(pageFlag == 2){
-                    supportFragmentManager.beginTransaction().replace(binding.navHostFragment.id, MypageFragment()).commit()
                     binding.navBottom.selectedItemId = R.id.menu_mypage
 
                 }
