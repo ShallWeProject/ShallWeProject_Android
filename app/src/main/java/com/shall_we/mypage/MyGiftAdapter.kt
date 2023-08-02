@@ -1,15 +1,10 @@
 package com.shall_we.mypage
 
 import android.content.Context
-import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.drawable.Drawable
-import android.transition.TransitionManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.RecyclerView
 import com.shall_we.R
 import com.shall_we.databinding.ItemGiftBinding
@@ -25,11 +20,11 @@ class MyGiftAdapter(private val context: Context) : RecyclerView.Adapter<MyGiftA
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val data = datas[position]
-        holder.binding.tvDate.text = data.MyGift_date
-        holder.binding.tvTime.text = data.MyGift_time
-        holder.binding.tvTitle.text = data.MyGift_title
-        holder.binding.tvDescription.text = data.MyGift_description
-        holder.binding.tvMessage.text = data.MyGift_message
+        holder.binding.tvDate.text = data.date
+        holder.binding.tvTime.text = data.time
+        holder.binding.tvTitle.text = data.title
+        holder.binding.tvDescription.text = data.description
+        holder.binding.tvMessage.text = data.message
         holder.binding.tvDate.setCompoundDrawablesRelativeWithIntrinsicBounds(
             holder.itemView.context.getDrawable(R.drawable.calendar_light_resize), // 시작 부분 Drawable 설정
             null,     // 위쪽 Drawable 설정 (null이면 이전 설정 유지)
@@ -42,9 +37,10 @@ class MyGiftAdapter(private val context: Context) : RecyclerView.Adapter<MyGiftA
             null,     // 끝 부분 Drawable 설정 (null이면 이전 설정 유지)
             null      // 아래쪽 Drawable 설정 (null이면 이전 설정 유지)
         )
-        if (data.MyGift_cancellation == false)
+        if (data.cancellation == false) {
+            holder.binding.tvCancelReserv.visibility = View.GONE
             holder.binding.tvChangeReserv.visibility = View.GONE
-
+        }
 
         if (position == 1)
             holder.binding.ivMessage.setImageResource(R.drawable.message_img2)
@@ -61,11 +57,14 @@ class MyGiftAdapter(private val context: Context) : RecyclerView.Adapter<MyGiftA
             }
         }
     }
+
+    // 카드뷰 축소시 색상, visibility 변경
     private fun changeColorContacted(holder: ViewHolder, position: Int) {
         val data = datas[position]
         holder.binding.tvMessage.visibility = View.GONE
         holder.binding.ivMessage.visibility = View.GONE
         holder.binding.tvChangeReserv.visibility = View.GONE
+        holder.binding.tvCancelReserv.visibility = View.GONE
         holder.binding.constView.setBackgroundColor(Color.parseColor("#F8F8F8"))
         holder.binding.tvDate.setCompoundDrawablesRelativeWithIntrinsicBounds(
             holder.itemView.context.getDrawable(R.drawable.calendar_black_resize), // 시작 부분 Drawable 설정
@@ -84,12 +83,16 @@ class MyGiftAdapter(private val context: Context) : RecyclerView.Adapter<MyGiftA
         holder.binding.tvDate.setTextColor(Color.parseColor("#333333"))
         holder.binding.tvTime.setTextColor(Color.parseColor("#333333"))
     }
+
+    // 카드뷰 확장시 색상, visibility 변경
     private fun changeColorExpanded(holder: ViewHolder, position: Int) {
         val data = datas[position]
         holder.binding.tvMessage.visibility = View.VISIBLE
         holder.binding.ivMessage.visibility = View.VISIBLE
-        if (data.MyGift_cancellation == true)
+        if (data.cancellation == true) {
             holder.binding.tvChangeReserv.visibility = View.VISIBLE
+            holder.binding.tvCancelReserv.visibility = View.VISIBLE
+        }
         holder.binding.constView.setBackgroundColor(Color.parseColor("#FFF5F6"))
         holder.binding.tvDate.setCompoundDrawablesRelativeWithIntrinsicBounds(
             holder.itemView.context.getDrawable(R.drawable.calendar_light_resize), // 시작 부분 Drawable 설정
@@ -140,6 +143,8 @@ class MyGiftAdapter(private val context: Context) : RecyclerView.Adapter<MyGiftA
 
             // 예약 취소로 이동
             binding.tvCancelReserv.setOnClickListener {
+//                val action = MyGiftReceivedFragmentDirections.actionMyGiftReceivedFragmentToMyAlbumFragment()
+//                findNavController().navigate(action)
             }
         }
     }

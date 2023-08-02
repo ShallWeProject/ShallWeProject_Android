@@ -3,11 +3,7 @@ package com.shall_we.mypage
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.GridLayout
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.shall_we.R
-import com.shall_we.databinding.ItemAlbumBinding
 import com.shall_we.databinding.ItemFaqBinding
 
 
@@ -23,8 +19,8 @@ class FaqAdapter(private val context: Context) : RecyclerView.Adapter<FaqAdapter
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val data = datas[position]
 
-        holder.binding.tvQuestion.text = data.Faq_question
-        holder.binding.tvAnswer.text = data.Faq_answer
+        holder.binding.tvQuestion.text = data.question
+        holder.binding.tvAnswer.text = data.answer
 
     }
 

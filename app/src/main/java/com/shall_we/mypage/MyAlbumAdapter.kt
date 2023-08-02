@@ -3,10 +3,7 @@ package com.shall_we.mypage
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.GridLayout
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.shall_we.R
 import com.shall_we.databinding.ItemAlbumBinding
 
 
@@ -26,7 +23,7 @@ class MyAlbumAdapter(private val context: Context) : RecyclerView.Adapter<MyAlbu
 
         // 여기서 데이터를 바인딩하여 ViewHolder에 표시합니다.
         // 예를 들어, ImageView에 이미지 설정하기
-        holder.binding.ivAlbum.setImageResource(data.MyAlbum_img)
+        holder.binding.ivAlbum.setImageResource(data.imgUrl)
 
         // 나머지 데이터들도 바인딩하기 (TextView 등)
 
