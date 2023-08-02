@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="exgift_text02" type="id" />
+    <item name="exgift_text03" type="id" />
+    <item name="exgift_text04" type="id" />
+    <item name="exgift_text06" type="id" />
+    <item name="exgift_btn02" type="id" />
+    <item name="exgift_text07" type="id" />
+    <item name="giftreserve_edittext04" type="id" />
+    <item name="giftreserve_edittext05" type="id" />
+    <item name="giftreserve_btn01" type="id" />
+    <item name="giftreserve_btn02" type="id" />
+</resources>
