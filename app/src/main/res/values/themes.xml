@@ -11,6 +11,7 @@
         <item name="android:textSize">10sp</item>
     </style>
 
+
     <style name="Theme.App.Starting" parent="Theme.AppCompat.Light.NoActionBar">
         // Set the splash screen background, animated icon, and animation duration.
         <!-- API 31+ specific attributes -->
