@@ -48,7 +48,7 @@ class DrawerHelpFragment : Fragment() {
 
 
         }
-        val spaceDecoration = HomeRecomFragment.HorizontalSpaceItemDecoration(dpToPx(7))
+        val spaceDecoration = HomeRecomFragment.HorizontalSpaceItemDecoration(dpToPx(15))
         rv.addItemDecoration(spaceDecoration)
 
 
