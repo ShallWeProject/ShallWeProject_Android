@@ -11,4 +11,29 @@
         <item>가격높은순</item>
         <item>가격낮은순</item>
     </string-array>
+    <array name="category_img">
+        <item>@drawable/craft</item>
+        <item>@drawable/baking</item>
+        <item>@drawable/art</item>
+        <item>@drawable/outdoor</item>
+        <item>@drawable/sport</item>
+        <item>@drawable/category_photobook</item>
+        <item>@drawable/category_sent</item>
+        <item>@drawable/category_received</item>
+        <item>@drawable/category_faq</item>
+        <item>@drawable/category_mail</item>
+    </array>
+    <array name="category_text">
+        <item>"공예"</item>
+        <item>"베이킹"</item>
+        <item>"문화예술"</item>
+        <item>"아웃도어"</item>
+        <item>"스포츠"</item>
+        <item>"추억사진첩"</item>
+        <item>"보낸 선물"</item>
+        <item>"받은 선물"</item>
+        <item>"FAQ"</item>
+        <item>"메일 문의"</item>
+
+    </array>
 </resources>

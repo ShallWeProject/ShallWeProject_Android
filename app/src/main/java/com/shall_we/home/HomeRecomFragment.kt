@@ -51,7 +51,6 @@ class HomeRecomFragment : Fragment() {
         textView.text = builder
 
         return binding.root
-        return binding.root
     }
 
     private fun initRecycler(rvCategory: RecyclerView) {
