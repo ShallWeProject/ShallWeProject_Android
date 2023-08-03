@@ -17,19 +17,44 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/tb_main"
             android:layout_width="match_parent"
-            android:layout_height="46sp"
+            android:layout_height="46dp"
+            app:contentInsetStart="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:layout_width="91dp"
-                android:layout_height="14dp"
-                android:layout_gravity="center"
-                android:src="@drawable/logo_text"
-                tools:layout_editor_absoluteX="151dp"
-                tools:layout_editor_absoluteY="16dp" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="fill_horizontal"
+                tools:layout_editor_absoluteX="16dp">
+
+                <ImageView
+                    android:layout_width="91dp"
+                    android:layout_height="14dp"
+                    android:layout_gravity="center"
+
+                    android:src="@drawable/logo_text"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/view5"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_gravity="bottom"
+                    android:background="#FEF3F2"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
         </androidx.appcompat.widget.Toolbar>
+
+
+
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/nav_host_fragment"
@@ -49,7 +74,7 @@
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/nav_bottom"
             android:layout_width="match_parent"
-            android:layout_height="57sp"
+            android:layout_height="57dp"
             android:layout_alignParentBottom="true"
             android:layout_gravity="start"
             android:background="@color/white"
@@ -70,7 +95,8 @@
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/main_navigation_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="765dp"
         android:layout_gravity="start"
+        android:background="@drawable/drawer_round"
         app:headerLayout="@layout/item_drawer"/>
 </androidx.drawerlayout.widget.DrawerLayout>

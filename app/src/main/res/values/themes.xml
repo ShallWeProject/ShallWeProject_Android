@@ -13,13 +13,10 @@
 
 
     <style name="Theme.App.Starting" parent="Theme.AppCompat.Light.NoActionBar">
-        // Set the splash screen background, animated icon, and animation duration.
         <!-- API 31+ specific attributes -->
         <item name="android:windowSplashScreenBackground">#FFF0F2</item>
         <item name="android:windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_splash</item>
-        # animated icons
 
-        // Set the theme of the Activity that directly follows your splash screen.
         <item name="postSplashScreenTheme">@style/Theme.Shall_we</item>  # Required.
 
 
