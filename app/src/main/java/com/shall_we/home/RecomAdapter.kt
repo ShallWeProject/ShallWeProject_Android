@@ -1,6 +1,7 @@
 package com.shall_we.home
 
 import android.content.Context
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,11 +11,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.shall_we.Drawer.DrawerAdapter
+import com.shall_we.Drawer.DrawerData
 import com.shall_we.R
 
 
 class RecomAdapter(private val context: Context) : RecyclerView.Adapter<RecomAdapter.ViewHolder>() {
     var datas = mutableListOf<RecomData>()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_home_recom,parent,false)
         return ViewHolder(view)
@@ -37,7 +41,11 @@ class RecomAdapter(private val context: Context) : RecyclerView.Adapter<RecomAda
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     // 아이템 클릭 시 해당 포지션의 프래그먼트를 띄우기
-                    val fragment = ProductListFragment.newInstance(position)
+                    val fragment = ProductListFragment()
+                    val bundle = Bundle()
+                    bundle.putString("tab", "추천경험")
+                    bundle.putInt("position", position) // 클릭된 아이템의 이름을 "name" 키로 전달
+                    fragment.arguments = bundle
                     val fragmentManager = (itemView.context as FragmentActivity).supportFragmentManager
                     fragmentManager.beginTransaction()
                         .replace(R.id.nav_host_fragment, fragment)
@@ -49,7 +57,6 @@ class RecomAdapter(private val context: Context) : RecyclerView.Adapter<RecomAda
         fun bind(item: RecomData) {
             txtName.text = item.name
             Glide.with(itemView).load(item.img).into(imgProfile)
-
         }
     }
 
