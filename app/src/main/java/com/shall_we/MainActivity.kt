@@ -54,10 +54,10 @@ class MainActivity : AppCompatActivity() {
             }
             override fun onDrawerClosed(drawerView: View) {
                 if (pageFlag == 1) {
-                    binding.navBottom.selectedItemId = R.id.menu_home
+                    binding.navBottom.menu.findItem(R.id.menu_home).setChecked(true)
                 }
                 else if(pageFlag == 2){
-                    binding.navBottom.selectedItemId = R.id.menu_mypage
+                    binding.navBottom.menu.findItem(R.id.menu_mypage).setChecked(true)
 
                 }
             }
