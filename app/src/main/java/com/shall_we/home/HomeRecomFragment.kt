@@ -17,16 +17,16 @@ import com.shall_we.R
 import com.shall_we.databinding.FragmentHomeRecomBinding
 
 
-class HomeRecomFragment : Fragment() {
+class HomeRecomFragment : Fragment(){
     lateinit var recomAdapter: RecomAdapter
     lateinit var textView : TextView
     val recomData = mutableListOf<RecomData>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
     }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -55,6 +55,7 @@ class HomeRecomFragment : Fragment() {
 
     private fun initRecycler(rvCategory: RecyclerView) {
         recomAdapter = RecomAdapter(requireContext())
+//        recomAdapter.setOnItemClickListener(this)
         rvCategory.adapter = recomAdapter
 
 
@@ -98,8 +99,7 @@ class HomeRecomFragment : Fragment() {
 data class RecomData (
     val img : Int,
     val name : String,
-
-    )
+)
 
 fun dpToPx(dp: Int) : Int{
     return TypedValue.applyDimension(

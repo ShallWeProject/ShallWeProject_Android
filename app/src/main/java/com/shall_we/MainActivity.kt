@@ -4,33 +4,29 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout.DrawerListener
 import androidx.fragment.app.FragmentManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.shall_we.databinding.ActivityMainBinding
-import com.shall_we.databinding.ItemDrawerBinding
-import com.shall_we.databinding.ItemDrawerMenuBinding
 import com.shall_we.home.HomeFragment
 
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
-    lateinit var bindingdrawer : ItemDrawerBinding
-    lateinit var bindingdrawermenu: ItemDrawerMenuBinding
+    object MySharedData {
+        var pageFlag : Int = 1 // 다른 파일에서 이 변수에 접근하여 값을 변경하거나 사용할 수 있습니다.
+    }
 
     val drawerData = mutableListOf<DrawerData>()
-    var pageFlag : Int = 1 //페이지 번호
+     //페이지 번호
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        bindingdrawer = ItemDrawerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
 
@@ -45,22 +41,23 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(false) // 뒤로가기 버튼 true이면 나옴
         supportActionBar?.setTitle("")
 
-
         var listener: DrawerListener = object : DrawerListener { // 드로어레이이웃 닫힐 때 전에 열려 있던 탭으로 이동하도록
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
 
             }
             override fun onDrawerOpened(drawerView: View) {
+
             }
             override fun onDrawerClosed(drawerView: View) {
-                if (pageFlag == 1) {
-                    binding.navBottom.selectedItemId = R.id.menu_home
+                if (MySharedData.pageFlag == 1) {
+                    binding.navBottom.menu.findItem(R.id.menu_home).setChecked(true)
                 }
-                else if(pageFlag == 2){
-                    binding.navBottom.selectedItemId = R.id.menu_mypage
+                else if(MySharedData.pageFlag == 2){
+                    binding.navBottom.menu.findItem(R.id.menu_mypage).setChecked(true)
 
                 }
             }
+
             override fun onDrawerStateChanged(newState: Int) {}
         }
 
@@ -78,12 +75,12 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.menu_home -> {
                     fragmentManager.beginTransaction().replace(binding.navHostFragment.id, HomeFragment()).commit()
-                    pageFlag = 1
+                    MySharedData.pageFlag = 1
                     supportActionBar?.setDisplayHomeAsUpEnabled(false)
                 }
                 R.id.menu_mypage -> {
                     fragmentManager.beginTransaction().replace(binding.navHostFragment.id, MypageFragment()).commit()
-                    pageFlag = 2
+                    MySharedData.pageFlag = 2
                     supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
                 }

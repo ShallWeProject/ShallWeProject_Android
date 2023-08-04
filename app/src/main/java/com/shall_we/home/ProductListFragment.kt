@@ -22,16 +22,6 @@ class ProductListFragment : Fragment() {
     lateinit var productAdapter: ProductAdapter
     val productData = mutableListOf<ProductData>()
 
-    companion object {
-        fun newInstance(position: Int): ProductListFragment {
-            val fragment = ProductListFragment()
-            val args = Bundle()
-            args.putInt("position", position)
-            fragment.arguments = args
-            return fragment
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -45,7 +35,7 @@ class ProductListFragment : Fragment() {
         val binding = FragmentProductListBinding.inflate(inflater,container,false)
         // 포지션 가져오기 & 선택한 탭으로 초기화
         val position = arguments?.getInt("position", 0)
-        setSelectedTab(binding.tabLayout, position ?: 0)
+        val tab = arguments?.getString("tab", "경험카테고리")
 
         //tabbar 설정
         val tabLayout: TabLayout = binding.tabLayout
@@ -64,6 +54,26 @@ class ProductListFragment : Fragment() {
                 tab.view.layoutParams = tabLayoutParams
             }
         }
+        if(tab == "경험카테고리"){
+            val tabArray = arrayOf("공예","베이킹","문화예술","아웃도어","스포츠")
+
+            for (i in 0 until tabLayout.tabCount) {
+                val tab = tabLayout.getTabAt(i)
+                tab?.text = tabArray[i].toString()
+            }
+        }
+        else {
+            val tabArray = arrayOf("생일","연인","부모님","입학/졸업","결혼/집들이")
+
+            for (i in 0 until tabLayout.tabCount) {
+                val tab = tabLayout.getTabAt(i)
+                tab?.text = tabArray[i].toString()
+            }
+        }
+
+        setSelectedTab(binding.tabLayout, position ?: 0)
+
+
         initRecycler(binding.rvProduct)
         initSpinner(binding.spinner)
 
