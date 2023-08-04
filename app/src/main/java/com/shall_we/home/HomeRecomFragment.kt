@@ -6,16 +6,13 @@ import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.shall_we.Drawer.DrawerData
 import com.shall_we.R
 import com.shall_we.databinding.FragmentHomeRecomBinding
 
@@ -30,23 +27,6 @@ class HomeRecomFragment : Fragment(){
         super.onCreate(savedInstanceState)
 
     }
-//    override fun onItemClick(position: Int) {
-//        Log.d("change","drawer")
-//
-//        // 클릭된 아이템의 정보를 사용하여 다른 프래그먼트로 전환하는 로직을 작성
-//        val newFragment = ProductListFragment()// 전환할 다른 프래그먼트 객체 생성
-//        val bundle = Bundle()
-//        bundle.putString("tab", "추천경험")
-//        bundle.putInt("position", position)
-//        newFragment.arguments = bundle
-//
-//        // 프래그먼트 전환
-//        parentFragmentManager.beginTransaction()
-//            .replace(R.id.nav_host_fragment, newFragment)
-//            .addToBackStack(null)
-//            .commit()
-//
-//    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

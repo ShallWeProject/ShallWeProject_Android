@@ -6,15 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.shall_we.R
-import com.shall_we.home.ProductAdapter
-import com.shall_we.home.ProductData
-import com.shall_we.home.ProductListFragment
-import com.shall_we.home.RecomAdapter
-import com.shall_we.home.RecomData
 
 class DrawerAdapter (private val context: Context) : RecyclerView.Adapter<DrawerAdapter.ViewHolder>() {
     var datas = mutableListOf<DrawerData>()

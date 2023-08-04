@@ -11,8 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.shall_we.Drawer.DrawerAdapter
-import com.shall_we.Drawer.DrawerData
 import com.shall_we.R
 
 
