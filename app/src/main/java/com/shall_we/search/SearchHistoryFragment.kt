@@ -1,5 +1,7 @@
 package com.shall_we.search
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
@@ -8,7 +10,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.shall_we.R
@@ -20,16 +24,17 @@ class SearchHistoryFragment : Fragment(), ISearchHistoryRecycler {
     lateinit var no_record : TextView
     lateinit var rv_search_result : RecyclerView
     lateinit var box_recent : ConstraintLayout
-
+    lateinit var no_result : TextView
 
     lateinit var recentAdapter: RecentAdapter
     private var searchHistoryList = ArrayList<SearchData>()
 
+    private lateinit var sharedViewModel: SharedViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
     }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,6 +45,11 @@ class SearchHistoryFragment : Fragment(), ISearchHistoryRecycler {
         this.no_record = binding.noRecord
         this.rv_search_result = binding.rvSearchResult
         this.box_recent = binding.boxRecent
+        this.no_result = binding.noResult
+        //뷰 초기 세팅
+        rv_search_result.visibility = View.GONE
+        no_result.visibility = View.GONE
+
         // 저장된 검색 기록 가져오기
         this.searchHistoryList = SharedPrefManager.getSearchHistoryList() as ArrayList<SearchData>
 
@@ -47,7 +57,7 @@ class SearchHistoryFragment : Fragment(), ISearchHistoryRecycler {
         handleSearchViewUi()
 
         // 검색기록 리사이클러뷰 준비
-        initRecycler(binding.rvRecent, searchHistoryList)
+        initHistoryRecycler(binding.rvRecent, searchHistoryList)
 
         binding.deleteAll.setOnClickListener { // 전체 삭제 버튼 클릭
             SharedPrefManager.clearSearchHistoryList()
@@ -56,8 +66,15 @@ class SearchHistoryFragment : Fragment(), ISearchHistoryRecycler {
         }
         return binding.root
     }
-
-    fun initRecycler(rv: RecyclerView, searchHistoryList: ArrayList<SearchData>) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        // 데이터 변경을 관찰하여 업데이트
+        sharedViewModel.data.observe(viewLifecycleOwner) { data ->
+            // 데이터를 사용하여 작업 수행
+            searchResultCall(data)
+        }
+    }
+    fun initHistoryRecycler(rv: RecyclerView, searchHistoryList: ArrayList<SearchData>) {
 
         recentAdapter = RecentAdapter(requireContext(),this)
         recentAdapter.submitList(searchHistoryList)
@@ -74,6 +91,26 @@ class SearchHistoryFragment : Fragment(), ISearchHistoryRecycler {
         }
 
     }
+
+    fun initResultRecycler(rv: RecyclerView, searchHistoryList: ArrayList<SearchData>) {
+
+//        recentAdapter = RecentAdapter(requireContext(),this)
+//        recentAdapter.submitList(searchHistoryList)
+//        val myLinearLayoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, true)
+//        myLinearLayoutManager.stackFromEnd = true
+//        val spaceDecoration =SpaceItemDecoration(dpToPx(5),0)
+//
+//        rv.apply {
+//            layoutManager = myLinearLayoutManager
+//            this.scrollToPosition(recentAdapter.itemCount -1) // 마지막 아이템으로 스크롤
+//            adapter = recentAdapter
+//            addItemDecoration(spaceDecoration)
+//
+//        }
+
+    }
+
+
     class SpaceItemDecoration(private val verticalSpaceWidth:Int, private val horizontalSpaceWidth:Int):RecyclerView.ItemDecoration(){
         override fun getItemOffsets(
             outRect: Rect,
@@ -108,8 +145,32 @@ class SearchHistoryFragment : Fragment(), ISearchHistoryRecycler {
         val queryString = this.searchHistoryList[position].search_word
 
         this.insertSearchTermHistory(searchTerm = queryString)
+
+        searchResultCall(queryString)
+    }
+
+    @SuppressLint("SetTextI18n")
+    fun searchResultCall(queryString : String){
+        // 히스토리 관련 뷰들 안보이게 설정
+        no_record = requireActivity().findViewById(R.id.no_record)
+        box_recent = requireActivity().findViewById(R.id.box_recent)
+        rv_search_result = requireActivity().findViewById(R.id.rv_search_result)
+        no_result = requireActivity().findViewById(R.id.no_result)
+
+        no_record.visibility = View.GONE
+        box_recent.visibility = View.GONE
+
+        // 검색 API 불러오기
         this.searchPhotoApiCall(queryString)
 
+        // 겸색 결과 있으면
+        // 리사이클러뷰에 검색 결과 넣기, 텍스트는 안보이게
+
+        // 검색 결과 없으면
+        // 리사이클러뷰 안보이게, 텍스트 보이게
+        rv_search_result.visibility = View.GONE
+        no_result.visibility = View.VISIBLE
+        no_result.text = "\"${queryString}\"에 대한 검색 결과가 없습니다."
     }
 
     // 사진 검색 API 호출
@@ -143,9 +204,6 @@ class SearchHistoryFragment : Fragment(), ISearchHistoryRecycler {
             if (no_record != null) {
                 no_record.visibility = View.GONE
             }
-            if (rv_search_result != null) {
-                rv_search_result.visibility = View.GONE
-            }
             if (box_recent != null) {
                 box_recent.visibility = View.VISIBLE
             }
@@ -153,14 +211,26 @@ class SearchHistoryFragment : Fragment(), ISearchHistoryRecycler {
             if (no_record != null) {
                 no_record.visibility = View.VISIBLE
             }
-            if (rv_search_result != null) {
-                rv_search_result.visibility = View.GONE
-            }
             if (box_recent != null) {
                 box_recent.visibility = View.GONE
             }
         }
 
+    }
+
+    private fun handleResultViewUi(queryString : String){
+        // 검색 API 불러오기
+        this.searchPhotoApiCall(queryString)
+
+        // 겸색 결과 있으면
+
+        // 리사이클러뷰에 검색 결과 넣기, 텍스트는 안보이게
+//        rv_search_result.visibility = View.VISIBLE
+//        no_result.visibility = View.GONE
+        // 검색 결과 없으면
+        // 리사이클러뷰 안보이게, 텍스트 보이게
+        rv_search_result.visibility = View.GONE
+        no_result.visibility = View.VISIBLE
     }
 
     // 검색어 저장

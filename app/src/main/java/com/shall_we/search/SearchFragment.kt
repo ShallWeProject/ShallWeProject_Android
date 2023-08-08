@@ -12,17 +12,28 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.shall_we.R
 import com.shall_we.databinding.FragmentSearchBinding
 import com.shall_we.utils.SharedPrefManager
 
 class SearchFragment : Fragment() , SearchView.OnQueryTextListener{
     private var searchView = view?.findViewById<SearchView>(R.id.searchView)
+    lateinit var searchHistoryFragment : FragmentContainerView
     //검색 기록 배열
     private var searchHistoryList = ArrayList<SearchData>()
 
+    private lateinit var historyFragment: SearchHistoryFragment
+
+    private lateinit var sharedViewModel: SharedViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
 
     }
 
@@ -32,8 +43,14 @@ class SearchFragment : Fragment() , SearchView.OnQueryTextListener{
     ): View? {
         // Inflate the layout for this fragment
         val binding = FragmentSearchBinding.inflate(inflater,container,false)
+        searchHistoryFragment = binding.historyFragment
+
+        historyFragment = SearchHistoryFragment()
+
         //searchview 세팅
         searchView = binding.searchView
+
+
         this.searchView?.apply {
             requestFocus()
             setOnQueryTextListener(this@SearchFragment)
@@ -83,6 +100,8 @@ class SearchFragment : Fragment() , SearchView.OnQueryTextListener{
 
         SharedPrefManager.storeSearchHistoryList(this.searchHistoryList)
 
+        sharedViewModel.data.value = query.toString()
+
         return true
     }
 
@@ -93,6 +112,13 @@ class SearchFragment : Fragment() , SearchView.OnQueryTextListener{
 
         return true
     }
+    fun sendDataToFragment(data: String) {
+        // 프래그먼트의 메서드를 호출하여 데이터 전달
+        historyFragment.searchResultCall(data)
+    }
 
+}
 
+class SharedViewModel : ViewModel() {
+    val data: MutableLiveData<String> = MutableLiveData()
 }

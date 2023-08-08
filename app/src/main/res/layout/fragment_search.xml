@@ -42,7 +42,7 @@
         app:layout_constraintTop_toBottomOf="@+id/searchView" />
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragmentContainerView3"
+        android:id="@+id/historyFragment"
         android:name="com.shall_we.search.SearchHistoryFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -50,6 +50,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view6" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

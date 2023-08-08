@@ -10,7 +10,7 @@
 
 
     <androidx.appcompat.widget.SearchView
-        android:id="@+id/searchView"
+        android:id="@+id/main_searchView"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginStart="16dp"
@@ -40,10 +40,10 @@
         android:background="@android:color/transparent"
         android:scaleType="centerInside"
         android:src="@drawable/bell_icon"
-        app:layout_constraintBottom_toBottomOf="@+id/searchView"
+        app:layout_constraintBottom_toBottomOf="@+id/main_searchView"
         app:layout_constraintEnd_toStartOf="@+id/faq_btn"
         app:layout_constraintHorizontal_weight="24"
-        app:layout_constraintStart_toEndOf="@+id/searchView"
+        app:layout_constraintStart_toEndOf="@+id/main_searchView"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
@@ -56,7 +56,7 @@
         android:background="@android:color/transparent"
         android:scaleType="centerInside"
         android:src="@drawable/chat_icon"
-        app:layout_constraintBottom_toBottomOf="@+id/searchView"
+        app:layout_constraintBottom_toBottomOf="@+id/main_searchView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_weight="25"
         app:layout_constraintStart_toEndOf="@+id/notice_btn"
@@ -71,7 +71,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchView">
+        app:layout_constraintTop_toBottomOf="@+id/main_searchView">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

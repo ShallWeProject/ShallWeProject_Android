@@ -60,14 +60,14 @@ class HomeFragment : Fragment() {
         }
         subscribeObservers()
 
-        binding.searchView.clearFocus()
+        binding.mainSearchView.clearFocus()
         val hintColor = Color.parseColor("#FEA3B4") // 원하는 힌트 색상으로 변경
         val searchEditText =
-            binding.searchView.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
+            binding.mainSearchView.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
         searchEditText.setHintTextColor(hintColor)
         searchEditText.textSize = 13f
 
-        binding.searchView.setOnQueryTextFocusChangeListener { searchView, hasFocus ->
+        binding.mainSearchView.setOnQueryTextFocusChangeListener { searchView, hasFocus ->
             if (hasFocus) {
                 Log.d("searchview","아이템 클릭 ")
 
@@ -81,7 +81,7 @@ class HomeFragment : Fragment() {
                     .addToBackStack(null)
                     .commit()
 
-                binding.searchView.clearFocus()
+                binding.mainSearchView.clearFocus()
             }
         }
         return binding.root
