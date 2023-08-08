@@ -1,7 +1,6 @@
-package com.shall_we.Drawer
+package com.shall_we.drawer
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,34 +8,36 @@ import android.view.ViewGroup
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.shall_we.MainActivity
-import com.shall_we.MypageFragment
 import com.shall_we.R
-import com.shall_we.databinding.FragmentDrawerMypageBinding
+import com.shall_we.databinding.FragmentDrawerHelpBinding
 import com.shall_we.home.HomeRecomFragment
 import com.shall_we.home.dpToPx
+import com.shall_we.mypage.FaqFragment
 
-class DrawerMypageFragment : Fragment(), DrawerAdapter.OnItemClickListener {
+class DrawerHelpFragment : Fragment(), DrawerAdapter.OnItemClickListener  {
     lateinit var drawerAdapter: DrawerAdapter
     val drawerData = mutableListOf<DrawerData>()
 
-
-
     override fun onItemClick(position: Int) {
-        MainActivity.MySharedData.pageFlag = 2
+        MainActivity.MySharedData.pageFlag = 1
 
         val navigationView = requireActivity().findViewById<NavigationView>(R.id.main_navigation_view)
         val drawerLayout = navigationView.parent as DrawerLayout
         drawerLayout.closeDrawer(GravityCompat.START)
+        val newFragment : Fragment
+        if(position == 0){
+            newFragment = FaqFragment() // faq페이지로 이동
+            val bundle = Bundle()
+            newFragment.arguments = bundle
 
-        // 클릭된 아이템의 정보를 사용하여 다른 프래그먼트로 전환하는 로직을 작성
-        val newFragment = MypageFragment() // 전환할 다른 프래그먼트 객체 생성
-        val bundle = Bundle()
-        bundle.putString("tab", "경험카테고리")
-        bundle.putInt("position", position) // 클릭된 아이템의 이름을 "name" 키로 전달
-        newFragment.arguments = bundle
+        }
+        else {
+            newFragment = FaqFragment() // 메일 문의 페이지로 이동 **수정하기
+            val bundle = Bundle()
+            newFragment.arguments = bundle
+        }
 
         // 프래그먼트 전환
         parentFragmentManager.beginTransaction()
@@ -44,25 +45,24 @@ class DrawerMypageFragment : Fragment(), DrawerAdapter.OnItemClickListener {
             .addToBackStack(null)
             .commit()
 
-        val bottomNavigation = requireActivity().findViewById<BottomNavigationView>(R.id.nav_bottom)
-        bottomNavigation.menu.findItem(R.id.menu_mypage).setChecked(true)
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val binding = FragmentDrawerMypageBinding.inflate(inflater,container,false)
-        initRecycler(binding.rvMypage)
+        val binding = FragmentDrawerHelpBinding.inflate(inflater,container,false)
+        initRecycler(binding.rvHelp)
+
         return binding.root
     }
 
     fun initRecycler(rv: RecyclerView) {
-
         drawerAdapter = DrawerAdapter(requireContext())
         drawerAdapter.setOnItemClickListener(this)
 
@@ -70,9 +70,8 @@ class DrawerMypageFragment : Fragment(), DrawerAdapter.OnItemClickListener {
 
 
         drawerData.apply {
-            add(DrawerData(img = R.drawable.category_photobook, name = "추억사진첩"))
-            add(DrawerData(img = R.drawable.category_sent, name = "보낸 선물"))
-            add(DrawerData(img = R.drawable.category_received, name = "빋은 선물"))
+            add(DrawerData(img = R.drawable.category_faq, name = "FAQ"))
+            add(DrawerData(img = R.drawable.category_mail, name = "메일 문의"))
 
 
 

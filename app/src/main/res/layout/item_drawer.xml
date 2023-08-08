@@ -41,7 +41,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/rvExCategory"
-        android:name="com.shall_we.Drawer.DrawerExFragment"
+        android:name="com.shall_we.drawer.DrawerExFragment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -65,7 +65,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/rvMy"
-        android:name="com.shall_we.Drawer.DrawerMypageFragment"
+        android:name="com.shall_we.drawer.DrawerMypageFragment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
@@ -88,7 +88,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/rvHelp"
-        android:name="com.shall_we.Drawer.DrawerHelpFragment"
+        android:name="com.shall_we.drawer.DrawerHelpFragment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
