@@ -1,4 +1,4 @@
-package com.shall_we.Drawer
+package com.shall_we.drawer
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -14,6 +14,7 @@ class DrawerAdapter (private val context: Context) : RecyclerView.Adapter<Drawer
     var datas = mutableListOf<DrawerData>()
 
     private var itemClickListener: DrawerAdapter.OnItemClickListener? = null
+
     interface OnItemClickListener {
         fun onItemClick(position: Int)
     }
@@ -23,7 +24,7 @@ class DrawerAdapter (private val context: Context) : RecyclerView.Adapter<Drawer
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.item_drawer_menu,parent,false)
+        val view = LayoutInflater.from(context).inflate(R.layout.item_drawer_menu, parent, false)
         return ViewHolder(view)
     }
 
@@ -38,7 +39,8 @@ class DrawerAdapter (private val context: Context) : RecyclerView.Adapter<Drawer
 
         private val txtName: TextView = itemView.findViewById(R.id.category_text)
         private val imgProfile: ImageView = itemView.findViewById(R.id.category_icon)
-//        init {
+
+        //        init {
 //            // 아이템 뷰에 클릭 리스너 설정
 //            itemView.setOnClickListener {
 //                val position = adapterPosition
@@ -71,7 +73,3 @@ class DrawerAdapter (private val context: Context) : RecyclerView.Adapter<Drawer
     }
 
 }
-data class DrawerData (
-    val name : String,
-    val img : Int,
-)

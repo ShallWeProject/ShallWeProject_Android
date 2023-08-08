@@ -1,4 +1,4 @@
-package com.shall_we.Drawer
+package com.shall_we.drawer
 
 import android.graphics.Rect
 import android.os.Bundle
