@@ -63,12 +63,13 @@
         android:id="@+id/gift_btn01"
         android:layout_width="328dp"
         android:layout_height="39dp"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="220dp"
+        android:background="@drawable/btn_design"
+        android:backgroundTint="#F15F79"
         android:text="홈으로"
-        android:textColor="#F15F79"
+        android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:background="@drawable/calender_design"
         app:layout_constraintTop_toBottomOf="@+id/gift_text02">
 
     </Button>
@@ -78,17 +79,15 @@
         android:id="@+id/gift_btn02"
         android:layout_width="328dp"
         android:layout_height="39dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginBottom="50dp"
-        android:background="@drawable/calender_design"
+        android:background="@drawable/btn_design"
+        android:backgroundTint="#FEF3F2"
         android:text="보낸 선물함 확인하기"
         android:textColor="#F15F79"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.506"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gift_btn01"
-       >
+        app:layout_constraintLeft_toLeftOf="@+id/gift_btn01"
+        app:layout_constraintTop_toBottomOf="@+id/gift_btn01">
 
     </Button>
 

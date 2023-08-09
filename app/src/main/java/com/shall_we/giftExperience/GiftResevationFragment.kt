@@ -21,7 +21,18 @@ import com.shall_we.databinding.FragmentGiftResevationBinding
 
 
 class GiftResevationFragment : BaseFragment<FragmentGiftResevationBinding>(R.layout.fragment_gift_resevation) {
+    private var count: Int = 2
+
     override fun init() {
+        binding.exgiftBtn01.setOnClickListener {
+            count--
+            binding.exgiftText06.text = count.toString()
+        }
+
+        binding.exgiftBtn02.setOnClickListener {
+            count++
+            binding.exgiftText06.text = count.toString()
+        }
         binding.giftreserveEdittext01.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
