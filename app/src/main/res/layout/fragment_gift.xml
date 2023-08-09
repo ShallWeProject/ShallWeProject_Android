@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
+
 <androidx.constraintlayout.widget.ConstraintLayout
     tools:context=".giftExperience.GiftFragment"
     android:id="@+id/giftLayout"
@@ -17,7 +18,7 @@
         android:id="@+id/gifted"
         android:layout_width="314dp"
         android:layout_height="201dp"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="100dp"
         android:src="@drawable/gift"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -93,4 +94,5 @@
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

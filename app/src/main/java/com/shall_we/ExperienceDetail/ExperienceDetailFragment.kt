@@ -12,6 +12,7 @@ import com.shall_we.base.BaseFragment
 import com.shall_we.databinding.FragmentExperienceDetailBinding
 import com.shall_we.databinding.FragmentHomeBinding
 import com.shall_we.giftExperience.GiftExperienceFragment
+import com.shall_we.giftExperience.GiftResevationFragment
 
 
 class ExperienceDetailFragment: BaseFragment<FragmentExperienceDetailBinding>(R.layout.fragment_experience_detail)  {
@@ -23,15 +24,16 @@ class ExperienceDetailFragment: BaseFragment<FragmentExperienceDetailBinding>(R.
         {
             Log.d("clicked","clicked")
             binding.fab.visibility = View.GONE
-            val giftExperienceDetailFragment = GiftExperienceFragment() // 전환할 프래그먼트 인스턴스 생성
+            val giftReservationFragment = GiftResevationFragment() // 전환할 프래그먼트 인스턴스 생성
             val fragmentTransaction = parentFragmentManager.beginTransaction()
             // 기존 프래그먼트를 숨기고 새로운 프래그먼트로 교체
-            fragmentTransaction.replace(R.id.exdetail_layout, giftExperienceDetailFragment, "giftex")
+            fragmentTransaction.replace(R.id.exdetail_layout, giftReservationFragment, "giftreserve")
 
             fragmentTransaction.addToBackStack(null)
             fragmentTransaction.commitAllowingStateLoss()
 
         }
+
     }
 
     private fun initTab() {

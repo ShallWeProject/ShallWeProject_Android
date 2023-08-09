@@ -127,6 +127,14 @@ class GiftResevationFragment : BaseFragment<FragmentGiftResevationBinding>(R.lay
         binding.giftreserveBtn02.setOnClickListener(){
            Log.d("clicked","clicked")
             binding.giftreserveBtn02.visibility = View.GONE
+            binding.exgiftBtn01.visibility=View.GONE
+            binding.exgiftBtn02.visibility=View.GONE
+
+            binding.giftreserveEdittext03.visibility=View.GONE
+
+            binding.giftreserveBtn02.visibility=View.GONE
+            binding.giftreserveBtn01.visibility=View.GONE
+
             val giftFragment = GiftFragment() // 전환할 프래그먼트 인스턴스 생성
             val fragmentTransaction = parentFragmentManager.beginTransaction()
             fragmentTransaction.replace(R.id.gift_reservation_layout,giftFragment, "gift")
