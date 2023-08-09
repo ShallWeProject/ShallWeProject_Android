@@ -1,6 +1,7 @@
 package com.shall_we.giftExperience
 
 import android.app.DatePickerDialog
+import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -17,6 +18,7 @@ import com.prolificinteractive.materialcalendarview.format.TitleFormatter
 import com.shall_we.ExperienceDetail.ExperienceDetailFragment
 import com.shall_we.R
 import com.shall_we.base.BaseFragment
+import com.shall_we.changeReservation.CustomAlertDialog
 import com.shall_we.databinding.FragmentGiftExperienceBinding
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -25,7 +27,7 @@ import java.util.Locale
 
 class GiftExperienceFragment : BaseFragment<FragmentGiftExperienceBinding>(R.layout.fragment_gift_experience) {
 
-    private var count: Int = 2
+
     private lateinit var calendarView: MaterialCalendarView
     private val locale: Locale = Locale("ko")
 
@@ -33,16 +35,20 @@ class GiftExperienceFragment : BaseFragment<FragmentGiftExperienceBinding>(R.lay
         calendarView = binding.calendar
 
         var isButtonSelected = false
+        val tabs = requireActivity().findViewById<View>(R.id.tabs)
+        tabs.visibility = View.GONE
 
-        binding.exgiftBtn01.setOnClickListener {
-            count--
-            binding.exgiftText06.text = count.toString()
+
+        binding.exgiftBtn03.setOnClickListener {
+            val customDialog = CustomAlertDialog(requireContext())
+
+            customDialog.setTitle("예약변경")
+            customDialog.setMessage("9일 11시")
+
+            val alertDialog = customDialog.create()
+            alertDialog.show()
         }
 
-        binding.exgiftBtn02.setOnClickListener {
-            count++
-            binding.exgiftText06.text = count.toString()
-        }
 
         calendarView.setOnDateChangedListener(object : OnDateSelectedListener {
             override fun onDateSelected(
@@ -72,25 +78,6 @@ class GiftExperienceFragment : BaseFragment<FragmentGiftExperienceBinding>(R.lay
             binding.btnbtn.isSelected = isButtonSelected
         }
 
-        binding.exgiftBtn03.setOnClickListener{
-            binding.exgiftBtn01.visibility = View.INVISIBLE
-            binding.exgiftBtn02.visibility = View.INVISIBLE
-            binding.exgiftBtn03.visibility = View.INVISIBLE
-            binding.calendar.visibility=View.INVISIBLE
-            binding.btnbtn.visibility=View.INVISIBLE
-            Log.d("clicked", "clicked")
-
-            val giftExperienceFragment = parentFragmentManager.findFragmentByTag("exexperience")
-            if (giftExperienceFragment != null) {
-                parentFragmentManager.beginTransaction().hide(GiftExperienceFragment()).commit()
-            }
-
-            val giftReservationFragment = GiftResevationFragment()
-            val fragmentTransaction = parentFragmentManager.beginTransaction()
-            fragmentTransaction.replace(R.id.gift_experience_layout, giftReservationFragment, "exreservation")
-            fragmentTransaction.addToBackStack(null)
-            fragmentTransaction.commitAllowingStateLoss()
-        }
 
     }
 }

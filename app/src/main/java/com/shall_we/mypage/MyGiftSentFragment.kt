@@ -62,7 +62,7 @@ class MyGiftSentFragment : Fragment() {
         return viewBinding.root
     }
     private fun setupRecyclerView(recyclerView: RecyclerView) {
-        adapter = MyGiftAdapter(requireContext())
+        adapter = MyGiftAdapter(requireContext(),parentFragmentManager)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 

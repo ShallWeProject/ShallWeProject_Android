@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <!-- Declare variables if needed -->
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:background="@drawable/alert_design"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:backgroundTint="@color/white"
+    >
+
+        <TextView
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/tvDialogTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="15dp"
+            android:layout_margin="15dp"
+            android:text="예약변경"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/tvDialogMessage01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="7월 25일 15시"
+            android:layout_marginTop="10dp"
+            android:textSize="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="0dp"
+            android:textColor="#E31B54"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvDialogTitle" />
+
+        <TextView
+            android:id="@+id/tvDialogMessage02"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="44dp"
+            android:layout_marginLeft="0dp"
+            android:text="로 "
+            android:textColor="#49454F"
+            android:textSize="15dp"
+
+            app:layout_constraintLeft_toRightOf="@id/tvDialogMessage01"
+            app:layout_constraintTop_toBottomOf="@id/tvDialogTitle" />
+
+        <TextView
+            android:id="@+id/tvDialogMessage03"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="44dp"
+            android:textColor="#49454F"
+            android:text="변경하시겠습니까? "
+            android:textSize="15dp"
+
+            app:layout_constraintLeft_toLeftOf="@id/tvDialogMessage01"
+            app:layout_constraintTop_toBottomOf="@id/tvDialogMessage01" />
+
+        <Button
+            android:id="@+id/btnDialogPositive"
+            android:layout_width="76dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="80dp"
+            android:background="@drawable/btn_design"
+            android:text="변경하기"
+            android:textColor="#E31B54"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:backgroundTint="#FFE4E8"
+            app:layout_constraintLeft_toRightOf="@id/btnDialogNegative"
+            app:layout_constraintTop_toBottomOf="@id/tvDialogMessage01" />
+
+        <Button
+            android:id="@+id/btnDialogNegative"
+            android:layout_width="76dp"
+            android:layout_height="40dp"
+
+            android:layout_marginLeft="140dp"
+            android:layout_marginTop="80dp"
+            android:background="@drawable/btn_design"
+            android:text="취소"
+
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvDialogMessage01" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
