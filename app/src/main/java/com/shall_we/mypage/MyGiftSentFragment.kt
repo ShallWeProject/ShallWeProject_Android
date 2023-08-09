@@ -1,21 +1,28 @@
 package com.shall_we.mypage
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.shall_we.MypageFragment
+import com.shall_we.R
 import com.shall_we.databinding.FragmentMyGiftSentBinding
+import com.shall_we.databinding.FragmentMypageBinding
+import com.shall_we.isTabLayoutVisible
 
 class MyGiftSentFragment : Fragment() {
     private lateinit var viewBinding: FragmentMyGiftSentBinding
+    private lateinit var mypageBinding: FragmentMypageBinding
     private lateinit var adapter: MyGiftAdapter
 
     val giftData = mutableListOf<MyGiftDto>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
     }
 
     override fun onCreateView(
@@ -25,6 +32,33 @@ class MyGiftSentFragment : Fragment() {
     ): View {
         viewBinding = FragmentMyGiftSentBinding.inflate(layoutInflater)
         setupRecyclerView(viewBinding.recyclerView)
+
+        viewBinding.fabAlbum.setOnClickListener {
+
+//            findNavController().navigate(
+//                R.id.myalbum
+//            )
+//            val myAlbumFragment = MyAlbumFragment() // 전환할 프래그먼트 인스턴스 생성
+//            val fragmentTransaction = parentFragmentManager.beginTransaction()
+//            fragmentTransaction.add(R.id.mypage_layout, myAlbumFragment, "get")
+//            fragmentTransaction.addToBackStack(null)
+//            fragmentTransaction.commitAllowingStateLoss()
+//            Log.d("clicked","change")
+
+            val tabs = requireActivity().findViewById<View>(R.id.tabs)
+            tabs.visibility = View.GONE
+//            mypageBinding.tabs.visibility = View.GONE
+            // 상태 토글
+//            isTabLayoutVisible = !isTabLayoutVisible
+
+            viewBinding.fabAlbum.visibility = View.GONE
+            val myAlbumFragment = MyAlbumFragment()
+            val fragmentTransaction = parentFragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.my_gift_sent_layout, myAlbumFragment, "myAlbumFragment")
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commitAllowingStateLoss()
+            Log.d("clicked","change")
+        }
         return viewBinding.root
     }
     private fun setupRecyclerView(recyclerView: RecyclerView) {
@@ -41,8 +75,9 @@ class MyGiftSentFragment : Fragment() {
                     "2023.08.13",
                     "20시",
                     false,
-                    "MessageImgUrl 1",
+                    R.drawable.message_img,
                     "취뽀 축하한다~~~ 주당인 널 위해 칵테일 클래스를 찾아와봤어~ 내 센스 한 번만 칭찬해주고ㅋㅎ 무쪼록 우리 광란의 밤을 보내보자고~!~!! 스냅사진도 신청했으니까 드레스코드도 블랙으로 꼭 맞춰와라잉! 다시 한 번 축하해!!"
+
                 )
             )
             add(
@@ -53,7 +88,7 @@ class MyGiftSentFragment : Fragment() {
                     "2023.04.23",
                     "16시",
                     false,
-                    "MessageImgUrl 2",
+                    R.drawable.message_img2,
                     "100일 넌무너무 축하해 !! 100일 기념으로 케이크 같이 만드는거 어때? 직접 케이크 만들고 성수 맛집 가장 !!!"
                 ),
             )

@@ -26,6 +26,30 @@
             app:destination="@id/myAlbumFragment" />
     </fragment>
     <fragment
+        android:id="@+id/mygiftsentFragment"
+        android:name="com.shall_we.mypage.MyGiftSentFragment"
+        android:label="fragment_my_gift_sent"
+        tools:layout="@layout/fragment_my_gift_sent" >
+        <action
+            android:id="@+id/action_myGiftSentFragment_to_myAlbumFragment"
+            app:destination="@id/myAlbumFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mygiftreceivedFragment"
+        android:name="com.shall_we.mypage.MyGiftReceivedFragment"
+        android:label="fragment_my_gift_received"
+        tools:layout="@layout/fragment_my_gift_received" >
+        <action
+            android:id="@+id/action_myGiftReceivedFragment_to_changeReservationFragment"
+            app:destination="@id/changeReservationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/changeReservationFragment"
+        android:name="com.shall_we.changeReservation.ChangeReservationFragment"
+        android:label="fragment_change_reservation"
+        tools:layout="@layout/fragment_change_reservation" >
+    </fragment>
+    <fragment
         android:id="@+id/myAlbumFragment"
         android:name="com.shall_we.mypage.MyAlbumFragment"
         android:label="fragment_my_album"

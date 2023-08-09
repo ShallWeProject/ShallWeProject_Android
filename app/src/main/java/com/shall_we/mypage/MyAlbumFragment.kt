@@ -5,18 +5,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.shall_we.R
 import com.shall_we.databinding.FragmentMyAlbumBinding
 
 class MyAlbumFragment : Fragment() {
     private lateinit var viewBinding: FragmentMyAlbumBinding
-    private lateinit var adapter: MyAlbumAdapter
+    private lateinit var albumadapter: MyAlbumAdapter
+    private lateinit var giftAdapter: MyGiftAdapter
 
-    var albumData = mutableListOf<MyAlbumDto>()
+    val albumData = mutableListOf<MyAlbumPhotoDto>()
+    val giftData = mutableListOf<MyGiftDto>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,13 +30,22 @@ class MyAlbumFragment : Fragment() {
 //        (activity as AppCompatActivity).findViewById<ExtendedFloatingActionButton>(R.id.fab_album).show()
 
         viewBinding.ivLeft.setOnClickListener {
-            // 이전 추억으로 이동
+            val newFragment = MyAlbumFragment.newInstance("", "")
+            val fragmentTransaction = parentFragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.myalbum, newFragment, "myAlbumFragment")
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commitAllowingStateLoss()
         }
 
 
         viewBinding.ivRight.setOnClickListener {
-            // 다음 추억으로 이동
+            val newFragment = MyAlbumFragment.newInstance("", "")
+            val fragmentTransaction = parentFragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.myalbum, newFragment, "myAlbumFragment")
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commitAllowingStateLoss()
         }
+
         return viewBinding.root
     }
 
@@ -49,64 +57,56 @@ class MyAlbumFragment : Fragment() {
         viewBinding.recyclerAlbumView.layoutManager = gridLayoutManager
 
         // Adapter 설정
-        adapter = MyAlbumAdapter(requireContext())
-        viewBinding.recyclerAlbumView.adapter = adapter
+        albumadapter = MyAlbumAdapter(requireContext())
+        viewBinding.recyclerAlbumView.adapter = albumadapter
         // adapter.datas = // 데이터 리스트 설정
 
         albumData.apply {
             add(
-                MyAlbumDto(
+                MyAlbumPhotoDto(
                     R.drawable.add_photo
                 )
             )
             add(
-                MyAlbumDto(
+                MyAlbumPhotoDto(
                     R.drawable.person1
                 )
             )
             add(
-                MyAlbumDto(
+                MyAlbumPhotoDto(
+                    R.drawable.photo_big
+                )
+            )
+            add(
+                MyAlbumPhotoDto(
                     R.drawable.person1
                 )
             )
             add(
-                MyAlbumDto(
+                MyAlbumPhotoDto(
                     R.drawable.person1
                 )
             )
             add(
-                MyAlbumDto(
+                MyAlbumPhotoDto(
                     R.drawable.person1
                 )
             )
             add(
-                MyAlbumDto(
+                MyAlbumPhotoDto(
                     R.drawable.person1
                 )
             )
             add(
-                MyAlbumDto(
-                    R.drawable.person1
-                )
-            )
-            add(
-                MyAlbumDto(
-                    R.drawable.person1
-                )
-            )
-            add(
-                MyAlbumDto(
-                    R.drawable.person1
-                )
-            )
-            add(
-                MyAlbumDto(
+                MyAlbumPhotoDto(
                     R.drawable.person1
                 )
             )
 
-            adapter.datas = albumData
-            adapter.notifyDataSetChanged()
+
+            albumadapter.datas = albumData
+            albumadapter.notifyDataSetChanged()
+
         }
 
 //        (activity as AppCompatActivity).findViewById<ExtendedFloatingActionButton>(R.id.fab_album).hide()

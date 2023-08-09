@@ -19,9 +19,9 @@ import com.shall_we.databinding.FragmentMypageBinding
 import com.shall_we.mypage.MyAlbumFragment
 import com.shall_we.mypage.MypageVPAdapter
 
+public var isTabLayoutVisible = true
 
 class MypageFragment : Fragment() {
-    var isTabLayoutVisible = true
 
     private val binding: FragmentMypageBinding by lazy {
         FragmentMypageBinding.inflate(layoutInflater)
@@ -46,36 +46,6 @@ class MypageFragment : Fragment() {
         }.attach()
 
 
-        binding.fabAlbum.setOnClickListener {
-
-//            findNavController().navigate(
-//                R.id.myalbum
-//            )
-//            val myAlbumFragment = MyAlbumFragment() // 전환할 프래그먼트 인스턴스 생성
-//            val fragmentTransaction = parentFragmentManager.beginTransaction()
-//            fragmentTransaction.add(R.id.mypage_layout, myAlbumFragment, "get")
-//            fragmentTransaction.addToBackStack(null)
-//            fragmentTransaction.commitAllowingStateLoss()
-//            Log.d("clicked","change")
-
-            if (isTabLayoutVisible) {
-                // TabLayout 숨기기
-                binding.tabs.visibility = View.GONE
-            } else {
-                // TabLayout 보이기
-                binding.tabs.visibility = View.VISIBLE
-            }
-            // 상태 토글
-            isTabLayoutVisible = !isTabLayoutVisible
-
-            binding.fabAlbum.visibility = View.GONE
-            val myAlbumFragment = MyAlbumFragment()
-            val fragmentTransaction = parentFragmentManager.beginTransaction()
-            fragmentTransaction.replace(R.id.mypage_layout, myAlbumFragment, "myAlbumFragment")
-            fragmentTransaction.addToBackStack(null)
-            fragmentTransaction.commitAllowingStateLoss()
-            Log.d("clicked","change")
-        }
     }
 
     override fun onCreateView(

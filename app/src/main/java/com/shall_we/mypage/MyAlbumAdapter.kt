@@ -1,14 +1,27 @@
 package com.shall_we.mypage
 
+import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.provider.MediaStore
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.Toast
+import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.recyclerview.widget.RecyclerView
+import com.shall_we.R
 import com.shall_we.databinding.ItemAlbumBinding
 
 
 class MyAlbumAdapter(private val context: Context) : RecyclerView.Adapter<MyAlbumAdapter.ViewHolder>() {
-    var datas = mutableListOf<MyAlbumDto>()
+    var datas = mutableListOf<MyAlbumPhotoDto>()
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemAlbumBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -25,10 +38,36 @@ class MyAlbumAdapter(private val context: Context) : RecyclerView.Adapter<MyAlbu
         // 예를 들어, ImageView에 이미지 설정하기
         holder.binding.ivAlbum.setImageResource(data.imgUrl)
 
+        holder.binding.root.setOnClickListener {
+            picDialog(it, position)
+        }
         // 나머지 데이터들도 바인딩하기 (TextView 등)
 
         // 클릭 이벤트 등을 설정하려면 여기서도 추가해줄 수 있습니다.
 
+    }
+
+    fun picDialog(view: View, position: Int) {
+        // 사진 추가
+        if (position == 0) {
+            Toast.makeText(view.context,    "사진 추가 기능", Toast.LENGTH_SHORT).show()
+            //openGalleryForImageSelection()
+        }
+
+        // 사진 뷰어
+        else {
+            val myLayout = LayoutInflater.from(context).inflate(R.layout.dialog_photoviewer, null)
+            val imageView = myLayout.findViewById<ImageView>(R.id.iv_photo)
+            imageView.setImageResource(datas[position].imgUrl)
+            val build = AlertDialog.Builder(view.context).apply {
+                setView(myLayout)
+            }
+            val dialog = build.create()
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+            dialog.show()
+
+        }
     }
 
 

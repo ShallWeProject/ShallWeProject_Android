@@ -1,20 +1,26 @@
 package com.shall_we.mypage
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.shall_we.R
-import com.shall_we.databinding.ItemGiftBinding
+import com.shall_we.changeReservation.ChangeReservationFragment
+import com.shall_we.databinding.ItemGiftboxBinding
 
 
 class MyGiftAdapter(private val context: Context) : RecyclerView.Adapter<MyGiftAdapter.ViewHolder>() {
     var datas = mutableListOf<MyGiftDto>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemGiftBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemGiftboxBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -24,6 +30,7 @@ class MyGiftAdapter(private val context: Context) : RecyclerView.Adapter<MyGiftA
         holder.binding.tvTime.text = data.time
         holder.binding.tvTitle.text = data.title
         holder.binding.tvDescription.text = data.description
+        holder.binding.ivMessage.setImageResource(data.messageImgUrl)
         holder.binding.tvMessage.text = data.message
         holder.binding.tvDate.setCompoundDrawablesRelativeWithIntrinsicBounds(
             holder.itemView.context.getDrawable(R.drawable.calendar_light_resize), // 시작 부분 Drawable 설정
@@ -42,8 +49,6 @@ class MyGiftAdapter(private val context: Context) : RecyclerView.Adapter<MyGiftA
             holder.binding.tvChangeReserv.visibility = View.GONE
         }
 
-        if (position == 1)
-            holder.binding.ivMessage.setImageResource(R.drawable.message_img2)
         // 클릭 이벤트 처리
         holder.binding.cardView.setOnClickListener {
             if (holder.binding.tvMessage.visibility == View.VISIBLE) {
@@ -117,9 +122,9 @@ class MyGiftAdapter(private val context: Context) : RecyclerView.Adapter<MyGiftA
         return datas.size
     }
 
-    inner class ViewHolder(val binding: ItemGiftBinding) : RecyclerView.ViewHolder(binding.root){
+    inner class ViewHolder(val binding: ItemGiftboxBinding) : RecyclerView.ViewHolder(binding.root){
         init {
-            // 예약 수정으로 이동
+            // 예약 변경으로 이동
             binding.tvChangeReserv.setOnClickListener {
                 // 클릭한 TextView의 위치(position)을 가져옴
                 val position = adapterPosition
@@ -139,13 +144,56 @@ class MyGiftAdapter(private val context: Context) : RecyclerView.Adapter<MyGiftA
 //                fragmentTransaction.addToBackStack(null)
 //                fragmentTransaction.commitAllowingStateLoss()
 //                Log.d("clicked","change")
+
+//                val newFragment = ChangeReservationFragment.newInstance("", "")
+//                val fragmentTransaction = parentFragmentManager.beginTransaction()
+//                fragmentTransaction.replace(R.id.myalbum, newFragment, "changeReservationFragment")
+//                fragmentTransaction.addToBackStack(null)
+//                fragmentTransaction.commitAllowingStateLoss()
             }
 
             // 예약 취소로 이동
             binding.tvCancelReserv.setOnClickListener {
-//                val action = MyGiftReceivedFragmentDirections.actionMyGiftReceivedFragmentToMyAlbumFragment()
-//                findNavController().navigate(action)
+                cuDialog(it, position)
+//                val builder = AlertDialog.Builder(this@MyGiftAdapter.context);
+//                builder.setTitle("예약을 취소하시겠습니까?")
+//                    .setMessage("취소하면 불이익이 있을 수 있고 .. 그냥 몰라요 저도 ㅡㄱ만 할래요 ㅠㅠ ㅠ ㅠ")
+//                    .setPositiveButton("예약 취소",
+//                    DialogInterface.OnClickListener{ dialog, id ->
+//                        binding.tvDescription.text = "예약 취소된 선물입니다."
+//                    })
+//                    .setNegativeButton("아니오",
+//                        DialogInterface.OnClickListener{ dialog, id ->
+//                            binding.tvDescription.text = "아무일도안일어남그냥아니오누름."
+//                        })
+//                builder.show()
             }
         }
     }
+    fun cuDialog(view: View, position: Int) {
+        val myLayout = LayoutInflater.from(context).inflate(R.layout.dialog_cancel_reservation, null)
+        val build = AlertDialog.Builder(view.context).apply {
+            setView(myLayout)
+        }
+        val dialog = build.create()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        dialog.show()
+
+        myLayout.findViewById<Button>(R.id.btn_cancel_reservation).setOnClickListener {
+            Toast.makeText(view.context, "예약이 취소되었습니다.", Toast.LENGTH_SHORT).show()
+            datas.apply {
+                removeAt(position)
+//                removeLast() //해당 position의 data 삭제로 코드 변경해야함.
+            }
+            notifyDataSetChanged()
+            dialog.dismiss()
+        }
+        myLayout.findViewById<Button>(R.id.btn_cancel).setOnClickListener {
+            Toast.makeText(view.context,    "Cancel Button Click", Toast.LENGTH_SHORT).show()
+            dialog.dismiss()
+        }
+
+    }
 }
+
