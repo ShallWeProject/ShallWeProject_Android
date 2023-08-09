@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/dialog_cancel_reserv"
+    android:padding="24dp"
+    android:layout_marginStart="24dp"
+    android:layout_marginEnd="24dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/tv_cancel_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="예약을 취소하시겠습니까?"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#1D1B20"/>
+
+    <TextView
+        android:id="@+id/tv_cancel_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:text="이용 3일 전부터는 예약 취소가 불가능하며 잦은 예약 취소를 하실 경우 서비스 이용에 제한이 생길 수 있습니다."
+        android:textSize="13sp"
+        android:textColor="#333333"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right">
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tv_cancel_description"
+            app:layout_constraintEnd_toStartOf="@id/btn_cancel_reservation"
+            android:layout_marginEnd="8dp"
+            android:background="@null"
+            android:text="아니오"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btn_cancel_reservation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tv_cancel_description"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@drawable/btn_cancel_reservation"
+            android:outlineProvider="none"
+            android:text="예약 취소"
+            android:textSize="14sp"
+            android:textColor="@color/rose600"
+            android:textStyle="bold" />
+</LinearLayout>
+
+</LinearLayout>
