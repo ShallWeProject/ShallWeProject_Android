@@ -10,4 +10,5 @@
     <item name="giftreserve_edittext05" type="id" />
     <item name="giftreserve_btn01" type="id" />
     <item name="giftreserve_btn02" type="id" />
+    <item name="gift_reservation_layout" type="id" />
 </resources>
