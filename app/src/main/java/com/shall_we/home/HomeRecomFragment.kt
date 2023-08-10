@@ -60,11 +60,11 @@ class HomeRecomFragment : Fragment(){
 
 
         recomData.apply {
-            add(RecomData(img = R.drawable.nav_home, name = "생일"))
-            add(RecomData(img = R.drawable.nav_home, name = "연인"))
-            add(RecomData(img = R.drawable.nav_home, name = "부모님"))
-            add(RecomData(img = R.drawable.nav_home, name = "입학/졸업"))
-            add(RecomData(img = R.drawable.nav_home, name = "결혼/집들이"))
+            add(RecomData(img = R.drawable.recom_birth, name = "생일"))
+            add(RecomData(img = R.drawable.recom_couple, name = "연인"))
+            add(RecomData(img = R.drawable.recom_parent, name = "부모님"))
+            add(RecomData(img = R.drawable.recom_school, name = "입학/졸업"))
+            add(RecomData(img = R.drawable.recom_merry, name = "결혼/집들이"))
 
 
             recomAdapter.datas = recomData
