@@ -13,20 +13,18 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.shall_we.ExperienceDetail.ExDetailFragment
 import com.shall_we.ExperienceDetail.ExperienceDetailFragment
 import com.shall_we.R
 import com.shall_we.databinding.FragmentHomeRealtimeBinding
 import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RetrofitManager
+import com.shall_we.utils.initProductRecycler
 
 
 class HomeRealtimeFragment : Fragment(), ProductAdapter.OnItemClickListener {
     lateinit var textView : TextView
-    lateinit var productAdapter: ProductAdapter
     lateinit var categoryAdapter: CategoryAdapter
 
-    val productData = mutableListOf<ProductData>()
     val categoryData = mutableListOf<CategoryData>()
 
 
@@ -50,12 +48,14 @@ class HomeRealtimeFragment : Fragment(), ProductAdapter.OnItemClickListener {
         savedInstanceState: Bundle?
     ): View? {
         val binding = FragmentHomeRealtimeBinding.inflate(inflater,container,false)
-        RetrofitManager.instace.experienceGiftSttCategory(categoryId = 1, category = "가격높은순", completion = { // 카테고리별 경험으로 바꾸기
+        initCategoryRecycler(binding.rvCategory)
+        RetrofitManager.instance.experienceGiftSttCategory(categoryId = 1, category = "가격높은순", completion = { // 카테고리별 경험으로 바꾸기
                 responseState, responseBody ->
             when(responseState){
                 RESPONSE_STATE.OKAY -> {
                     Log.d("retrofit", "api 호출 성공1 : ${responseBody?.size}")
-                    initRecycler(binding.rvRealtime, binding.rvCategory, responseBody!!)
+//                    initRecycler(binding.rvRealtime, binding.rvCategory, responseBody!!)
+                    initProductRecycler(binding.rvRealtime, responseBody!!)
 
 
                 }
@@ -84,21 +84,9 @@ class HomeRealtimeFragment : Fragment(), ProductAdapter.OnItemClickListener {
         return binding.root
     }
 
-    private fun initRecycler(rvRealtime: RecyclerView,rvCategory: RecyclerView, data : ArrayList<ProductData>) {
-        productAdapter = ProductAdapter(requireContext())
-        productAdapter.setOnItemClickListener(this)
-        val layoutManager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
-        rvRealtime.layoutManager = layoutManager
-        rvRealtime.adapter = productAdapter
-
-        productAdapter.datas = data
-        productAdapter.notifyDataSetChanged()
-
-//            rvRealtime.addItemDecoration(GridSpaceItemDecoration(2, dpToPx(8)))
-
+    private fun initCategoryRecycler(rvCategory: RecyclerView) {
         categoryAdapter = CategoryAdapter(requireContext())
         rvCategory.adapter = categoryAdapter
-
 
         categoryData.apply {
             add(CategoryData(name = "전체"))

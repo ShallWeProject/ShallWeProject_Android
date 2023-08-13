@@ -1,7 +1,6 @@
 package com.shall_we.search
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
@@ -10,15 +9,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.shall_we.R
 import com.shall_we.databinding.FragmentSearchHistoryBinding
+import com.shall_we.home.ProductAdapter
+import com.shall_we.home.ProductData
 import com.shall_we.home.dpToPx
+import com.shall_we.retrofit.RESPONSE_STATE
+import com.shall_we.retrofit.RetrofitManager
 import com.shall_we.utils.SharedPrefManager
+import com.shall_we.utils.initProductRecycler
 import java.util.ArrayList
 class SearchHistoryFragment : Fragment(), ISearchHistoryRecycler {
     lateinit var no_record : TextView
@@ -29,6 +33,7 @@ class SearchHistoryFragment : Fragment(), ISearchHistoryRecycler {
     lateinit var recentAdapter: RecentAdapter
     private var searchHistoryList = ArrayList<SearchData>()
 
+    lateinit var resultAdapter: ProductAdapter
     private lateinit var sharedViewModel: SharedViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -92,25 +97,6 @@ class SearchHistoryFragment : Fragment(), ISearchHistoryRecycler {
 
     }
 
-    fun initResultRecycler(rv: RecyclerView, searchHistoryList: ArrayList<SearchData>) {
-
-//        recentAdapter = RecentAdapter(requireContext(),this)
-//        recentAdapter.submitList(searchHistoryList)
-//        val myLinearLayoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, true)
-//        myLinearLayoutManager.stackFromEnd = true
-//        val spaceDecoration =SpaceItemDecoration(dpToPx(5),0)
-//
-//        rv.apply {
-//            layoutManager = myLinearLayoutManager
-//            this.scrollToPosition(recentAdapter.itemCount -1) // 마지막 아이템으로 스크롤
-//            adapter = recentAdapter
-//            addItemDecoration(spaceDecoration)
-//
-//        }
-
-    }
-
-
     class SpaceItemDecoration(private val verticalSpaceWidth:Int, private val horizontalSpaceWidth:Int):RecyclerView.ItemDecoration(){
         override fun getItemOffsets(
             outRect: Rect,
@@ -150,7 +136,7 @@ class SearchHistoryFragment : Fragment(), ISearchHistoryRecycler {
     }
 
     @SuppressLint("SetTextI18n")
-    fun searchResultCall(queryString : String){
+    fun searchResultCall(queryString : String) {
         // 히스토리 관련 뷰들 안보이게 설정
         no_record = requireActivity().findViewById(R.id.no_record)
         box_recent = requireActivity().findViewById(R.id.box_recent)
@@ -162,38 +148,36 @@ class SearchHistoryFragment : Fragment(), ISearchHistoryRecycler {
 
         // 검색 API 불러오기
         this.searchPhotoApiCall(queryString)
-
-        // 겸색 결과 있으면
-        // 리사이클러뷰에 검색 결과 넣기, 텍스트는 안보이게
-
-        // 검색 결과 없으면
-        // 리사이클러뷰 안보이게, 텍스트 보이게
-        rv_search_result.visibility = View.GONE
-        no_result.visibility = View.VISIBLE
-        no_result.text = "\"${queryString}\"에 대한 검색 결과가 없습니다."
     }
 
     // 사진 검색 API 호출
     private fun searchPhotoApiCall(query: String){
      //레트로핏 연결
-//        RetrofitManager.instance.searchPhotos(searchTerm = query, completion = { status, list ->
-//            when(status){
-//                RESPONSE_STATUS.OKAY -> {
-//                    Log.d(TAG, "PhotoCollectionActivity - searchPhotoApiCall() called 응답 성공 / list.size : ${list?.size}")
-//
-//                    if (list != null){
-//                        this.photoList.clear()
-//                        this.photoList = list
-//                        this.photoGridRecyeclerViewAdapter.submitList(this.photoList)
-//                        this.photoGridRecyeclerViewAdapter.notifyDataSetChanged()
-//                    }
-//
-//                }
-//                RESPONSE_STATUS.NO_CONTENT -> {
-//                    Toast.makeText(this, "$query 에 대한 검색 결과가 없습니다.", Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//        })
+        RetrofitManager.instance.experienceGiftSearch(title = query, completion = { responseState, responseBody ->
+            when (responseState) {
+                RESPONSE_STATE.OKAY -> {
+                    Log.d("retrofit", "api 호출 성공1 : ${responseBody!!}")
+                    if (responseBody.size != 0) {
+                        // 겸색 결과 있으면
+                        // 리사이클러뷰에 검색 결과 넣기, 텍스트는 안보이게
+                        rv_search_result.visibility = View.VISIBLE
+                        no_result.visibility = View.GONE
+                        initProductRecycler(rv_search_result, responseBody)
+
+                    }else{
+                        // 검색 결과 없으면
+                        // 리사이클러뷰 안보이게, 텍스트 보이게
+                        rv_search_result.visibility = View.GONE
+                        no_result.visibility = View.VISIBLE
+                        no_result.text = "\"${query}\"에 대한 검색 결과가 없습니다."
+                    }
+                }
+
+                RESPONSE_STATE.FAIL -> {
+                    Log.d("retrofit", "api 호출 에러")
+                }
+            }
+        })
 
     }
     private fun handleSearchViewUi(){

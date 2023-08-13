@@ -15,4 +15,7 @@ interface IRetrofit {
     @GET(API.EXPERIENCE_GIFT_EXPCATEGORY)
     fun experienceGiftExpCategory(@Path("ExpCategoryId") categoryId : Int, @Query("category") category : String) : Call<JsonElement>
 
+    @GET(API.EXPERIENCE_GIFT_SEARCH)
+    fun experienceGiftSearch(@Query("title") title : String) : Call<JsonElement>
+
 }

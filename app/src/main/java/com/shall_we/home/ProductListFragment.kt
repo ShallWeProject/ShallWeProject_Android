@@ -16,6 +16,7 @@ import com.shall_we.R
 import com.shall_we.databinding.FragmentProductListBinding
 import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RetrofitManager
+import com.shall_we.utils.initProductRecycler
 
 
 class ProductListFragment : Fragment() {
@@ -108,17 +109,6 @@ class ProductListFragment : Fragment() {
         }
     }
 
-    private fun initRecycler(rvProduct: RecyclerView, data: ArrayList<ProductData>) {
-        Log.d("retrofit","$data")
-        productAdapter = ProductAdapter(requireContext())
-        val layoutManager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
-        rvProduct.layoutManager = layoutManager
-        rvProduct.adapter = productAdapter
-        productAdapter.datas = data
-        productAdapter.notifyDataSetChanged()
-//            rvRealtime.addItemDecoration(GridSpaceItemDecoration(2, dpToPx(8)))
-
-    }
     private fun initSpinner(spinner : Spinner) {
         //spinner
 
@@ -160,13 +150,13 @@ class ProductListFragment : Fragment() {
 
     private fun retrofitCall(sttCategory : Boolean, categoryId : Int, rv:RecyclerView) {
         if(sttCategory == true){
-            RetrofitManager.instace.experienceGiftSttCategory(categoryId = 1, category = "가격높은순" // category 번호로 바꾸기
-            ) { // 카테고리별 경험으로 바꾸기
+            RetrofitManager.instance.experienceGiftSttCategory(categoryId = 1, category = "가격높은순" // category 번호로 바꾸기
+            ) {
                     responseState, responseBody ->
                 when (responseState) {
                     RESPONSE_STATE.OKAY -> {
                         Log.d("retrofit", "api 호출 성공1 : ${responseBody!!}")
-                        initRecycler(rv,responseBody)
+                        initProductRecycler(rv,responseBody)
                     }
 
                     RESPONSE_STATE.FAIL -> {
@@ -177,19 +167,19 @@ class ProductListFragment : Fragment() {
             }
         }
         else {
-//            RetrofitManager.instace.experienceGiftExpCategory(categoryId = categoryId, category = "가격높은순" ) {
+//            RetrofitManager.instance.experienceGiftExpCategory(categoryId = categoryId, category = "가격높은순" ) {
 //                    responseState, responseBody ->
 //                when (responseState) {
 //                    RESPONSE_STATE.OKAY -> {
-//                        Log.d("retrofit", "api 호출 성공1 : ${responseBody?.size}")
-//                        data = responseBody!!
+//                        Log.d("retrofit", "api 호출 성공1 : ${responseBody!!}")
+//                        initProductRecycler(rv,responseBody)
 //                    }
 //
 //                    RESPONSE_STATE.FAIL -> {
 //                        Log.d("retrofit", "api 호출 에러")
 //                    }
 //                }
-//
+
 //            }
         }
     }
