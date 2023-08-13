@@ -13,6 +13,8 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.shall_we.databinding.ActivityMainBinding
 import com.shall_we.home.HomeFragment
+import com.shall_we.retrofit.RESPONSE_STATE
+import com.shall_we.retrofit.RetrofitManager
 
 
 class MainActivity : AppCompatActivity() {
@@ -30,6 +32,19 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setTheme(R.style.Base_Theme_Shall_we)
 
+
+//        RetrofitManager.instace.experienceGiftExpCategory(categoryId = 1, category = "가격높은순", completion = {
+//                responseState, responseBody ->
+//            when(responseState){
+//                RESPONSE_STATE.OKAY -> {
+//                    Log.d("retrofit", "api 호출 성공2 : ${responseBody?.size}")
+//
+//                }
+//                RESPONSE_STATE.FAIL -> {
+//                    Log.d("retrofit", "api 호출 에러")
+//                }
+//            }
+//        })
 
         supportFragmentManager.beginTransaction().replace(binding.navHostFragment.id, HomeFragment()).commit() // 첫 페이지는 home
         binding.navBottom.selectedItemId = R.id.menu_home
