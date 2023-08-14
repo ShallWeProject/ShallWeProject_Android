@@ -1,8 +1,9 @@
 package com.shall_we.home
 
 data class ProductData (
-    val name : String,
-    val comment : String,
+    val title : String,
+    val subtitle : String,
     val price : String,
-    val img : Int,
+    val img : String,
+    val giftid : Int
 )

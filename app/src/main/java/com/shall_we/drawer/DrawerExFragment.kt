@@ -16,6 +16,7 @@ import com.shall_we.R
 import com.shall_we.databinding.FragmentDrawerExBinding
 import com.shall_we.home.ProductListFragment
 import com.shall_we.home.dpToPx
+import com.shall_we.utils.SpaceItemDecoration
 
 class DrawerExFragment : Fragment(), DrawerAdapter.OnItemClickListener {
 
@@ -89,15 +90,4 @@ class DrawerExFragment : Fragment(), DrawerAdapter.OnItemClickListener {
 
     }
 
-    class SpaceItemDecoration(private val verticalSpaceWidth:Int, private val horizontalSpaceWidth:Int):RecyclerView.ItemDecoration(){
-        override fun getItemOffsets(
-            outRect: Rect,
-            view: View,
-            parent: RecyclerView,
-            state: RecyclerView.State
-        ) {
-            outRect.right = horizontalSpaceWidth
-            outRect.top = verticalSpaceWidth
-        }
-    }
 }

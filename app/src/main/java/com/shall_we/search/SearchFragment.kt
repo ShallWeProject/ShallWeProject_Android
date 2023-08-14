@@ -1,5 +1,7 @@
 package com.shall_we.search
 
+import android.annotation.SuppressLint
+import android.app.appsearch.SearchResult
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
@@ -10,23 +12,32 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.widget.SearchView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.shall_we.ExperienceDetail.ExperienceDetailFragment
 import com.shall_we.R
 import com.shall_we.databinding.FragmentSearchBinding
+import com.shall_we.home.dpToPx
+import com.shall_we.retrofit.RESPONSE_STATE
+import com.shall_we.retrofit.RetrofitManager
 import com.shall_we.utils.SharedPrefManager
 
 class SearchFragment : Fragment() , SearchView.OnQueryTextListener{
     private var searchView = view?.findViewById<SearchView>(R.id.searchView)
-    lateinit var searchHistoryFragment : FragmentContainerView
+
     //검색 기록 배열
     private var searchHistoryList = ArrayList<SearchData>()
 
-    private lateinit var historyFragment: SearchHistoryFragment
+
+    private lateinit var fragmentBox: FragmentContainerView
 
     private lateinit var sharedViewModel: SharedViewModel
 
@@ -43,9 +54,8 @@ class SearchFragment : Fragment() , SearchView.OnQueryTextListener{
     ): View? {
         // Inflate the layout for this fragment
         val binding = FragmentSearchBinding.inflate(inflater,container,false)
-        searchHistoryFragment = binding.historyFragment
 
-        historyFragment = SearchHistoryFragment()
+        this.fragmentBox = binding.fragmentBox
 
         //searchview 세팅
         searchView = binding.searchView
@@ -78,11 +88,6 @@ class SearchFragment : Fragment() , SearchView.OnQueryTextListener{
             }
         }
 
-        //저장된 검색 기록 가져오기
-        this.searchHistoryList = SharedPrefManager.getSearchHistoryList() as ArrayList<SearchData>
-        this.searchHistoryList.forEach{
-            Log.d("history", it.search_word)
-        }
         return binding.root
     }
 
@@ -96,11 +101,14 @@ class SearchFragment : Fragment() , SearchView.OnQueryTextListener{
         // TODO:: 검색어 저장
         val newSearchData = SearchData(search_word = query.toString())
 
+        this.searchHistoryList = SharedPrefManager.getSearchHistoryList() as ArrayList<SearchData>
+
         this.searchHistoryList.add(newSearchData)
 
         SharedPrefManager.storeSearchHistoryList(this.searchHistoryList)
 
-        sharedViewModel.data.value = query.toString()
+        insertSearchTermHistory(query.toString())
+        searchPhotoApiCall(query.toString())
 
         return true
     }
@@ -112,11 +120,70 @@ class SearchFragment : Fragment() , SearchView.OnQueryTextListener{
 
         return true
     }
-    fun sendDataToFragment(data: String) {
-        // 프래그먼트의 메서드를 호출하여 데이터 전달
-        historyFragment.searchResultCall(data)
+
+        // 사진 검색 API 호출
+    private fun searchPhotoApiCall(query: String){
+     //레트로핏 연결
+        RetrofitManager.instance.experienceGiftSearch(title = query, completion = { responseState, responseBody ->
+            when (responseState) {
+                RESPONSE_STATE.OKAY -> {
+                    Log.d("retrofit", "api 호출 성공1 : ${responseBody!!}")
+                    // 클릭된 아이템의 정보를 사용하여 다른 프래그먼트로 전환하는 로직을 작성
+                    val newFragment = SearchResultFragment() // 전환할 다른 프래그먼트 객체 생성
+                    val bundle = Bundle()
+                    if(responseBody.size == 0){
+                        bundle.putBoolean("status",false)
+                        bundle.putString("query",query)
+                    }
+                    else{
+                        bundle.putBoolean("status", true)
+                        bundle.putSerializable("data", responseBody)
+                    }
+                    newFragment.arguments = bundle
+
+                    // 프래그먼트 전환
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentBox, newFragment)
+                        .addToBackStack(null)
+                        .commit()
+
+                }
+                RESPONSE_STATE.FAIL -> {
+                    Log.d("retrofit", "api 호출 에러")
+                }
+            }
+        })
+
     }
 
+    // 검색어 저장
+    @SuppressLint("NotifyDataSetChanged")
+    private fun insertSearchTermHistory(searchTerm: String){
+        Log.d("history", "insertSearchTermHistory() called")
+
+        // 중복 아이템 삭제
+        var indexListToRemove = java.util.ArrayList<Int>()
+
+        this.searchHistoryList.forEachIndexed{ index, searchDataItem ->
+
+            if(searchDataItem.search_word == searchTerm){
+                Log.d("history", "index: $index")
+                indexListToRemove.add(index)
+            }
+        }
+
+        // 뒤에서부터 제거
+        for (i in indexListToRemove.size - 1 downTo 0) {
+            this.searchHistoryList.removeAt(indexListToRemove[i])
+        }
+
+        // 새 아이템 넣기
+        val newSearchData = SearchData(search_word = searchTerm)
+        this.searchHistoryList.add(newSearchData)
+
+        // 기존 데이터에 덮어쓰기
+        SharedPrefManager.storeSearchHistoryList(this.searchHistoryList)
+    }
 }
 
 class SharedViewModel : ViewModel() {

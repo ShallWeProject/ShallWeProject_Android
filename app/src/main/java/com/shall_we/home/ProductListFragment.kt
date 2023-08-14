@@ -3,11 +3,9 @@ package com.shall_we.home
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Spinner
 import androidx.fragment.app.Fragment
@@ -16,11 +14,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import com.shall_we.R
 import com.shall_we.databinding.FragmentProductListBinding
+import com.shall_we.retrofit.RESPONSE_STATE
+import com.shall_we.retrofit.RetrofitManager
+import com.shall_we.utils.initProductRecycler
 
 
 class ProductListFragment : Fragment() {
-    lateinit var productAdapter: ProductAdapter
-    val productData = mutableListOf<ProductData>()
+    var category : Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +56,7 @@ class ProductListFragment : Fragment() {
         }
         if(tab == "경험카테고리"){
             val tabArray = arrayOf("공예","베이킹","문화예술","아웃도어","스포츠")
-
+            category = false
             for (i in 0 until tabLayout.tabCount) {
                 val tab = tabLayout.getTabAt(i)
                 tab?.text = tabArray[i].toString()
@@ -64,7 +64,7 @@ class ProductListFragment : Fragment() {
         }
         else {
             val tabArray = arrayOf("생일","연인","부모님","입학/졸업","결혼/집들이")
-
+            category = true
             for (i in 0 until tabLayout.tabCount) {
                 val tab = tabLayout.getTabAt(i)
                 tab?.text = tabArray[i].toString()
@@ -72,9 +72,8 @@ class ProductListFragment : Fragment() {
         }
 
         setSelectedTab(binding.tabLayout, position ?: 0)
+        val data = retrofitCall(category, 1,binding.rvProduct)
 
-
-        initRecycler(binding.rvProduct)
         initSpinner(binding.spinner)
 
 
@@ -84,25 +83,8 @@ class ProductListFragment : Fragment() {
 
         tabLayout.addOnTabSelectedListener(object :TabLayout.OnTabSelectedListener{
             override fun onTabSelected(tab: TabLayout.Tab?) {
+                tab?.position?.let { retrofitCall(category, it, binding.rvProduct) }
                 initSpinner(binding.spinner)
-                initRecycler(binding.rvProduct)
-                when(tab?.position){
-                    0 -> {
-
-                    }
-                    1 -> {
-
-                    }
-                    2 -> {
-
-                    }
-                    3 -> {
-
-                    }
-                    4 -> {
-
-                    }
-                }
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
@@ -125,77 +107,6 @@ class ProductListFragment : Fragment() {
         }
     }
 
-    private fun initRecycler(rvProduct: RecyclerView) {
-        productAdapter = ProductAdapter(requireContext())
-        val layoutManager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
-        rvProduct.layoutManager = layoutManager
-        rvProduct.adapter = productAdapter
-
-        productData.apply {
-            add(
-                ProductData(
-                    name = "[성수] 인기 공예 클래스",
-                    comment = "프라이빗 소수정예 터프팅 클래스",
-                    price = "39,800 원",
-                    img = R.drawable.product_img
-                )
-            )
-            add(
-                ProductData(
-                    name = "[성수] 인기 공예 클래스",
-                    comment = "프라이빗 소수정예 터프팅 클래스",
-                    price = "39,800 원",
-                    img = R.drawable.product_img
-                )
-            )
-            add(
-                ProductData(
-                    name = "[성수] 인기 공예 클래스",
-                    comment = "프라이빗 소수정예 터프팅 클래스",
-                    price = "39,800 원",
-                    img = R.drawable.product_img
-                )
-            )
-            add(
-                ProductData(
-                    name = "[성수] 인기 공예 클래스",
-                    comment = "프라이빗 소수정예 터프팅 클래스",
-                    price = "39,800 원",
-                    img = R.drawable.product_img
-                )
-            )
-            add(
-                ProductData(
-                    name = "[성수] 인기 공예 클래스",
-                    comment = "프라이빗 소수정예 터프팅 클래스",
-                    price = "39,800 원",
-                    img = R.drawable.product_img
-                )
-            )
-            add(
-                ProductData(
-                    name = "[성수] 인기 공예 클래스",
-                    comment = "프라이빗 소수정예 터프팅 클래스",
-                    price = "39,800 원",
-                    img = R.drawable.product_img
-                )
-            )
-            add(
-                ProductData(
-                    name = "[성수] 인기 공예 클래스",
-                    comment = "프라이빗 소수정예 터프팅 클래스",
-                    price = "39,800 원",
-                    img = R.drawable.product_img
-                )
-            )
-
-
-
-            productAdapter.datas = productData
-            productAdapter.notifyDataSetChanged()
-//            rvRealtime.addItemDecoration(GridSpaceItemDecoration(2, dpToPx(8)))
-        }
-    }
     private fun initSpinner(spinner : Spinner) {
         //spinner
 
@@ -233,6 +144,42 @@ class ProductListFragment : Fragment() {
             }
         }
 
+    }
+
+    private fun retrofitCall(sttCategory : Boolean, categoryId : Int, rv:RecyclerView) {
+        if(sttCategory == true){
+            RetrofitManager.instance.experienceGiftSttCategory(categoryId = 1, category = "가격높은순" // category 번호로 바꾸기
+            ) {
+                    responseState, responseBody ->
+                when (responseState) {
+                    RESPONSE_STATE.OKAY -> {
+                        Log.d("retrofit", "api 호출 성공1 : ${responseBody!!}")
+                        initProductRecycler(rv,responseBody)
+                    }
+
+                    RESPONSE_STATE.FAIL -> {
+                        Log.d("retrofit", "api 호출 에러")
+                    }
+                }
+
+            }
+        }
+        else {
+//            RetrofitManager.instance.experienceGiftExpCategory(categoryId = categoryId, category = "가격높은순" ) {
+//                    responseState, responseBody ->
+//                when (responseState) {
+//                    RESPONSE_STATE.OKAY -> {
+//                        Log.d("retrofit", "api 호출 성공1 : ${responseBody!!}")
+//                        initProductRecycler(rv,responseBody)
+//                    }
+//
+//                    RESPONSE_STATE.FAIL -> {
+//                        Log.d("retrofit", "api 호출 에러")
+//                    }
+//                }
+
+//            }
+        }
     }
 
 }

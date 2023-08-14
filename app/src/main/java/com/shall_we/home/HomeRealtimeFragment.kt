@@ -13,18 +13,20 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.shall_we.ExperienceDetail.ExDetailFragment
 import com.shall_we.ExperienceDetail.ExperienceDetailFragment
 import com.shall_we.R
 import com.shall_we.databinding.FragmentHomeRealtimeBinding
+import com.shall_we.retrofit.RESPONSE_STATE
+import com.shall_we.retrofit.RetrofitManager
+import com.shall_we.utils.initProductRecycler
 
 
-class HomeRealtimeFragment : Fragment(), ProductAdapter.OnItemClickListener {
+class HomeRealtimeFragment : Fragment(), ProductAdapter.OnItemClickListener, CategoryAdapter.OnItemClickListener{
     lateinit var textView : TextView
-    lateinit var productAdapter: ProductAdapter
     lateinit var categoryAdapter: CategoryAdapter
 
-    val productData = mutableListOf<ProductData>()
+    lateinit var rvRealtime : RecyclerView
+
     val categoryData = mutableListOf<CategoryData>()
 
 
@@ -33,7 +35,7 @@ class HomeRealtimeFragment : Fragment(), ProductAdapter.OnItemClickListener {
         // 클릭된 아이템의 정보를 사용하여 다른 프래그먼트로 전환하는 로직을 작성
         val newFragment = ExperienceDetailFragment() // 전환할 다른 프래그먼트 객체 생성
         val bundle = Bundle()
-        bundle.putString("name", item.name) // 클릭된 아이템의 이름을 "name" 키로 전달
+        bundle.putString("title", item.title) // 클릭된 아이템의 이름을 "title" 키로 전달
         newFragment.arguments = bundle
 
         // 프래그먼트 전환
@@ -43,13 +45,23 @@ class HomeRealtimeFragment : Fragment(), ProductAdapter.OnItemClickListener {
             .commit()
     }
 
+    override fun onItemClick(position: Int) {
+        RetrofitCall(rvRealtime, position)
+    }
+
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val binding = FragmentHomeRealtimeBinding.inflate(inflater,container,false)
-        initRecycler(binding.rvRealtime, binding.rvCategory)
 
+        rvRealtime = binding.rvRealtime
+
+        initCategoryRecycler(binding.rvCategory)
+
+        RetrofitCall(rvRealtime, 1)
 
         // 1. TextView 참조
         textView = binding.realtimeText
@@ -69,84 +81,11 @@ class HomeRealtimeFragment : Fragment(), ProductAdapter.OnItemClickListener {
         return binding.root
     }
 
-    private fun initRecycler(rvRealtime: RecyclerView,rvCategory: RecyclerView) {
-        productAdapter = ProductAdapter(requireContext())
-        productAdapter.setOnItemClickListener(this)
-        val layoutManager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
-        rvRealtime.layoutManager = layoutManager
-        rvRealtime.adapter = productAdapter
-
-        productData.apply {
-            add(
-                ProductData(
-                    name = "[성수] 인기 공예 클래스",
-                    comment = "프라이빗 소수정예 터프팅 클래스",
-                    price = "39,800 원",
-                    img = R.drawable.product_img
-                )
-            )
-            add(
-                ProductData(
-                    name = "[성수] 인기 공예 클래스",
-                    comment = "프라이빗 소수정예 터프팅 클래스",
-                    price = "39,800 원",
-                    img = R.drawable.product_img
-                )
-            )
-            add(
-                ProductData(
-                    name = "[성수] 인기 공예 클래스",
-                    comment = "프라이빗 소수정예 터프팅 클래스",
-                    price = "39,800 원",
-                    img = R.drawable.product_img
-                )
-            )
-            add(
-                ProductData(
-                    name = "[성수] 인기 공예 클래스",
-                    comment = "프라이빗 소수정예 터프팅 클래스",
-                    price = "39,800 원",
-                    img = R.drawable.product_img
-                )
-            )
-            add(
-                ProductData(
-                    name = "[성수] 인기 공예 클래스",
-                    comment = "프라이빗 소수정예 터프팅 클래스",
-                    price = "39,800 원",
-                    img = R.drawable.product_img
-                )
-            )
-            add(
-                ProductData(
-                    name = "[성수] 인기 공예 클래스",
-                    comment = "프라이빗 소수정예 터프팅 클래스",
-                    price = "39,800 원",
-                    img = R.drawable.product_img
-                )
-            )
-            add(
-                ProductData(
-                    name = "[성수] 인기 공예 클래스",
-                    comment = "프라이빗 소수정예 터프팅 클래스",
-                    price = "39,800 원",
-                    img = R.drawable.product_img
-                )
-            )
-
-
-
-            productAdapter.datas = productData
-            productAdapter.notifyDataSetChanged()
-
-//            rvRealtime.addItemDecoration(GridSpaceItemDecoration(2, dpToPx(8)))
-
-
-        }
-
+    fun initCategoryRecycler(rvCategory: RecyclerView) {
         categoryAdapter = CategoryAdapter(requireContext())
-        rvCategory.adapter = categoryAdapter
+        categoryAdapter.setOnItemClickListener(this)
 
+        rvCategory.adapter = categoryAdapter
 
         categoryData.apply {
             add(CategoryData(name = "전체"))
@@ -155,13 +94,9 @@ class HomeRealtimeFragment : Fragment(), ProductAdapter.OnItemClickListener {
             add(CategoryData(name = "문화예술"))
             add(CategoryData(name = "아웃도어"))
             add(CategoryData(name = "스포츠"))
-
-
-
-            categoryAdapter.datas = categoryData
-            categoryAdapter.notifyDataSetChanged()
-
         }
+        categoryAdapter.datas = categoryData
+        categoryAdapter.notifyDataSetChanged()
 
         val spaceDecoration = HomeRecomFragment.HorizontalSpaceItemDecoration(dpToPx(7))
         rvCategory.addItemDecoration(spaceDecoration)
@@ -192,7 +127,18 @@ class HomeRealtimeFragment : Fragment(), ProductAdapter.OnItemClickListener {
         }
 
     }
-
-
-
+    fun RetrofitCall(rv : RecyclerView, categoryId : Int){
+        RetrofitManager.instance.experienceGiftSttCategory(categoryId = categoryId, category = "가격높은순", completion = { // 카테고리별 경험으로 바꾸기
+                responseState, responseBody ->
+            when(responseState){
+                RESPONSE_STATE.OKAY -> {
+                    Log.d("retrofit", "category api : ${responseBody?.size}")
+                    initProductRecycler(rv, responseBody!!)
+                }
+                RESPONSE_STATE.FAIL -> {
+                    Log.d("retrofit", "api 호출 에러")
+                }
+            }
+        })
+    }
 }
