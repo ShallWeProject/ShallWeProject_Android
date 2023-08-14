@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/myalbum"
     android:background="@color/white"
-    tools:context="mypage.MyAlbumFragment"
+    tools:context=".myAlbum.MyAlbumFragment"
     app:layout_constraintTop_toTopOf="parent"
     app:layout_constraintStart_toStartOf="parent">
     <androidx.constraintlayout.widget.ConstraintLayout

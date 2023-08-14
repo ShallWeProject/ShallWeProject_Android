@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.shall_we.MainActivity
-import com.shall_we.MypageFragment
+import com.shall_we.mypage.MypageFragment
 import com.shall_we.R
 import com.shall_we.databinding.FragmentDrawerMypageBinding
 import com.shall_we.home.HomeRecomFragment
