@@ -1,5 +1,7 @@
 package com.shall_we.utils
 
+import android.graphics.Rect
+import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.shall_we.home.ProductAdapter
@@ -23,4 +25,16 @@ fun initProductRecycler(rv: RecyclerView, resultData: ArrayList<ProductData>) {
     rv.adapter = resultAdapter
     resultAdapter.datas = resultData
     resultAdapter.notifyDataSetChanged()
+}
+
+class SpaceItemDecoration(private val verticalSpaceWidth:Int, private val horizontalSpaceWidth:Int):RecyclerView.ItemDecoration(){
+    override fun getItemOffsets(
+        outRect: Rect,
+        view: View,
+        parent: RecyclerView,
+        state: RecyclerView.State
+    ) {
+        outRect.right = horizontalSpaceWidth
+        outRect.top = verticalSpaceWidth
+    }
 }

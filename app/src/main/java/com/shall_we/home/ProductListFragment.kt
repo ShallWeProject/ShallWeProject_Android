@@ -20,8 +20,6 @@ import com.shall_we.utils.initProductRecycler
 
 
 class ProductListFragment : Fragment() {
-    lateinit var productAdapter: ProductAdapter
-    val productData = mutableListOf<ProductData>()
     var category : Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -37,7 +37,7 @@ class RetrofitManager {
                                 val title : String = resultItemObject.get("title").asString
 //                                val subtitle : String = resultItemObject.get("subtitle").asString
 //                                val price : String = resultItemObject.get("price").asString
-//                                val img : String = resultItemObject.get("thumbnail").asString
+//                                val img : String = resultItemObject.get("giftImgUrl").asString
                                 val giftid : Int = resultItemObject.get("experienceGiftId").asInt
 
                                 val productItem = ProductData(title = title, subtitle = "subtitle", price = "75,000", img = "img", giftid = giftid)
@@ -81,7 +81,7 @@ class RetrofitManager {
                                 val title : String = resultItemObject.get("title").asString
                                 val subtitle : String = subtitleArray.get("title").asString
 //                                val price : String = resultItemObject.get("price").asString
-                                val img : String = resultItemObject.get("thumbnail").asString
+                                val img : String = resultItemObject.get("giftImgUrl").asString
                                 val giftid : Int = resultItemObject.get("experienceGiftId").asInt
 
                                 val productItem = ProductData(title = title, subtitle = subtitle, price = "75,000", img = img, giftid = giftid)
@@ -124,11 +124,11 @@ class RetrofitManager {
 //                                val subtitleArray = resultItemObject.get("subtitle").asJsonObject
                                 val title : String = resultItemObject.get("title").asString
 //                                val subtitle : String = resultItemObject.get("subtitle").asString
-//                                val price : String = resultItemObject.get("price").asString
-//                                val img : String = resultItemObject.get("thumbnail").asString
+                                val price : String = resultItemObject.get("price").asString
+//                                val img : String = resultItemObject.get("giftImgUrl").asString
                                 val giftid : Int = resultItemObject.get("experienceGiftId").asInt
 
-                                val productItem = ProductData(title = title, subtitle = "subtitle", price = "75,000", img = "img", giftid = giftid)
+                                val productItem = ProductData(title = title, subtitle = "subtitle", price = price, img = "img", giftid = giftid)
 
                                 parsedProductDataArray.add(productItem)
                             }
