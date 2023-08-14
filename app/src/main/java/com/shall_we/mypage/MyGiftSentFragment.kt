@@ -8,15 +8,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.shall_we.MypageFragment
 import com.shall_we.R
 import com.shall_we.databinding.FragmentMyGiftSentBinding
 import com.shall_we.databinding.FragmentMypageBinding
-import com.shall_we.isTabLayoutVisible
+import com.shall_we.myAlbum.MyAlbumFragment
 
 class MyGiftSentFragment : Fragment() {
     private lateinit var viewBinding: FragmentMyGiftSentBinding
-    private lateinit var mypageBinding: FragmentMypageBinding
     private lateinit var adapter: MyGiftAdapter
 
     val giftData = mutableListOf<MyGiftDto>()
@@ -33,32 +31,6 @@ class MyGiftSentFragment : Fragment() {
         viewBinding = FragmentMyGiftSentBinding.inflate(layoutInflater)
         setupRecyclerView(viewBinding.recyclerView)
 
-        viewBinding.fabAlbum.setOnClickListener {
-
-//            findNavController().navigate(
-//                R.id.myalbum
-//            )
-//            val myAlbumFragment = MyAlbumFragment() // 전환할 프래그먼트 인스턴스 생성
-//            val fragmentTransaction = parentFragmentManager.beginTransaction()
-//            fragmentTransaction.add(R.id.mypage_layout, myAlbumFragment, "get")
-//            fragmentTransaction.addToBackStack(null)
-//            fragmentTransaction.commitAllowingStateLoss()
-//            Log.d("clicked","change")
-
-            val tabs = requireActivity().findViewById<View>(R.id.tabs)
-            tabs.visibility = View.GONE
-//            mypageBinding.tabs.visibility = View.GONE
-            // 상태 토글
-//            isTabLayoutVisible = !isTabLayoutVisible
-
-            viewBinding.fabAlbum.visibility = View.GONE
-            val myAlbumFragment = MyAlbumFragment()
-            val fragmentTransaction = parentFragmentManager.beginTransaction()
-            fragmentTransaction.replace(R.id.my_gift_sent_layout, myAlbumFragment, "myAlbumFragment")
-            fragmentTransaction.addToBackStack(null)
-            fragmentTransaction.commitAllowingStateLoss()
-            Log.d("clicked","change")
-        }
         return viewBinding.root
     }
     private fun setupRecyclerView(recyclerView: RecyclerView) {

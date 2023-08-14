@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingBottom="17dp"
-            android:background="@color/rose25">
+            android:background="#F8F8F8">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_date"
@@ -34,16 +34,16 @@
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginTop="16dp"
                 android:layout_marginStart="17dp"
-                android:drawableStart="@drawable/calendar_light_resize"
+                android:drawableStart="@drawable/calendar_black_resize"
                 android:drawablePadding="5dp"
                 android:text="2023.06.01"
                 android:textSize="12sp"
-                android:background="@drawable/tv_date_selected"
+                android:background="@drawable/tv_date_unselected"
                 android:paddingStart="12.5dp"
                 android:paddingEnd="12.5dp"
                 android:paddingTop="4.5dp"
                 android:paddingBottom="4.5dp"
-                android:textColor="@color/rose600" />
+                android:textColor="#333333" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_time"
@@ -53,16 +53,16 @@
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginTop="16dp"
                 android:layout_marginStart="4dp"
-                android:drawableStart="@drawable/time_light_resize"
+                android:drawableStart="@drawable/time_black_resize"
                 android:drawablePadding="5dp"
                 android:text="13시"
                 android:textSize="12sp"
-                android:background="@drawable/tv_date_selected"
+                android:background="@drawable/tv_date_unselected"
                 android:paddingStart="8.5dp"
                 android:paddingEnd="8.5dp"
                 android:paddingTop="4.5dp"
                 android:paddingBottom="4.5dp"
-                android:textColor="@color/rose600" />
+                android:textColor="#333333" />
 
             <TextView
                 android:id="@+id/tv_title"
@@ -89,6 +89,7 @@
 
             <ImageView
                 android:id="@+id/iv_message"
+                android:visibility="gone"
                 android:layout_width="296dp"
                 android:layout_height="108dp"
                 app:layout_constraintStart_toStartOf="@+id/tv_date"
@@ -100,6 +101,7 @@
                 android:id="@+id/tv_message"
                 android:layout_width="296dp"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@+id/tv_date"
                 app:layout_constraintTop_toBottomOf="@+id/iv_message"
                 android:layout_marginTop="12dp"
@@ -113,6 +115,7 @@
                 android:id="@+id/tv_changeReserv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@id/tv_message"
                 app:layout_constraintEnd_toStartOf="@id/tv_cancelReserv"
                 android:layout_marginTop="20dp"
@@ -126,6 +129,7 @@
                 android:id="@+id/tv_cancelReserv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@id/tv_message"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="20dp"

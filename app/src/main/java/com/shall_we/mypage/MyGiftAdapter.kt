@@ -33,20 +33,26 @@ class MyGiftAdapter(private val context: Context) : RecyclerView.Adapter<MyGiftA
         holder.binding.ivMessage.setImageResource(data.messageImgUrl)
         holder.binding.tvMessage.text = data.message
         holder.binding.tvDate.setCompoundDrawablesRelativeWithIntrinsicBounds(
-            holder.itemView.context.getDrawable(R.drawable.calendar_light_resize), // 시작 부분 Drawable 설정
-            null,     // 위쪽 Drawable 설정 (null이면 이전 설정 유지)
-            null,     // 끝 부분 Drawable 설정 (null이면 이전 설정 유지)
-            null      // 아래쪽 Drawable 설정 (null이면 이전 설정 유지)
+            holder.itemView.context.getDrawable(R.drawable.calendar_black_resize),
+            null,
+            null,
+            null
         )
         holder.binding.tvTime.setCompoundDrawablesRelativeWithIntrinsicBounds(
-            holder.itemView.context.getDrawable(R.drawable.time_light_resize), // 시작 부분 Drawable 설정
-            null,     // 위쪽 Drawable 설정 (null이면 이전 설정 유지)
-            null,     // 끝 부분 Drawable 설정 (null이면 이전 설정 유지)
-            null      // 아래쪽 Drawable 설정 (null이면 이전 설정 유지)
+            holder.itemView.context.getDrawable(R.drawable.time_black_resize),
+            null,
+            null,
+            null
         )
         if (data.cancellation == false) {
             holder.binding.tvCancelReserv.visibility = View.GONE
             holder.binding.tvChangeReserv.visibility = View.GONE
+        }
+
+        if (holder.binding.tvMessage.visibility == View.VISIBLE) {
+            changeColorExpanded(holder, position)
+        } else {
+            changeColorContacted(holder, position)
         }
 
         // 클릭 이벤트 처리
@@ -72,16 +78,16 @@ class MyGiftAdapter(private val context: Context) : RecyclerView.Adapter<MyGiftA
         holder.binding.tvCancelReserv.visibility = View.GONE
         holder.binding.constView.setBackgroundColor(Color.parseColor("#F8F8F8"))
         holder.binding.tvDate.setCompoundDrawablesRelativeWithIntrinsicBounds(
-            holder.itemView.context.getDrawable(R.drawable.calendar_black_resize), // 시작 부분 Drawable 설정
-            null,     // 위쪽 Drawable 설정 (null이면 이전 설정 유지)
-            null,     // 끝 부분 Drawable 설정 (null이면 이전 설정 유지)
-            null      // 아래쪽 Drawable 설정 (null이면 이전 설정 유지)
+            holder.itemView.context.getDrawable(R.drawable.calendar_black_resize),
+            null,
+            null,
+            null
         )
         holder.binding.tvTime.setCompoundDrawablesRelativeWithIntrinsicBounds(
-            holder.itemView.context.getDrawable(R.drawable.time_black_resize), // 시작 부분 Drawable 설정
-            null,     // 위쪽 Drawable 설정 (null이면 이전 설정 유지)
-            null,     // 끝 부분 Drawable 설정 (null이면 이전 설정 유지)
-            null      // 아래쪽 Drawable 설정 (null이면 이전 설정 유지)
+            holder.itemView.context.getDrawable(R.drawable.time_black_resize),
+            null,
+            null,
+            null
         )
         holder.binding.tvDate.setBackgroundResource(R.drawable.tv_date_unselected)
         holder.binding.tvTime.setBackgroundResource(R.drawable.tv_date_unselected)

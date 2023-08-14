@@ -15,7 +15,7 @@
     </fragment>
     <fragment
         android:id="@+id/mypageFragment"
-        android:name="com.shall_we.MypageFragment"
+        android:name="com.shall_we.mypage.MypageFragment"
         android:label="fragment_mypage"
         tools:layout="@layout/fragment_mypage" >
         <action
@@ -51,7 +51,7 @@
     </fragment>
     <fragment
         android:id="@+id/myAlbumFragment"
-        android:name="com.shall_we.mypage.MyAlbumFragment"
+        android:name="com.shall_we.myAlbum.MyAlbumFragment"
         android:label="fragment_my_album"
         tools:layout="@layout/fragment_my_album" >
     <action
