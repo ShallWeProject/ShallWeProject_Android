@@ -1,23 +1,18 @@
-package com.shall_we
+package com.shall_we.mypage
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.addCallback
-import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.shall_we.R
 import com.shall_we.databinding.FragmentMypageBinding
-import com.shall_we.mypage.MyAlbumFragment
-import com.shall_we.mypage.MypageVPAdapter
+import com.shall_we.myAlbum.MyAlbumFragment
 
 public var isTabLayoutVisible = true
 
@@ -53,6 +48,55 @@ class MypageFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 //        binding.fabAlbum.show()
+
+        binding.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                // 선택된 탭의 인덱스를 얻습니다.
+                val selectedTabIndex = tab?.position ?: 2
+                // 이제 선택된 탭에 대한 작업을 수행할 수 있습니다.
+                // 예: 선택된 탭의 인덱스를 이용해 데이터를 업데이트하거나 다른 동작 수행.
+                if (selectedTabIndex == 0) {
+                    binding.fabAlbum.visibility = View.VISIBLE
+                }
+                else {
+                    binding.fabAlbum.visibility = View.GONE
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+            }
+        })
+
+        binding.fabAlbum.setOnClickListener {
+
+//            findNavController().navigate(
+//                R.id.myalbum
+//            )
+//            val myAlbumFragment = MyAlbumFragment() // 전환할 프래그먼트 인스턴스 생성
+//            val fragmentTransaction = parentFragmentManager.beginTransaction()
+//            fragmentTransaction.add(R.id.mypage_layout, myAlbumFragment, "get")
+//            fragmentTransaction.addToBackStack(null)
+//            fragmentTransaction.commitAllowingStateLoss()
+//            Log.d("clicked","change")
+
+            val tabs = requireActivity().findViewById<View>(R.id.tabs)
+            tabs.visibility = View.GONE
+//            mypageBinding.tabs.visibility = View.GONE
+            // 상태 토글
+//            isTabLayoutVisible = !isTabLayoutVisible
+
+            binding.fabAlbum.visibility = View.GONE
+            val myAlbumFragment = MyAlbumFragment()
+            val fragmentTransaction = parentFragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.mypage_layout, myAlbumFragment, "myAlbumFragment")
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commitAllowingStateLoss()
+            Log.d("clicked","change")
+        }
+
         return binding.root
     }
 

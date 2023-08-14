@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="20dp"
     android:background="@drawable/iv_photo_viewer"
-    android:backgroundTint="@color/white">
+        android:backgroundTint="@color/white">
 
     <ImageView
         android:layout_width="wrap_content"

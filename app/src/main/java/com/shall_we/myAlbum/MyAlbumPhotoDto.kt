@@ -1,4 +1,4 @@
-package com.shall_we.mypage
+package com.shall_we.myAlbum
 
 data class MyAlbumPhotoDto(
     val imgUrl: Int,

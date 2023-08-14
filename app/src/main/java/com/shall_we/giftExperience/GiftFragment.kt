@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.graphics.createBitmap
-import com.shall_we.MypageFragment
+import com.shall_we.mypage.MypageFragment
 import com.shall_we.R
 import com.shall_we.base.BaseFragment
 import com.shall_we.databinding.FragmentExperienceDetailBinding

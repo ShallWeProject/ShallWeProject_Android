@@ -1,4 +1,4 @@
-package com.shall_we.mypage
+package com.shall_we.myAlbum
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import com.shall_we.R
 import com.shall_we.databinding.FragmentMyAlbumBinding
+import com.shall_we.mypage.MyGiftAdapter
+import com.shall_we.mypage.MyGiftDto
 
 class MyAlbumFragment : Fragment() {
     private lateinit var viewBinding: FragmentMyAlbumBinding
@@ -30,7 +32,7 @@ class MyAlbumFragment : Fragment() {
 //        (activity as AppCompatActivity).findViewById<ExtendedFloatingActionButton>(R.id.fab_album).show()
 
         viewBinding.ivLeft.setOnClickListener {
-            val newFragment = MyAlbumFragment.newInstance("", "")
+            val newFragment = newInstance("", "")
             val fragmentTransaction = parentFragmentManager.beginTransaction()
             fragmentTransaction.replace(R.id.myalbum, newFragment, "myAlbumFragment")
             fragmentTransaction.addToBackStack(null)
@@ -39,7 +41,7 @@ class MyAlbumFragment : Fragment() {
 
 
         viewBinding.ivRight.setOnClickListener {
-            val newFragment = MyAlbumFragment.newInstance("", "")
+            val newFragment = newInstance("", "")
             val fragmentTransaction = parentFragmentManager.beginTransaction()
             fragmentTransaction.replace(R.id.myalbum, newFragment, "myAlbumFragment")
             fragmentTransaction.addToBackStack(null)
