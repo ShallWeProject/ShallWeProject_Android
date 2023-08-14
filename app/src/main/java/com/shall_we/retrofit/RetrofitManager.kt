@@ -22,7 +22,7 @@ class RetrofitManager {
         call.enqueue(object : retrofit2.Callback<JsonElement>{
             // 응답 성공
             override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
-                Log.d("retrofit","RetrofitManager - onResponse() called / response : ${response.body()}")
+                Log.d("retrofit","RetrofitManager - onResponse() called / response : ${response.code()}")
 
                 when(response.code()){
                     200 -> {
@@ -66,7 +66,7 @@ class RetrofitManager {
         call.enqueue(object : retrofit2.Callback<JsonElement>{
             // 응답 성공
             override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
-                Log.d("retrofit","RetrofitManager - onResponse() called / response : ${response.body()}")
+                Log.d("retrofit","RetrofitManager - onResponse() called / response : ${response.code()}")
 
                 when(response.code()){
                     200 -> {
@@ -110,7 +110,7 @@ class RetrofitManager {
         call.enqueue(object : retrofit2.Callback<JsonElement>{
             // 응답 성공
             override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
-                Log.d("retrofit","RetrofitManager - onResponse() called / response : ${response.body()}")
+                Log.d("retrofit","RetrofitManager - onResponse() called / response : ${response.code()}")
 
                 when(response.code()){
                     200 -> {

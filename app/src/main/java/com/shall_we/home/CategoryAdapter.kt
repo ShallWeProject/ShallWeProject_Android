@@ -5,8 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import androidx.core.content.ContextCompat
-import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.shall_we.R
 
@@ -14,6 +12,18 @@ import com.shall_we.R
 class CategoryAdapter (private val context: Context) : RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
     var datas = mutableListOf<CategoryData>()
     private var selectedItemIndex = 0 // 선택된 아이템의 인덱스
+
+    private var itemClickListener: OnItemClickListener? = null
+
+    // 클릭 리스너 인터페이스 정의
+    interface OnItemClickListener {
+        fun onItemClick(position: Int)
+    }
+
+    fun setOnItemClickListener(listener: OnItemClickListener) {
+        itemClickListener = listener
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_realtime_category,parent,false)
         return ViewHolder(view)
@@ -36,6 +46,7 @@ class CategoryAdapter (private val context: Context) : RecyclerView.Adapter<Cate
         holder.categoryBtn.setOnClickListener {
             // 선택된 아이템의 인덱스를 설정하고 변경을 알림
             setSelectedItemIndex(position)
+            itemClickListener?.onItemClick(position)
             notifyDataSetChanged()
         }
     }
@@ -43,16 +54,14 @@ class CategoryAdapter (private val context: Context) : RecyclerView.Adapter<Cate
         selectedItemIndex = index
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
-
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val categoryBtn: Button = itemView.findViewById(R.id.category_btn)
 
         fun bind(item: CategoryData) {
             categoryBtn.text = item.name
-
-
         }
     }
+
+
 
 }

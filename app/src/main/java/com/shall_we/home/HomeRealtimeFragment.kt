@@ -21,9 +21,11 @@ import com.shall_we.retrofit.RetrofitManager
 import com.shall_we.utils.initProductRecycler
 
 
-class HomeRealtimeFragment : Fragment(), ProductAdapter.OnItemClickListener {
+class HomeRealtimeFragment : Fragment(), ProductAdapter.OnItemClickListener, CategoryAdapter.OnItemClickListener{
     lateinit var textView : TextView
     lateinit var categoryAdapter: CategoryAdapter
+
+    lateinit var rvRealtime : RecyclerView
 
     val categoryData = mutableListOf<CategoryData>()
 
@@ -43,28 +45,23 @@ class HomeRealtimeFragment : Fragment(), ProductAdapter.OnItemClickListener {
             .commit()
     }
 
+    override fun onItemClick(position: Int) {
+        RetrofitCall(rvRealtime, position)
+    }
+
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val binding = FragmentHomeRealtimeBinding.inflate(inflater,container,false)
+
+        rvRealtime = binding.rvRealtime
+
         initCategoryRecycler(binding.rvCategory)
-        RetrofitManager.instance.experienceGiftSttCategory(categoryId = 1, category = "가격높은순", completion = { // 카테고리별 경험으로 바꾸기
-                responseState, responseBody ->
-            when(responseState){
-                RESPONSE_STATE.OKAY -> {
-                    Log.d("retrofit", "api 호출 성공1 : ${responseBody?.size}")
-//                    initRecycler(binding.rvRealtime, binding.rvCategory, responseBody!!)
-                    initProductRecycler(binding.rvRealtime, responseBody!!)
 
-
-                }
-                RESPONSE_STATE.FAIL -> {
-                    Log.d("retrofit", "api 호출 에러")
-                }
-            }
-        })
-
+        RetrofitCall(rvRealtime, 1)
 
         // 1. TextView 참조
         textView = binding.realtimeText
@@ -84,8 +81,10 @@ class HomeRealtimeFragment : Fragment(), ProductAdapter.OnItemClickListener {
         return binding.root
     }
 
-    private fun initCategoryRecycler(rvCategory: RecyclerView) {
+    fun initCategoryRecycler(rvCategory: RecyclerView) {
         categoryAdapter = CategoryAdapter(requireContext())
+        categoryAdapter.setOnItemClickListener(this)
+
         rvCategory.adapter = categoryAdapter
 
         categoryData.apply {
@@ -95,11 +94,9 @@ class HomeRealtimeFragment : Fragment(), ProductAdapter.OnItemClickListener {
             add(CategoryData(name = "문화예술"))
             add(CategoryData(name = "아웃도어"))
             add(CategoryData(name = "스포츠"))
-
-            categoryAdapter.datas = categoryData
-            categoryAdapter.notifyDataSetChanged()
-
         }
+        categoryAdapter.datas = categoryData
+        categoryAdapter.notifyDataSetChanged()
 
         val spaceDecoration = HomeRecomFragment.HorizontalSpaceItemDecoration(dpToPx(7))
         rvCategory.addItemDecoration(spaceDecoration)
@@ -130,7 +127,18 @@ class HomeRealtimeFragment : Fragment(), ProductAdapter.OnItemClickListener {
         }
 
     }
-
-
-
+    fun RetrofitCall(rv : RecyclerView, categoryId : Int){
+        RetrofitManager.instance.experienceGiftSttCategory(categoryId = categoryId, category = "가격높은순", completion = { // 카테고리별 경험으로 바꾸기
+                responseState, responseBody ->
+            when(responseState){
+                RESPONSE_STATE.OKAY -> {
+                    Log.d("retrofit", "category api : ${responseBody?.size}")
+                    initProductRecycler(rv, responseBody!!)
+                }
+                RESPONSE_STATE.FAIL -> {
+                    Log.d("retrofit", "api 호출 에러")
+                }
+            }
+        })
+    }
 }

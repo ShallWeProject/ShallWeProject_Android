@@ -4,14 +4,11 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.shall_we.App
 import com.shall_we.R
 
 class ProductAdapter(private val context: Context) : RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
@@ -42,12 +39,7 @@ class ProductAdapter(private val context: Context) : RecyclerView.Adapter<Produc
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(datas[position])
 
-
-
-
     }
-
-
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val constraintLayout: ConstraintLayout = itemView.findViewById(R.id.constraintLayout)

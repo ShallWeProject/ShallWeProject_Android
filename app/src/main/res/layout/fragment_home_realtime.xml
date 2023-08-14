@@ -18,7 +18,7 @@
         android:layout_marginTop="16dp"
         android:text="실시간 인기 경험"
         android:textColor="@color/black"
-        android:textSize="15sp"
+        android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -28,8 +28,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
+        android:layout_marginEnd="16dp"
         android:orientation="horizontal"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/realtimeText"
         app:layout_constraintTop_toBottomOf="@+id/realtimeText"
         tools:listitem="@layout/item_realtime_category" />

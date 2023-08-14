@@ -16,7 +16,7 @@
         android:layout_marginTop="16dp"
         android:text="상황별 추천 경험"
         android:textColor="@color/black"
-        android:textSize="15sp"
+        android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
