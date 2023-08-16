@@ -18,6 +18,8 @@ import com.shall_we.R
 import com.shall_we.databinding.FragmentHomeRealtimeBinding
 import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RetrofitManager
+import com.shall_we.utils.HorizontalSpaceItemDecoration
+import com.shall_we.utils.dpToPx
 import com.shall_we.utils.initProductRecycler
 
 
@@ -26,6 +28,7 @@ class HomeRealtimeFragment : Fragment(), ProductAdapter.OnItemClickListener, Cat
     lateinit var categoryAdapter: CategoryAdapter
 
     lateinit var rvRealtime : RecyclerView
+    lateinit var rvCategory: RecyclerView
 
     val categoryData = mutableListOf<CategoryData>()
 
@@ -58,6 +61,7 @@ class HomeRealtimeFragment : Fragment(), ProductAdapter.OnItemClickListener, Cat
         val binding = FragmentHomeRealtimeBinding.inflate(inflater,container,false)
 
         rvRealtime = binding.rvRealtime
+        rvCategory = binding.rvCategory
 
         initCategoryRecycler(binding.rvCategory)
 
@@ -81,7 +85,7 @@ class HomeRealtimeFragment : Fragment(), ProductAdapter.OnItemClickListener, Cat
         return binding.root
     }
 
-    fun initCategoryRecycler(rvCategory: RecyclerView) {
+    private fun initCategoryRecycler(rvCategory: RecyclerView) {
         categoryAdapter = CategoryAdapter(requireContext())
         categoryAdapter.setOnItemClickListener(this)
 
@@ -94,41 +98,20 @@ class HomeRealtimeFragment : Fragment(), ProductAdapter.OnItemClickListener, Cat
             add(CategoryData(name = "문화예술"))
             add(CategoryData(name = "아웃도어"))
             add(CategoryData(name = "스포츠"))
-        }
-        categoryAdapter.datas = categoryData
-        categoryAdapter.notifyDataSetChanged()
 
-        val spaceDecoration = HomeRecomFragment.HorizontalSpaceItemDecoration(dpToPx(7))
+            categoryAdapter.datas = categoryData
+            categoryAdapter.notifyDataSetChanged()
+        }
+
+
+        val spaceDecoration = HorizontalSpaceItemDecoration(dpToPx(7))
         rvCategory.addItemDecoration(spaceDecoration)
 
     }
 
 
-    class GridSpaceItemDecoration(private val spanCount: Int, private val space: Int): RecyclerView.ItemDecoration() {
-
-        override fun getItemOffsets(
-            outRect: Rect,
-            view: View,
-            parent: RecyclerView,
-            state: RecyclerView.State
-        ) {
-            val position = parent.getChildAdapterPosition(view)
-            val column = position % spanCount + 1      // 1부터 시작
-
-            /** 첫번째 행(row-1) 이후부터 있는 아이템에만 상단에 [space] 만큼의 여백을 추가한다. 즉, 첫번째 행에 있는 아이템에는 상단에 여백을 주지 않는다.*/
-            if (position >= spanCount){
-                outRect.top = space
-            }
-            /** 첫번째 열이 아닌(None Column-1) 아이템들만 좌측에 [space] 만큼의 여백을 추가한다. 즉, 첫번째 열에 있는 아이템에는 좌측에 여백을 주지 않는다. */
-            if (column != 1){
-                outRect.left = space
-            }
-
-        }
-
-    }
     fun RetrofitCall(rv : RecyclerView, categoryId : Int){
-        RetrofitManager.instance.experienceGiftSttCategory(categoryId = categoryId, category = "가격높은순", completion = { // 카테고리별 경험으로 바꾸기
+        RetrofitManager.instance.experienceGiftExpCategory(categoryId = categoryId, category = "인기순", completion = {
                 responseState, responseBody ->
             when(responseState){
                 RESPONSE_STATE.OKAY -> {

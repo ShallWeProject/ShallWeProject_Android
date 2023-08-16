@@ -13,8 +13,9 @@ import com.shall_we.MainActivity
 import com.shall_we.R
 import com.shall_we.databinding.FragmentDrawerHelpBinding
 import com.shall_we.home.HomeRecomFragment
-import com.shall_we.home.dpToPx
 import com.shall_we.mypage.FaqFragment
+import com.shall_we.utils.HorizontalSpaceItemDecoration
+import com.shall_we.utils.dpToPx
 
 class DrawerHelpFragment : Fragment(), DrawerAdapter.OnItemClickListener  {
     lateinit var drawerAdapter: DrawerAdapter
@@ -81,7 +82,7 @@ class DrawerHelpFragment : Fragment(), DrawerAdapter.OnItemClickListener  {
 
 
         }
-        val spaceDecoration = HomeRecomFragment.HorizontalSpaceItemDecoration(dpToPx(15))
+        val spaceDecoration = HorizontalSpaceItemDecoration(dpToPx(15))
         rv.addItemDecoration(spaceDecoration)
 
 

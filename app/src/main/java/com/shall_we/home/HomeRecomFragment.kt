@@ -15,6 +15,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.shall_we.R
 import com.shall_we.databinding.FragmentHomeRecomBinding
+import com.shall_we.utils.HorizontalSpaceItemDecoration
+import com.shall_we.utils.dpToPx
 
 
 class HomeRecomFragment : Fragment(){
@@ -80,18 +82,6 @@ class HomeRecomFragment : Fragment(){
     }
 
 
-    class HorizontalSpaceItemDecoration(private val horizontalSpaceWidth:Int):RecyclerView.ItemDecoration(){
-        override fun getItemOffsets(
-            outRect: Rect,
-            view: View,
-            parent: RecyclerView,
-            state: RecyclerView.State
-        ) {
-            outRect.right = horizontalSpaceWidth
-        }
-    }
-
-
 }
 
 
@@ -100,11 +90,3 @@ data class RecomData (
     val img : Int,
     val name : String,
 )
-
-fun dpToPx(dp: Int) : Int{
-    return TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP,
-        dp.toFloat(),
-        Resources.getSystem().displayMetrics).toInt()
-
-}

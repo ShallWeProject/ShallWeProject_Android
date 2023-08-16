@@ -1,7 +1,6 @@
 package com.shall_we.search
 
 import android.annotation.SuppressLint
-import android.app.appsearch.SearchResult
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
@@ -14,18 +13,13 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.widget.SearchView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.shall_we.ExperienceDetail.ExperienceDetailFragment
 import com.shall_we.R
 import com.shall_we.databinding.FragmentSearchBinding
-import com.shall_we.home.dpToPx
 import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RetrofitManager
 import com.shall_we.utils.SharedPrefManager

@@ -21,7 +21,9 @@ import com.shall_we.utils.initProductRecycler
 
 class ProductListFragment : Fragment() {
     var category : Boolean = true
-
+    var spinnerString : String = "인기순"
+    var tabPosition : Int = 0
+    lateinit var rvProduct : RecyclerView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -33,33 +35,34 @@ class ProductListFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val binding = FragmentProductListBinding.inflate(inflater,container,false)
-        // 포지션 가져오기 & 선택한 탭으로 초기화
-        val position = arguments?.getInt("position", 0)
         val tab = arguments?.getString("tab", "경험카테고리")
+        tabPosition = arguments?.getInt("position", 0)!!
+        this.rvProduct = binding.rvProduct
 
         //tabbar 설정
         val tabLayout: TabLayout = binding.tabLayout
         val tabCount: Int = tabLayout.tabCount
-        for (i in 0 until tabCount) {
-            val tab: TabLayout.Tab? = tabLayout.getTabAt(i)
-            tab?.let {
-                val tabLayoutParams: LinearLayout.LayoutParams =
-                    tab.view.layoutParams as LinearLayout.LayoutParams
-                when (i) { // 탭바 너비 글자수에 맞춰서
-                    0, 1 -> tabLayoutParams.weight = 36f
-                    2 -> tabLayoutParams.weight = 49f
-                    3 -> tabLayoutParams.weight = 67f
-                    else -> tabLayoutParams.weight = 80f
-                }
-                tab.view.layoutParams = tabLayoutParams
-            }
-        }
+
         if(tab == "경험카테고리"){
             val tabArray = arrayOf("공예","베이킹","문화예술","아웃도어","스포츠")
             category = false
             for (i in 0 until tabLayout.tabCount) {
                 val tab = tabLayout.getTabAt(i)
                 tab?.text = tabArray[i].toString()
+            }
+            for (i in 0 until tabCount) {
+                val tab: TabLayout.Tab? = tabLayout.getTabAt(i)
+                tab?.let {
+                    val tabLayoutParams: LinearLayout.LayoutParams =
+                        tab.view.layoutParams as LinearLayout.LayoutParams
+                    when (i) { // 탭바 너비 글자수에 맞춰서
+                        0, 1 -> tabLayoutParams.weight = 36f
+                        2 -> tabLayoutParams.weight = 49f
+                        3 -> tabLayoutParams.weight = 49f
+                        else -> tabLayoutParams.weight = 36f
+                    }
+                    tab.view.layoutParams = tabLayoutParams
+                }
             }
         }
         else {
@@ -69,21 +72,29 @@ class ProductListFragment : Fragment() {
                 val tab = tabLayout.getTabAt(i)
                 tab?.text = tabArray[i].toString()
             }
+            for (i in 0 until tabCount) {
+                val tab: TabLayout.Tab? = tabLayout.getTabAt(i)
+                tab?.let {
+                    val tabLayoutParams: LinearLayout.LayoutParams =
+                        tab.view.layoutParams as LinearLayout.LayoutParams
+                    when (i) { // 탭바 너비 글자수에 맞춰서
+                        0, 1 -> tabLayoutParams.weight = 36f
+                        2 -> tabLayoutParams.weight = 49f
+                        3 -> tabLayoutParams.weight = 67f
+                        else -> tabLayoutParams.weight = 80f
+                    }
+                    tab.view.layoutParams = tabLayoutParams
+                }
+            }
         }
 
-        setSelectedTab(binding.tabLayout, position ?: 0)
-        val data = retrofitCall(category, 1,binding.rvProduct)
-
-        initSpinner(binding.spinner)
-
-
-
+        setSelectedTab(binding.tabLayout, tabPosition)
 
         tabLayout.tabMode = TabLayout.MODE_FIXED
 
         tabLayout.addOnTabSelectedListener(object :TabLayout.OnTabSelectedListener{
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                tab?.position?.let { retrofitCall(category, it, binding.rvProduct) }
+                tab?.position?.let { tabPosition = it }
                 initSpinner(binding.spinner)
             }
 
@@ -96,6 +107,7 @@ class ProductListFragment : Fragment() {
 
         })
 
+        initSpinner(binding.spinner)
 
         return binding.root
     }
@@ -126,35 +138,35 @@ class ProductListFragment : Fragment() {
                 //아이템이 클릭 되면 맨 위부터 position 0번부터 순서대로 동작하게 됩니다.
                 when (position) {
                     0 -> {
-                        Log.d("spinner", "0")
+                        spinnerString = "인기순"
                     }
 
                     1 -> {
-                        Log.d("spinner", "1")
-
+                        spinnerString = "최근순"
                     }
-                    //...
-                    else -> {
-                        Log.d("spinner", "---")
-
+                    2->{
+                        spinnerString = "가격높은순"
+                    }
+                    3 -> {
+                        spinnerString = "가격낮은순"
                     }
                 }
+                retrofitCall()
             }
             override fun onNothingSelected(parent: AdapterView<*>) {
             }
         }
-
     }
 
-    private fun retrofitCall(sttCategory : Boolean, categoryId : Int, rv:RecyclerView) {
-        if(sttCategory == true){
-            RetrofitManager.instance.experienceGiftSttCategory(categoryId = 1, category = "가격높은순" // category 번호로 바꾸기
+    private fun retrofitCall() {
+        if(category){
+            RetrofitManager.instance.experienceGiftSttCategory(categoryId = tabPosition+1, category = spinnerString // category 번호로 바꾸기
             ) {
                     responseState, responseBody ->
                 when (responseState) {
                     RESPONSE_STATE.OKAY -> {
-                        Log.d("retrofit", "api 호출 성공1 : ${responseBody!!}")
-                        initProductRecycler(rv,responseBody)
+                        Log.d("retrofit", "api 호출 성공1 : $tabPosition $category ${responseBody?.size}")
+                        initProductRecycler(rvProduct,responseBody!!)
                     }
 
                     RESPONSE_STATE.FAIL -> {
@@ -165,20 +177,18 @@ class ProductListFragment : Fragment() {
             }
         }
         else {
-//            RetrofitManager.instance.experienceGiftExpCategory(categoryId = categoryId, category = "가격높은순" ) {
-//                    responseState, responseBody ->
-//                when (responseState) {
-//                    RESPONSE_STATE.OKAY -> {
-//                        Log.d("retrofit", "api 호출 성공1 : ${responseBody!!}")
-//                        initProductRecycler(rv,responseBody)
-//                    }
-//
-//                    RESPONSE_STATE.FAIL -> {
-//                        Log.d("retrofit", "api 호출 에러")
-//                    }
-//                }
-
-//            }
+            RetrofitManager.instance.experienceGiftExpCategory(categoryId = tabPosition+1, category = spinnerString, completion = { // 카테고리별 경험으로 바꾸기
+                    responseState, responseBody ->
+                when(responseState){
+                    RESPONSE_STATE.OKAY -> {
+                        Log.d("retrofit", "api 호출 성공1 : ${responseBody!!}")
+                        initProductRecycler(rvProduct, responseBody)
+                    }
+                    RESPONSE_STATE.FAIL -> {
+                        Log.d("retrofit", "api 호출 에러")
+                    }
+                }
+            })
         }
     }
 

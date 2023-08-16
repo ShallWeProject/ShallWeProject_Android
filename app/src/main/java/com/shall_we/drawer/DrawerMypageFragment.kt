@@ -15,7 +15,8 @@ import com.shall_we.mypage.MypageFragment
 import com.shall_we.R
 import com.shall_we.databinding.FragmentDrawerMypageBinding
 import com.shall_we.home.HomeRecomFragment
-import com.shall_we.home.dpToPx
+import com.shall_we.utils.HorizontalSpaceItemDecoration
+import com.shall_we.utils.dpToPx
 
 class DrawerMypageFragment : Fragment(), DrawerAdapter.OnItemClickListener {
     lateinit var drawerAdapter: DrawerAdapter
@@ -81,7 +82,7 @@ class DrawerMypageFragment : Fragment(), DrawerAdapter.OnItemClickListener {
 
 
         }
-        val spaceDecoration = HomeRecomFragment.HorizontalSpaceItemDecoration(dpToPx(15))
+        val spaceDecoration = HorizontalSpaceItemDecoration(dpToPx(15))
         rv.addItemDecoration(spaceDecoration)
 
 
