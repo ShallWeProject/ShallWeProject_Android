@@ -1,6 +1,5 @@
 package com.shall_we.home
 
-import android.graphics.Rect
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.text.Spanned
@@ -11,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.shall_we.ExperienceDetail.ExperienceDetailFragment
 import com.shall_we.R
@@ -38,7 +36,7 @@ class HomeRealtimeFragment : Fragment(), ProductAdapter.OnItemClickListener, Cat
         // 클릭된 아이템의 정보를 사용하여 다른 프래그먼트로 전환하는 로직을 작성
         val newFragment = ExperienceDetailFragment() // 전환할 다른 프래그먼트 객체 생성
         val bundle = Bundle()
-        bundle.putString("title", item.title) // 클릭된 아이템의 이름을 "title" 키로 전달
+        bundle.putInt("id", item.giftid) // 클릭된 아이템의 이름을 "title" 키로 전달
         newFragment.arguments = bundle
 
         // 프래그먼트 전환
@@ -116,7 +114,7 @@ class HomeRealtimeFragment : Fragment(), ProductAdapter.OnItemClickListener, Cat
             when(responseState){
                 RESPONSE_STATE.OKAY -> {
                     Log.d("retrofit", "category api : ${responseBody?.size}")
-                    initProductRecycler(rv, responseBody!!)
+                    initProductRecycler(rv, responseBody!!,this)
                 }
                 RESPONSE_STATE.FAIL -> {
                     Log.d("retrofit", "api 호출 에러")

@@ -1,28 +1,40 @@
 package com.shall_we.search
 
-import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
+import com.shall_we.ExperienceDetail.ExperienceDetailFragment
 import com.shall_we.R
 import com.shall_we.base.BaseFragment
 import com.shall_we.databinding.FragmentSearchResultBinding
+import com.shall_we.home.ProductAdapter
 import com.shall_we.home.ProductData
 import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RetrofitManager
 import com.shall_we.utils.initProductRecycler
 import retrofit2.Retrofit
 
-class SearchResultFragment : BaseFragment<FragmentSearchResultBinding>(R.layout.fragment_search_result) {
+class SearchResultFragment : BaseFragment<FragmentSearchResultBinding>(R.layout.fragment_search_result) , ProductAdapter.OnItemClickListener{
     lateinit var rv_search_result : RecyclerView
     lateinit var no_result : TextView
 
+    override fun onItemClick(item: ProductData) {
+        // 클릭된 아이템의 정보를 사용하여 다른 프래그먼트로 전환하는 로직을 작성
+        val newFragment = ExperienceDetailFragment() // 전환할 다른 프래그먼트 객체 생성
+        val bundle = Bundle()
+        bundle.putInt("id", item.giftid) // 클릭된 아이템의 이름을 "title" 키로 전달
+        newFragment.arguments = bundle
+
+        // 프래그먼트 전환
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.home_layout, newFragment)
+            .addToBackStack(null)
+            .commit()
+    }
 
     override fun init() {
         rv_search_result = binding.rvSearchResult
@@ -42,7 +54,7 @@ class SearchResultFragment : BaseFragment<FragmentSearchResultBinding>(R.layout.
             val data = arguments?.getSerializable("data") as ArrayList<ProductData>
             rv_search_result.visibility = View.VISIBLE
             no_result.visibility = View.GONE
-            initProductRecycler(rv_search_result, data)
+            initProductRecycler(rv_search_result, data,this)
         }
     }
 

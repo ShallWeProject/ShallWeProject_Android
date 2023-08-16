@@ -123,7 +123,7 @@ class RetrofitManager {
                             data.forEach { resultItem ->
                                 val resultItemObject = resultItem.asJsonObject
                                 val title : String = resultItemObject.get("title").asString
-                                val subtitle : String = resultItemObject.get("subtitleTitle").asString
+                                val subtitle : String = resultItemObject.get("subtitle").asString
                                 val price : String = resultItemObject.get("price").asString
                                 val formattedPrice = String.format("%,d", price.toInt())
 
