@@ -15,8 +15,8 @@ import com.shall_we.MainActivity
 import com.shall_we.R
 import com.shall_we.databinding.FragmentDrawerExBinding
 import com.shall_we.home.ProductListFragment
-import com.shall_we.home.dpToPx
 import com.shall_we.utils.SpaceItemDecoration
+import com.shall_we.utils.dpToPx
 
 class DrawerExFragment : Fragment(), DrawerAdapter.OnItemClickListener {
 

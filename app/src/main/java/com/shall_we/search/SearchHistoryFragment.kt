@@ -16,11 +16,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.shall_we.R
 import com.shall_we.base.BaseFragment
 import com.shall_we.databinding.FragmentSearchHistoryBinding
-import com.shall_we.home.dpToPx
 import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RetrofitManager
 import com.shall_we.utils.SharedPrefManager
 import com.shall_we.utils.SpaceItemDecoration
+import com.shall_we.utils.dpToPx
 
 class SearchHistoryFragment : BaseFragment<FragmentSearchHistoryBinding>(R.layout.fragment_search_history), ISearchHistoryRecycler {
     lateinit var box_recent : ConstraintLayout

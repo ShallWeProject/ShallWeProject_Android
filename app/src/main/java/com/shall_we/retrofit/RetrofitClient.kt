@@ -27,8 +27,6 @@ object RetrofitClient {
     }
     // 레트로핏 클라이언트 가져오기
     fun getClient(baseUrl : String): Retrofit? {
-        Log.d("retrofit", "RetrofitClient - getClient() called")
-
         if(retrofitClient == null){
             val httpClient = OkHttpClient.Builder()
                 .addInterceptor(authInterceptor)
