@@ -20,6 +20,11 @@ class ExperienceDetailFragment: BaseFragment<FragmentExperienceDetailBinding>(R.
      //   initAppbar(binding.exdetailToolbar, "경험상세", true, false)
         initTab()
 
+        val giftid = arguments?.getInt("id", 1)
+
+        Log.d("id","$giftid")
+
+
         binding.fab.setOnClickListener()
         {
             Log.d("clicked","clicked")
