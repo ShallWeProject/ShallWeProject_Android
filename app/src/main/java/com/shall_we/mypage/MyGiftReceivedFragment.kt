@@ -14,7 +14,7 @@ class MyGiftReceivedFragment : Fragment() {
     private lateinit var viewBinding: FragmentMyGiftReceivedBinding
     private lateinit var adapter: MyGiftAdapter
 
-    val giftData = mutableListOf<MyGiftDto>()
+    val giftData = mutableListOf<MyGiftData>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -36,7 +36,7 @@ class MyGiftReceivedFragment : Fragment() {
 
         giftData.apply {
             add(
-                MyGiftDto(
+                MyGiftData(
                     1,
                     "[홍대] 인기 공예 클래스",
                     "테마가 있는 프라이빗 칵테일 클래스",
@@ -49,7 +49,7 @@ class MyGiftReceivedFragment : Fragment() {
                 )
             )
             add(
-                MyGiftDto(
+                MyGiftData(
                     2,
                     "[성수] 인기 베이킹 클래스",
                     "기념일 레터링 케이크 사지 말고 함께 만들어요",
