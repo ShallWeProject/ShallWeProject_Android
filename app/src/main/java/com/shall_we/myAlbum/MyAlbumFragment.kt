@@ -9,15 +9,15 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.shall_we.R
 import com.shall_we.databinding.FragmentMyAlbumBinding
 import com.shall_we.mypage.MyGiftAdapter
-import com.shall_we.mypage.MyGiftDto
+import com.shall_we.mypage.MyGiftData
 
 class MyAlbumFragment : Fragment() {
     private lateinit var viewBinding: FragmentMyAlbumBinding
     private lateinit var albumadapter: MyAlbumAdapter
     private lateinit var giftAdapter: MyGiftAdapter
 
-    val albumData = mutableListOf<MyAlbumPhotoDto>()
-    val giftData = mutableListOf<MyGiftDto>()
+    val albumData = mutableListOf<MyAlbumPhotoData>()
+    val giftData = mutableListOf<MyGiftData>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,42 +65,42 @@ class MyAlbumFragment : Fragment() {
 
         albumData.apply {
             add(
-                MyAlbumPhotoDto(
+                MyAlbumPhotoData(
                     R.drawable.add_photo
                 )
             )
             add(
-                MyAlbumPhotoDto(
+                MyAlbumPhotoData(
                     R.drawable.person1
                 )
             )
             add(
-                MyAlbumPhotoDto(
+                MyAlbumPhotoData(
                     R.drawable.photo_big
                 )
             )
             add(
-                MyAlbumPhotoDto(
+                MyAlbumPhotoData(
                     R.drawable.person1
                 )
             )
             add(
-                MyAlbumPhotoDto(
+                MyAlbumPhotoData(
                     R.drawable.person1
                 )
             )
             add(
-                MyAlbumPhotoDto(
+                MyAlbumPhotoData(
                     R.drawable.person1
                 )
             )
             add(
-                MyAlbumPhotoDto(
+                MyAlbumPhotoData(
                     R.drawable.person1
                 )
             )
             add(
-                MyAlbumPhotoDto(
+                MyAlbumPhotoData(
                     R.drawable.person1
                 )
             )

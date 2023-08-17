@@ -2,28 +2,23 @@ package com.shall_we.mypage
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 
 import androidx.recyclerview.widget.RecyclerView
 import com.shall_we.R
-import com.shall_we.changeReservation.ChangeReservationFragment
 import com.shall_we.databinding.ItemGiftboxBinding
 import com.shall_we.giftExperience.GiftExperienceFragment
-import com.shall_we.home.HomeFragment
 
 
 class MyGiftAdapter(private val context: Context, private val parentFragmentManager: FragmentManager) : RecyclerView.Adapter<MyGiftAdapter.ViewHolder>(){
-    var datas = mutableListOf<MyGiftDto>()
+    var datas = mutableListOf<MyGiftData>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemGiftboxBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -36,7 +31,6 @@ class MyGiftAdapter(private val context: Context, private val parentFragmentMana
         holder.binding.tvTime.text = data.time
         holder.binding.tvTitle.text = data.title
         holder.binding.tvDescription.text = data.description
-        holder.binding.ivMessage.setImageResource(data.messageImgUrl)
         holder.binding.tvMessage.text = data.message
         holder.binding.tvDate.setCompoundDrawablesRelativeWithIntrinsicBounds(
             holder.itemView.context.getDrawable(R.drawable.calendar_black_resize),
@@ -67,10 +61,6 @@ class MyGiftAdapter(private val context: Context, private val parentFragmentMana
                 changeColorContacted(holder, position)
             } else {
                 changeColorExpanded(holder, position)
-
-                // 이미지 로딩 등의 작업 수행
-                // Glide, Picasso 등의 라이브러리를 사용하여 이미지 로딩
-                // 예시: Glide.with(holder.itemView).load(data.imageUrl).into(holder.binding.imageView)
             }
         }
     }
@@ -79,7 +69,6 @@ class MyGiftAdapter(private val context: Context, private val parentFragmentMana
     private fun changeColorContacted(holder: ViewHolder, position: Int) {
         val data = datas[position]
         holder.binding.tvMessage.visibility = View.GONE
-        holder.binding.ivMessage.visibility = View.GONE
         holder.binding.tvChangeReserv.visibility = View.GONE
         holder.binding.tvCancelReserv.visibility = View.GONE
         holder.binding.constView.setBackgroundColor(Color.parseColor("#F8F8F8"))
@@ -105,7 +94,6 @@ class MyGiftAdapter(private val context: Context, private val parentFragmentMana
     private fun changeColorExpanded(holder: ViewHolder, position: Int) {
         val data = datas[position]
         holder.binding.tvMessage.visibility = View.VISIBLE
-        holder.binding.ivMessage.visibility = View.VISIBLE
         if (data.cancellation == true) {
             holder.binding.tvChangeReserv.visibility = View.VISIBLE
             holder.binding.tvCancelReserv.visibility = View.VISIBLE
@@ -173,18 +161,6 @@ class MyGiftAdapter(private val context: Context, private val parentFragmentMana
             // 예약 취소로 이동
             binding.tvCancelReserv.setOnClickListener {
                 cuDialog(it, position)
-//                val builder = AlertDialog.Builder(this@MyGiftAdapter.context);
-//                builder.setTitle("예약을 취소하시겠습니까?")
-//                    .setMessage("취소하면 불이익이 있을 수 있고 .. 그냥 몰라요 저도 ㅡㄱ만 할래요 ㅠㅠ ㅠ ㅠ")
-//                    .setPositiveButton("예약 취소",
-//                    DialogInterface.OnClickListener{ dialog, id ->
-//                        binding.tvDescription.text = "예약 취소된 선물입니다."
-//                    })
-//                    .setNegativeButton("아니오",
-//                        DialogInterface.OnClickListener{ dialog, id ->
-//                            binding.tvDescription.text = "아무일도안일어남그냥아니오누름."
-//                        })
-//                builder.show()
             }
         }
     }
@@ -202,16 +178,14 @@ class MyGiftAdapter(private val context: Context, private val parentFragmentMana
             Toast.makeText(view.context, "예약이 취소되었습니다.", Toast.LENGTH_SHORT).show()
             datas.apply {
                 removeAt(position)
-//                removeLast() //해당 position의 data 삭제로 코드 변경해야함.
             }
-            notifyDataSetChanged()
+            notifyItemRemoved(position)
+            notifyItemRangeChanged(position, itemCount)
             dialog.dismiss()
         }
         myLayout.findViewById<Button>(R.id.btn_cancel).setOnClickListener {
-            Toast.makeText(view.context,    "Cancel Button Click", Toast.LENGTH_SHORT).show()
             dialog.dismiss()
         }
-
     }
 }
 

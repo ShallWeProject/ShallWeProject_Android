@@ -1,6 +1,6 @@
 package com.shall_we.mypage
 
-data class MyGiftDto(
+data class MyGiftData(
     val idx: Int,
     val title: String,
     val description: String,
