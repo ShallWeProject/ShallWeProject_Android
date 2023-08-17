@@ -1,6 +1,7 @@
 package com.shall_we.retrofit
 
 import com.google.gson.JsonElement
+import com.shall_we.dto.ExperienceGiftDto
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Headers
@@ -17,5 +18,7 @@ interface IRetrofit {
 
     @GET(API.EXPERIENCE_GIFT_SEARCH)
     fun experienceGiftSearch(@Query("title") title : String) : Call<JsonElement>
+
+
 
 }
