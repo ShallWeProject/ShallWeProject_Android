@@ -15,11 +15,11 @@ import java.lang.Exception
 // 싱글턴
 object RetrofitClient {
     // 레트로핏 클라이언트 선언
-    private var retrofitClient : Retrofit? = null
+    var retrofitClient : Retrofit? = null
     // Interceptor를 사용하여 Bearer Token을 헤더에 추가
     private val authInterceptor = Interceptor { chain ->
         val originalRequest = chain.request()
-        val token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI4IiwiaWF0IjoxNjkyMTgyODQ0LCJleHAiOjE2OTIxODY0NDR9.RYGKsMHNTRG7uMFgRT1NUNBBoEsnaWbsI09dXvxKA6v4F5JDW_u2lu3Ynl-qb8jaeQEOiTEjLAhAIO6sBIZ2tA"
+        val token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMCIsImlhdCI6MTY5MjI3ODUxMSwiZXhwIjoxNjkyMjgyMTExfQ.2jnM-SrvJyAXfaTUrO3aaWbdhjT0z_jTwmJYNRHjIHBuZnDelhNMqO2muVwPB1bD1KlX3vVO6-4BB7dJ6CvRxw"
         val modifiedRequest = originalRequest.newBuilder()
             .header("Authorization", "Bearer $token")
             .build()
@@ -36,7 +36,7 @@ object RetrofitClient {
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(httpClient)
-//                .client(client.build())
+                //.client(client.build())
                 .build()
         }
         return retrofitClient

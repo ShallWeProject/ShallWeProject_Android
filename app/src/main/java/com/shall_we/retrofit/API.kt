@@ -8,6 +8,10 @@ object API {
     const val EXPERIENCE_GIFT_STTCATEGORY = "api/v1/experience/gift/stt-category/{SttCategoryId}"
 
     const val EXPERIENCE_GIFT_EXPCATEGORY = "api/v1/experience/gift/exp-category/{ExpCategoryId}"
+
+    const val EXPERIENCE_GIFT="api/v1/experience/gift"
+
+    const val EXPERIENCE_GIFT_EXPERIENCE_ID="api/v1/experience/gift/details/{ExperienceGiftId}"
 }
 
 enum class RESPONSE_STATE {
