@@ -15,7 +15,6 @@ import com.shall_we.databinding.FragmentMypageBinding
 import com.shall_we.myAlbum.MyAlbumFragment
 
 public var isTabLayoutVisible = true
-
 class MypageFragment : Fragment() {
 
     private val binding: FragmentMypageBinding by lazy {

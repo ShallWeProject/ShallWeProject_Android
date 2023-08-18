@@ -16,7 +16,6 @@ import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RetrofitManager
 import com.shall_we.mypage.MypageFragment
 
-
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     object MySharedData {

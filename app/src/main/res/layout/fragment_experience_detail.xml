@@ -128,7 +128,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
            app:backgroundTint="#00ff0000"
-            android:background="#00ff0000"
+            android:background="@drawable/fab"
             android:layout_gravity="bottom|end"
             android:src="@drawable/fab"
             app:fabSize="normal"
