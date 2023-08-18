@@ -13,6 +13,8 @@ import retrofit2.Response
 
 class ExperienceDetailViewModel:ViewModel() {
 
+
+
     //경험 상세
     private var _experience_detail_data = MutableLiveData<ExperienceGiftDto>()
     val experience_detail_data: LiveData<ExperienceGiftDto> get() = _experience_detail_data
@@ -32,15 +34,12 @@ class ExperienceDetailViewModel:ViewModel() {
                 response: Response<ExperienceMainRes>
             ) {
                 if (response.isSuccessful) {
-                    response.body()?.let {
-                        _experience_gift_data.value = it
-                    } ?: run {
-                        _experience_gift_data.value = ExperienceMainRes(emptyList(), emptyList())
-                        Log.d("whatisthis", "_experience_gift_data, response body is null")
-                    }
+                    Log.d("whatisthis", "_experience_gift_data, response 성공")
+                    _experience_gift_data.value = (response.body())
+                    Log.d("whatisthis", response.body()?.expCategoryRes.toString())
                 } else {
-                    _experience_gift_data.value = ExperienceMainRes(emptyList(), emptyList())
-                    Log.d("whatisthis", "_experience_gift_data, response 실패: ${response.errorBody()?.string() ?: "unknown"}")
+                    _experience_detail_data.postValue(ExperienceGiftDto())
+                    Log.d("whatisthis", "_experience_gift_data, response 못받음")
                 }
             }
 
@@ -50,14 +49,15 @@ class ExperienceDetailViewModel:ViewModel() {
             }
         })
     }
-    fun get_experience_detail_data(id: Int) {
-        ExperienceDetailService.experienceDetailService?.get_experience_detail_data(id)?.enqueue(object :
+    fun get_experience_detail_data(ExperienceGiftId:Int) {
+        ExperienceDetailService.experienceDetailService?.get_experience_detail_data(ExperienceGiftId)?.enqueue(object :
             Callback<ExperienceGiftDto> {
             override fun onResponse(
                 call: Call<ExperienceGiftDto>,
                 response: Response<ExperienceGiftDto>
             ) {
                 if (response.isSuccessful) {
+                    Log.d("whatisthis", "_experience_detail_data, response 성공")
                     _experience_detail_data.value = (response.body())
                 } else {
                     _experience_detail_data.postValue(ExperienceGiftDto())
@@ -80,21 +80,17 @@ class ExperienceDetailViewModel:ViewModel() {
 
             override fun onResponse(call: Call<ExperienceReq>, response: Response<ExperienceReq>) {
                 if (response.isSuccessful) {
-                    response.body()?.let {
-                        _update_gift_data.value = it
-                    } ?: run {
-                        _update_gift_data.value = experienceReq
-                        Log.d("whatisthis", "_update_gift_data, response body is null")
-                    }
+                    Log.d("whatisthis", "_update_gift_data, response 성공")
+                    _update_gift_data.value = (response.body())
                 } else {
-                    _experience_gift_data.value = ExperienceMainRes(emptyList(), emptyList())
-                    Log.d("whatisthis", "_experience_gift_data, response 실패: ${response.errorBody()?.string() ?: "unknown"}")
+                    _update_gift_data.postValue(experienceReq)
+                    Log.d("whatisthis", "_update_gift_data, response 못받음")
                 }
             }
 
             override fun onFailure(call: Call<ExperienceReq>, t: Throwable) {
-                _experience_gift_data.value = ExperienceMainRes(emptyList(), emptyList())
-                Log.d("whatisthis", "_experience_gift_data, 호출 실패: ${t.localizedMessage}")
+                _update_gift_data.value = experienceReq
+                Log.d("whatisthis", "_update_gift_data, 호출 실패: ${t.localizedMessage}")
             }
         })
     }

@@ -29,6 +29,7 @@ import retrofit2.Response
 
 class ExperienceDetailFragment: BaseFragment<FragmentExperienceDetailBinding>(R.layout.fragment_experience_detail)  {
     lateinit var experienceDetailViewModel: ExperienceDetailViewModel
+
     override fun init() {
 
         initTab()
@@ -36,12 +37,15 @@ class ExperienceDetailFragment: BaseFragment<FragmentExperienceDetailBinding>(R.
         val giftid = arguments?.getInt("id", 1)
         Log.d("id","$giftid")
 
+
         experienceDetailViewModel = ViewModelProvider(requireActivity()).get(ExperienceDetailViewModel::class.java)
+
         experienceDetailViewModel.get_experience_detail_data(id)
+
         experienceDetailViewModel.experience_detail_data.observe(viewLifecycleOwner, Observer {
             now_experience_detail_data->
             if(now_experience_detail_data!=null){
-                //binding.exdetailText01.text=now_experience_detail_data.title.toString()
+               // binding.exdetailText01.text=now_experience_detail_data.title.toString()
                 //binding.exdetailText02.text=now_experience_detail_data.subtitle.toString()
 
             }
@@ -49,8 +53,11 @@ class ExperienceDetailFragment: BaseFragment<FragmentExperienceDetailBinding>(R.
 
         experienceDetailViewModel.get_experience_gift()
         experienceDetailViewModel.experience_gift_data.observe(viewLifecycleOwner, Observer {
-            now_experience_detail_data->
-           // binding.exdetailText01.text=now_experience_detail_data.expCategories
+            now_experience_data->
+            if(now_experience_data!=null){
+
+            }
+
 
         })
 
@@ -58,6 +65,8 @@ class ExperienceDetailFragment: BaseFragment<FragmentExperienceDetailBinding>(R.
 
 
       //  ))
+
+
 
 
 

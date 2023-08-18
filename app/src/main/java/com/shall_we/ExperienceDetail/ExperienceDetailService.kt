@@ -1,14 +1,11 @@
 package com.shall_we.ExperienceDetail
 
-import com.google.gson.JsonElement
 import com.shall_we.dto.ExperienceGiftDto
 import com.shall_we.dto.ExperienceMainRes
 import com.shall_we.dto.ExperienceReq
 import com.shall_we.retrofit.API
 import com.shall_we.retrofit.RetrofitClient
-import com.shall_we.retrofit.RetrofitClient.retrofitClient
 import retrofit2.Call
-import retrofit2.create
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -32,7 +29,10 @@ object ExperienceDetailService {
         ): Call<ExperienceReq>
     }
 
-    val experienceDetailService =
-        retrofitClient?.create(ExperienceDetailService.ExperienceDetailInterface::class.java)
+   // val experienceDetailService =
+     //   retrofitClient?.create(ExperienceDetailService.ExperienceDetailInterface::class.java)
+
+    val  experienceDetailService: ExperienceDetailInterface?=RetrofitClient.getClient(API.BASE_URL)?.create(ExperienceDetailService.ExperienceDetailInterface::class.java)
+
 
 }
