@@ -4,8 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/agreement_layout"
+    android:background="@color/white"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".mypage.AgreementFragment">
+    tools:context=".signup.AgreementFragment">
 
     <TextView
         android:id="@+id/tv_title"
@@ -28,7 +29,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="16dp"
         android:layout_marginTop="40dp"
-        android:button="@drawable/check_agree_resize"
+        android:button="@drawable/custom_checkbox_all"
         android:checked="false" />
 
     <TextView

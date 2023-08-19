@@ -58,4 +58,13 @@
         android:id="@+id/action_myAlbumFragment_to_mypageFragment"
         app:destination="@id/mypageFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/loginSuccessFragment"
+        android:name="com.shall_we.signup.LoginSuccessFragment"
+        android:label="fragment_login_success"
+        tools:layout="@layout/fragment_login_success" >
+        <action
+            android:id="@+id/action_loginSuccessFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
 </navigation>
