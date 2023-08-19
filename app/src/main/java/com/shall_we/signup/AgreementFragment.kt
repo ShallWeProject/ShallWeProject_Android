@@ -1,4 +1,4 @@
-package com.shall_we.mypage
+package com.shall_we.signup
 
 import android.app.AlertDialog
 import android.graphics.Color
@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.shall_we.R
 import com.shall_we.databinding.FragmentAgreementBinding
@@ -34,6 +33,17 @@ class AgreementFragment : Fragment() {
             }
             binding.btnNext.setBackgroundResource(R.drawable.btn_next_black)
             return false
+        }
+
+        binding.cbAgreeAll.setOnCheckedChangeListener { button, ischecked ->
+            if (ischecked) {
+                checkList.forEach { checkBox -> checkBox.isChecked = true }
+                binding.cbAgree4.isChecked = true
+            }
+            else {
+                checkList.forEach { checkBox -> checkBox.isChecked = false }
+                binding.cbAgree4.isChecked = false
+            }
         }
 
         binding.cbAgree1.setOnCheckedChangeListener { button, ischecked ->
@@ -67,7 +77,7 @@ class AgreementFragment : Fragment() {
             }
         }
         binding.cbAgree4.setOnCheckedChangeListener { button, ischecked ->
-            // 마케팅 정보 수신 동의 데이터 처리 해야함
+            // Todo: 마케팅동의 정보 전달.
         }
         binding.tvAgree2More.setOnClickListener {
             agreementDialog(it, resources.getString(R.string.agreement_service))
@@ -77,12 +87,12 @@ class AgreementFragment : Fragment() {
             agreementDialog(it, resources.getString(R.string.agreement_personal))
         }
         binding.btnNext.setOnClickListener {
-            Toast.makeText(view?.context, "예약이 취소되었습니다.", Toast.LENGTH_SHORT).show()
             val profileFragment = ProfileFragment() // 전환할 프래그먼트 인스턴스 생성
             val fragmentTransaction = parentFragmentManager.beginTransaction()
             fragmentTransaction.replace(R.id.agreement_layout, profileFragment, "profile")
             fragmentTransaction.addToBackStack(null)
             fragmentTransaction.commitAllowingStateLoss()
+
         }
 
     }
