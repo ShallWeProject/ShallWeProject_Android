@@ -19,6 +19,7 @@ interface IRetrofit {
     @GET(API.EXPERIENCE_GIFT_SEARCH)
     fun experienceGiftSearch(@Query("title") title : String) : Call<JsonElement>
 
-
+    @GET(API.EXPERIENCE_GIFT_POPULAR)
+    fun experienceGiftPopular() : Call<JsonElement>
 
 }

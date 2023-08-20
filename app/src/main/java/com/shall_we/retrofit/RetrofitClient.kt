@@ -19,7 +19,7 @@ object RetrofitClient {
     // Interceptor를 사용하여 Bearer Token을 헤더에 추가
     private val authInterceptor = Interceptor { chain ->
         val originalRequest = chain.request()
-        val token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMCIsImlhdCI6MTY5MjM2NTQxMywiZXhwIjoxNjkyMzY5MDEzfQ.PTewLc2lsrBaSlsWCfgr5cqCA0f4JDEZnLn5TDQmbqGMUWAHH3iniWrgJoqjMScTHQbqQTRLwc8OQeHHEVbIGA"
+        val token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMSIsImlhdCI6MTY5MjUyOTE1NCwiZXhwIjoxNjkyNTMyNzU0fQ.eJmiK-UTJwRSkRrUYAVUUvBidcerXGso-JmVpUrgG_DOoOaDAT05HxXzIGLVnNiXdijOAKAKTWvcR-NDhUZDcg"
         val modifiedRequest = originalRequest.newBuilder()
             .header("Authorization", "Bearer $token")
             .build()
