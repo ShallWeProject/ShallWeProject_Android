@@ -3,18 +3,24 @@ package com.shall_we.signup
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.shall_we.R
 import com.shall_we.databinding.FragmentProfileBinding
+import com.shall_we.retrofit.RESPONSE_STATE
+import com.shall_we.retrofit.RetrofitManager
 
 class ProfileFragment : Fragment() {
     private lateinit var binding: FragmentProfileBinding
 
     private fun initProfile() {
+        var phone: String
+        var age: Int
+        var gender: String
+        var marketingAgree: Boolean
 
         fun checkRbChecked(): Boolean {
             if (binding.btnMan.isChecked || binding.btnWoman.isChecked || binding.btnNone.isChecked) {
@@ -32,11 +38,73 @@ class ProfileFragment : Fragment() {
         }
         binding.edtAge.addTextChangedListener(editTextWatcher)
 
+        binding.btnMan.setOnCheckedChangeListener() { button, ischecked ->
+            if (binding.edtAge.text.toString().isNotEmpty())
+                changeBtnClickable(true)
+            else {
+                changeBtnClickable(false)
+
+            }
+        }
+        binding.btnWoman.setOnCheckedChangeListener() { button, ischecked ->
+            if (binding.edtAge.text.toString().isNotEmpty())
+                changeBtnClickable(true)
+            else {
+                changeBtnClickable(false)
+
+            }
+        }
+        binding.btnNone.setOnCheckedChangeListener() { button, ischecked ->
+            if (binding.edtAge.text.toString().isNotEmpty())
+                changeBtnClickable(true)
+            else {
+                changeBtnClickable(false)
+
+            }
+        }
+
         binding.btnNextProfile.setOnClickListener {
-            Toast.makeText(view?.context,"다음 클릭됨", Toast.LENGTH_SHORT).show()
+            //Todo: 앞에서 번호 받아와서 업데이트
+            phone = "010-1111-1111"
+            age = binding.edtAge.text.toString().toInt()
+            gender = "UNKNOWN"
+            if (binding.btnMan.isChecked)
+                gender = "MALE"
+            else if (binding.btnWoman.isChecked)
+                gender = "FEMALE"
+            else if (binding.btnNone.isChecked)
+                gender = "UNKNOWN"
+
+            val isChecked = arguments?.getBoolean("isChecked", false)  // 기본값은 false
+            if (isChecked == true)
+                marketingAgree = true
+            else
+                marketingAgree = false
+
+            var userData = UserData(phone, marketingAgree, age, gender)
+            usersPatchApiCall(userData)
         }
     }
+    private fun usersPatchApiCall(userData: UserData){
+        //레트로핏 연결
+        RetrofitManager.instance.usersPatch(userData = userData, completion = { responseState ->
+            when (responseState) {
+                RESPONSE_STATE.OKAY -> {
+                    Log.d("retrofit", "api 호출 성공 : ${responseState!!}")
+                    val signupSuccessFragment = SignupSuccessFragment() // 전환할 프래그먼트 인스턴스 생성
+                    val fragmentTransaction = parentFragmentManager.beginTransaction()
+                    fragmentTransaction.replace(R.id.signup_success_layout, signupSuccessFragment, "signup_success")
+                    fragmentTransaction.addToBackStack(null)
+                    fragmentTransaction.commitAllowingStateLoss()
 
+                }
+                RESPONSE_STATE.FAIL -> {
+                    Log.d("retrofit", "api 호출 에러")
+                }
+            }
+        })
+
+    }
     fun changeBtnClickable(boolean: Boolean){
         if (boolean) {
             binding.btnNextProfile.setBackgroundResource(R.drawable.btn_next)

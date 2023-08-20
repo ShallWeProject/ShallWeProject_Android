@@ -3,6 +3,7 @@ package com.shall_we.retrofit
 import android.util.Log
 import com.google.gson.JsonElement
 import com.shall_we.home.ProductData
+import com.shall_we.signup.UserData
 import retrofit2.Call
 import retrofit2.Response
 
@@ -193,6 +194,36 @@ class RetrofitManager {
         })
     }
 
+
+    fun usersPatch(userData: UserData, completion:(RESPONSE_STATE) -> Unit){
+        val call = iRetrofit?.usersPatch(userData = userData) ?:return
+
+        call.enqueue(object : retrofit2.Callback<JsonElement>{
+            // 응답 성공
+            override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
+                Log.d("retrofit","RetrofitManager - onResponse() called / response : ${response.code()}")
+
+                when(response.code()){
+                    200 -> {
+                        response.body()?.let{
+                            val body = it.asJsonObject
+                            val message = body.get("message").asString
+
+                            completion(RESPONSE_STATE.OKAY)
+                        }
+                    }
+                }
+            }
+
+            // 응답 실패
+            override fun onFailure(call: Call<JsonElement>, t: Throwable) {
+                Log.d("retrofit","RetrofitManager - onFailure() called / t: $t")
+                completion(RESPONSE_STATE.FAIL)
+
+            }
+
+        })
+    }
 
 
 }
