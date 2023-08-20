@@ -39,7 +39,7 @@ class LoginActivity : AppCompatActivity(),ILoginEvent{
 
         // 프래그먼트를 처음에 추가합니다.
         supportFragmentManager.beginTransaction()
-            .add(R.id.fragmentContainerView3, phoneAuthFragment)
+            .add(R.id.fragmentContainerView3, kakaoLoginFragment)
             .commit()
 
     }

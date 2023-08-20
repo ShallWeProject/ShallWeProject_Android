@@ -40,6 +40,8 @@ class kakaoLoginFragment : Fragment() , IAuthSign {
 
             } else if (token != null) {
                 Log.d("login", "카카오계정으로 로그인 성공 access ${token.accessToken}")
+                getKakaoUserData()
+
             }
         }
 
@@ -93,24 +95,24 @@ class kakaoLoginFragment : Fragment() , IAuthSign {
 
 
     private fun getKakaoUserData(){
-    UserApiClient.instance.me { user, error ->
-        if (error != null) {
-            Log.e("login", "사용자 정보 요청 실패", error)
+        UserApiClient.instance.me { user, error ->
+            if (error != null) {
+                Log.e("login", "사용자 정보 요청 실패", error)
+            }
+            else if (user != null) {
+                Log.i("login", "사용자 정보 요청 성공" +
+                        "\n회원번호: ${user.id}" +
+                        "\n이메일: ${user.kakaoAccount?.email}" +
+                        "\n닉네임: ${user.kakaoAccount?.profile?.nickname}" +
+                        "\n프로필사진: ${user.kakaoAccount?.profile?.thumbnailImageUrl}")
+                auth = Auth(
+                    (user.id).toString()!!,
+                    user.kakaoAccount?.profile?.nickname!!,
+                    user.kakaoAccount?.email!!,
+                    user.kakaoAccount?.profile?.thumbnailImageUrl!!)
+                AuthSignService(this).tryPostAuthSignUp(auth)
+            }
         }
-        else if (user != null) {
-            Log.i("login", "사용자 정보 요청 성공" +
-                    "\n회원번호: ${user.id}" +
-                    "\n이메일: ${user.kakaoAccount?.email}" +
-                    "\n닉네임: ${user.kakaoAccount?.profile?.nickname}" +
-                    "\n프로필사진: ${user.kakaoAccount?.profile?.thumbnailImageUrl}")
-            auth = Auth(
-                (user.id).toString()!!,
-                user.kakaoAccount?.profile?.nickname!!,
-                user.kakaoAccount?.email!!,
-                user.kakaoAccount?.profile?.thumbnailImageUrl!!)
-            AuthSignService(this).tryPostAuthSignUp(auth)
-        }
-    }
     }
 
     override fun onPostAuthSignInSuccess(response: AuthResponse) {
