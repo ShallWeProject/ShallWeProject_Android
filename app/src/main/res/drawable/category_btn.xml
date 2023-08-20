@@ -8,6 +8,6 @@
         android:color="@color/rose200" />
 
     <corners
-        android:radius="20sp"/>
+        android:radius="20dp"/>
 
 </shape>

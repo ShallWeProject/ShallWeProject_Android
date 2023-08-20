@@ -1,9 +1,14 @@
 package com.shall_we.retrofit
 
 import android.util.Log
+import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.shall_we.home.ProductData
+import com.shall_we.login.data.Auth
+import com.shall_we.login.data.AuthLogin
+import com.shall_we.login.data.AuthResponse
 import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.Response
 
 class RetrofitManager {
@@ -149,5 +154,6 @@ class RetrofitManager {
 
         })
     }
+
 
 }
