@@ -1,7 +1,6 @@
 package com.shall_we.login.data
 
 import com.google.gson.Gson
-import com.shall_we.App
 import com.shall_we.retrofit.API
 import com.shall_we.retrofit.IRetrofit
 import com.shall_we.retrofit.RetrofitClient
@@ -13,7 +12,7 @@ class AuthSignService(val authSignInterface: IAuthSign) {
     private val iRetrofit : IRetrofit? = RetrofitClient.getClient(API.BASE_URL)?.create(IRetrofit::class.java)
 
     fun tryPostAuthSignIn(auth: Auth){
-        iRetrofit?.postAuthSignIn(AuthLogin(auth.providerId,auth.email))?.enqueue(object:
+        iRetrofit?.authSignIn(AuthLogin(auth.providerId,auth.email))?.enqueue(object:
             Callback<AuthResponse> {
             override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
                 if(response.code() == 200){
@@ -37,7 +36,7 @@ class AuthSignService(val authSignInterface: IAuthSign) {
         })
     }
     fun tryPostAuthSignUp(auth: Auth){
-        iRetrofit?.postAuthSignUp(auth)?.enqueue(object: Callback<AuthResponse> {
+        iRetrofit?.authSignUp(auth)?.enqueue(object: Callback<AuthResponse> {
             override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
                 if(response.code() == 200){
                     authSignInterface.onPostAuthSignUpSuccess(response.body() as AuthResponse)

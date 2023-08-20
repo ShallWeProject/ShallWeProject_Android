@@ -42,9 +42,6 @@ class LoginActivity : AppCompatActivity(),ILoginEvent{
             .add(R.id.fragmentContainerView3, phoneAuthFragment)
             .commit()
 
-        binding.nextBtn.setOnClickListener {
-
-        }
     }
 
     override fun onLoginSuccess() {
@@ -57,8 +54,6 @@ class LoginActivity : AppCompatActivity(),ILoginEvent{
             .replace(R.id.fragmentContainerView3, newFragment)
             .addToBackStack(null)
             .commit()
-
-        binding.nextBtn.visibility = View.VISIBLE
     }
 
     override fun onLoginFailed(message: String) {

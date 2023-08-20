@@ -9,7 +9,6 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
-import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -27,17 +26,26 @@ interface IRetrofit {
 
     //유저 로그인
     @POST(API.AUTH_SIGN_IN)
-    fun postAuthSignIn(@Body auth: AuthLogin): Call<AuthResponse>
+    fun authSignIn(@Body auth: AuthLogin): Call<AuthResponse>
 
     // 유저 회원가입
     @POST(API.AUTH_SIGN_UP)
-    fun postAuthSignUp(@Body auth: Auth): Call<AuthResponse>
+    fun authSignUp(@Body auth: Auth): Call<AuthResponse>
 
     // 유저 로그아웃
     @POST(API.AUTH_SIGN_OUT)
-    fun postAuthSignOut(@Header("Authorization") accessToken: String?): Call<AuthSignOutResponse>
+    fun authSignOut(@Header("Authorization") accessToken: String?): Call<AuthSignOutResponse>
 
     // 토큰갱신
     @POST(API.AUTH_REFRESH)
-    fun postTokenRefresh(@Body refreshToken :String): Call<AuthResponse>
+    fun tokenRefresh(@Body refreshToken :String): Call<AuthResponse>
+
+    // 인증 문자 전송
+    @POST(API.SEND_ONE)
+    fun sendOne(@Body phoneNumber: String): Call<JsonElement>
+
+    // 인증 번호 검증
+    @POST(API.VALID_VERIFICATION)
+    fun validVerification(@Body verificationCode: String, @Body phoneNumber:String): Call<JsonElement>
+
 }
