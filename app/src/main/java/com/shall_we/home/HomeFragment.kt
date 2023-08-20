@@ -16,6 +16,8 @@ import androidx.viewpager2.widget.ViewPager2
 import com.shall_we.R
 import com.shall_we.search.SearchFragment
 import com.shall_we.databinding.FragmentHomeBinding
+import com.shall_we.retrofit.RESPONSE_STATE
+import com.shall_we.retrofit.RetrofitManager
 
 
 class HomeFragment : Fragment() {
@@ -32,6 +34,8 @@ class HomeFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val binding = FragmentHomeBinding.inflate(inflater,container,false)
+
+
 
         viewModel = ViewModelProvider(this).get(HomeFragmentViewModel::class.java)
         viewModel.setBannerItems(
@@ -82,6 +86,9 @@ class HomeFragment : Fragment() {
                     .commit()
 
                 binding.mainSearchView.clearFocus()
+
+
+
             }
         }
         return binding.root
@@ -93,4 +100,6 @@ class HomeFragment : Fragment() {
             bannerViewPagerAdapter.submitList(bannerItemList)
         })
     }
+
+
 }

@@ -15,7 +15,7 @@ import com.shall_we.databinding.ItemAlbumBinding
 
 
 class MyAlbumAdapter(private val context: Context) : RecyclerView.Adapter<MyAlbumAdapter.ViewHolder>() {
-    var datas = mutableListOf<MyAlbumPhotoDto>()
+    var datas = mutableListOf<MyAlbumPhotoData>()
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

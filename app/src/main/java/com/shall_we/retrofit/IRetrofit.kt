@@ -5,6 +5,7 @@ import com.shall_we.login.data.Auth
 import com.shall_we.login.data.AuthLogin
 import com.shall_we.login.data.AuthResponse
 import com.shall_we.login.data.AuthSignOutResponse
+import com.shall_we.dto.ExperienceGiftDto
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET

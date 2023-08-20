@@ -20,6 +20,9 @@ object API {
     const val SEND_ONE = "auth/send-one"
 
     const val VALID_VERIFICATION = "auth/valid-verification-code"
+    const val EXPERIENCE_GIFT="api/v1/experience/gift"
+
+    const val EXPERIENCE_GIFT_EXPERIENCE_ID="api/v1/experience/gift/details/{ExperienceGiftId}"
 }
 
 enum class RESPONSE_STATE {

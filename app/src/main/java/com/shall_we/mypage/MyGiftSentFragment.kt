@@ -1,7 +1,6 @@
 package com.shall_we.mypage
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,14 +9,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.shall_we.R
 import com.shall_we.databinding.FragmentMyGiftSentBinding
-import com.shall_we.databinding.FragmentMypageBinding
-import com.shall_we.myAlbum.MyAlbumFragment
 
 class MyGiftSentFragment : Fragment() {
     private lateinit var viewBinding: FragmentMyGiftSentBinding
     private lateinit var adapter: MyGiftAdapter
 
-    val giftData = mutableListOf<MyGiftDto>()
+    val giftData = mutableListOf<MyGiftData>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -40,7 +37,7 @@ class MyGiftSentFragment : Fragment() {
 
         giftData.apply {
             add(
-                MyGiftDto(
+                MyGiftData(
                     1,
                     "[홍대] 인기 공예 클래스",
                     "테마가 있는 프라이빗 칵테일 클래스",
@@ -53,7 +50,7 @@ class MyGiftSentFragment : Fragment() {
                 )
             )
             add(
-                MyGiftDto(
+                MyGiftData(
                     2,
                     "[성수] 인기 베이킹 클래스",
                     "기념일 레터링 케이크 사지 말고 함께 만들어요",
@@ -64,9 +61,8 @@ class MyGiftSentFragment : Fragment() {
                     "100일 넌무너무 축하해 !! 100일 기념으로 케이크 같이 만드는거 어때? 직접 케이크 만들고 성수 맛집 가장 !!!"
                 ),
             )
-
-            adapter.datas = giftData
-            adapter.notifyDataSetChanged()
         }
+        adapter.datas = giftData
+        adapter.notifyDataSetChanged()
     }
 }
