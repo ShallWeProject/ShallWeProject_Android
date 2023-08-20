@@ -10,7 +10,7 @@ import com.shall_we.R
 
 class BannerViewPagerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
-        const val ITEM_COUNT = 10
+        const val ITEM_COUNT = 2
     }
 
     private var bannerItemList: List<BannerItem>? = null

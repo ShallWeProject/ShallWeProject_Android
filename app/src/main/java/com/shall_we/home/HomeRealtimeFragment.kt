@@ -63,7 +63,7 @@ class HomeRealtimeFragment : Fragment(), ProductAdapter.OnItemClickListener, Cat
 
         initCategoryRecycler(binding.rvCategory)
 
-        RetrofitCall(rvRealtime, 1)
+        RetrofitCall(rvRealtime, 0)
 
         // 1. TextView 참조
         textView = binding.realtimeText
@@ -109,17 +109,34 @@ class HomeRealtimeFragment : Fragment(), ProductAdapter.OnItemClickListener, Cat
 
 
     fun RetrofitCall(rv : RecyclerView, categoryId : Int){
-        RetrofitManager.instance.experienceGiftExpCategory(categoryId = categoryId, category = "인기순", completion = {
-                responseState, responseBody ->
-            when(responseState){
-                RESPONSE_STATE.OKAY -> {
-                    Log.d("retrofit", "category api : ${responseBody?.size}")
-                    initProductRecycler(rv, responseBody!!,this)
+        if(categoryId == 0){
+            RetrofitManager.instance.experienceGiftPopular( completion = {
+                    responseState, responseBody ->
+                when(responseState){
+                    RESPONSE_STATE.OKAY -> {
+                        Log.d("retrofit", "category api : ${responseBody?.size}")
+                        initProductRecycler(rv, responseBody!!,this)
+                    }
+                    RESPONSE_STATE.FAIL -> {
+                        Log.d("retrofit", "api 호출 에러")
+                    }
                 }
-                RESPONSE_STATE.FAIL -> {
-                    Log.d("retrofit", "api 호출 에러")
+            })
+        }
+        else{
+            RetrofitManager.instance.experienceGiftExpCategory(categoryId = categoryId, category = "인기순", completion = {
+                    responseState, responseBody ->
+                when(responseState){
+                    RESPONSE_STATE.OKAY -> {
+                        Log.d("retrofit", "category api : ${responseBody?.size}")
+                        initProductRecycler(rv, responseBody!!,this)
+                    }
+                    RESPONSE_STATE.FAIL -> {
+                        Log.d("retrofit", "api 호출 에러")
+                    }
                 }
-            }
-        })
+            })
+        }
+
     }
 }
