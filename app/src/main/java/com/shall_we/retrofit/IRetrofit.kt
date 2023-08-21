@@ -36,7 +36,7 @@ interface IRetrofit {
     fun memoryPhoto(@Path("date") date: String) : Call<JsonElement>
 
     @GET(API.DELETE_RESERVATION)
-    fun experienceGiftSttCategory(id: Int): Call<JsonElement>
+    fun deleteReservation(@Header("id") id: Int): Call<JsonElement>
     //유저 로그인
     @POST(API.AUTH_SIGN_IN)
     fun authSignIn(@Body auth: AuthLogin): Call<AuthResponse>

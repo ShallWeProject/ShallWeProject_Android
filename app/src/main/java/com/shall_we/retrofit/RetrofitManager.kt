@@ -360,7 +360,7 @@ class RetrofitManager {
                                 val date = dateFormatter.format(dateTimeStr)
                                 val time = timeFormatter.format(dateTimeStr)
 
-                                val giftItem = MyGiftData(idx = reservationId, title = title, description = subtitle, date = date, time = time, cancellation = false, message = invitationComment)
+                                val giftItem = MyGiftData(idx = reservationId, title = title, description = subtitle, date = date, time = time, cancellable = false, message = invitationComment)
                                 Log.d("gift - send result: ", "$giftItem")
                                 parsedProductDataArray.add(giftItem)
                             }
@@ -379,48 +379,84 @@ class RetrofitManager {
         })
     }
 
-//     fun deleteReservation(id : Int, completion:(RESPONSE_STATE,ArrayList<MyGiftData>?) -> Unit){
-//         val call = iRetrofit?.deleteReservation(id = id) ?:return
+    fun usersGiftReceive(completion:(RESPONSE_STATE,ArrayList<MyGiftData>?) -> Unit){
+        val call = iRetrofit?.usersGiftReceive() ?:return
 
-//         call.enqueue(object : retrofit2.Callback<JsonElement>{
-//             // 응답 성공
-//             override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
-//                 Log.d("retrofit","RetrofitManager - onResponse() called / response : ${response.code()}")
+        call.enqueue(object : retrofit2.Callback<JsonElement>{
+            // 응답 성공
+            override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
+                Log.d("retrofit","RetrofitManager - userGiftReceive onResponse() called / response : ${response.code()}")
 
-//                 when(response.code()){
-//                     200 -> {
-//                         response.body()?.let{
-//                             var parsedProductDataArray = ArrayList<MyGiftData>()
-//                             val body = it.asJsonObject
-//                             val data = body.getAsJsonArray("data")
+                when(response.code()){
+                    200 -> {
+                        response.body()?.let{
+                            var parsedProductDataArray = ArrayList<MyGiftData>()
+                            val body = it.asJsonObject
+                            val data = body.getAsJsonObject("data")
+                            val gifts = data.getAsJsonArray("gifts")
+                            gifts.forEach { resultItem ->
+                                val resultItemObject = resultItem.asJsonObject
+                                val reservationId : Int = resultItemObject.get("reservationId").asInt
+                                val experienceGift = resultItemObject.getAsJsonObject("experienceGift")
+                                val title: String = experienceGift.get("title").asString
+                                val subtitle: String = experienceGift.get("subtitle").asString
 
-//                             data.forEach { resultItem ->
-//                                 val resultItemObject = resultItem.asJsonObject
-//                                 val id : Int = resultItemObject.get("id").asInt
-//                                 val title : String = resultItemObject.get("title").asString
-//                                 val subtitle : String = resultItemObject.get("subtitle").asString
-//                                 val date : String = resultItemObject.get("date").asString
-//                                 val time : String = resultItemObject.get("time").asString
-//                                 val cancellation : Boolean = resultItemObject.get("cancellation").asBoolean
-//                                 val invitationComment : String = resultItemObject.get("invitationComment").asString
+                                val dateTime : String = resultItemObject.get("dateTime").asString
+                                val invitationComment : String = resultItemObject.get("invitationComment").asString
 
+                                val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
+                                val dateTimeStr = sdf.parse(dateTime)
 
-//                                 val productItem = MyGiftData(idx = id, title = title, description = subtitle, date = date, time = time, cancellation = cancellation, message = invitationComment)
-//                                 parsedProductDataArray.add(productItem)
-//                             }
-//                             completion(RESPONSE_STATE.OKAY,parsedProductDataArray)
-//                         }
-//                     }
-//                 }
-//             }
+                                // Date 객체에서 날짜와 시간 추출
+                                val dateFormatter = SimpleDateFormat("yyyy.MM.dd")
+                                val timeFormatter = SimpleDateFormat("HH시")
 
-//             // 응답 실패
-//             override fun onFailure(call: Call<JsonElement>, t: Throwable) {
-//                 Log.d("retrofit","RetrofitManager - onFailure() called / t: $t")
-//                 completion(RESPONSE_STATE.FAIL, null)
-//             }
+                                val date = dateFormatter.format(dateTimeStr)
+                                val time = timeFormatter.format(dateTimeStr)
 
-//         })
-//     }
+                                val giftItem = MyGiftData(idx = reservationId, title = title, description = subtitle, date = date, time = time, cancellable = true, message = invitationComment)
+                                Log.d("gift - send result: ", "$giftItem")
+                                parsedProductDataArray.add(giftItem)
+                            }
+                            completion(RESPONSE_STATE.OKAY,parsedProductDataArray)
+                        }
+                    }
+                }
+            }
+
+            // 응답 실패
+            override fun onFailure(call: Call<JsonElement>, t: Throwable) {
+                Log.d("retrofit","RetrofitManager - onFailure() called / t: $t")
+                completion(RESPONSE_STATE.FAIL, null)
+            }
+
+        })
+    }
+
+     fun deleteReservation(id : Int, completion:(RESPONSE_STATE) -> Unit){
+         val call = iRetrofit?.deleteReservation(id = id) ?:return
+
+         call.enqueue(object : retrofit2.Callback<JsonElement>{
+             // 응답 성공
+             override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
+                 Log.d("retrofit","RetrofitManager - onResponse() called / response : ${response.code()}")
+
+                 when(response.code()){
+                     200 -> {
+                         response.body()?.let{
+                             val body = it.asJsonObject
+
+                             }
+                             completion(RESPONSE_STATE.OKAY)
+                         }
+                     }
+                 }
+             // 응답 실패
+             override fun onFailure(call: Call<JsonElement>, t: Throwable) {
+                 Log.d("retrofit","RetrofitManager - onFailure() called / t: $t")
+                 completion(RESPONSE_STATE.FAIL)
+             }
+         })
+     }
 
 }
