@@ -1,7 +1,6 @@
 package com.shall_we.retrofit
 
 import android.util.Log
-import com.kakao.sdk.auth.Constants.ACCESS_TOKEN
 import com.shall_we.App.Companion.sharedPreferences
 import com.shall_we.utils.isJsonArray
 import com.shall_we.utils.isJsonObject
@@ -22,7 +21,8 @@ object RetrofitClient {
     private val authInterceptor = Interceptor { chain ->
         val originalRequest = chain.request()
         // val token : String? = sharedPreferences.getString(ACCESS_TOKEN, null)
-        val token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMSIsImlhdCI6MTY5MjU5NjM1NCwiZXhwIjoxNjkyNTk5OTU0fQ.oKRLLsSu-GHJyQ-TepdOSJXgd_kqdXzbxAiOSVRX0_PzKC-DQB7ZWBPuPGCOyonpnneYIV1bj_-QNgATFLkZ3g"
+        val token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMyIsImlhdCI6MTY5MjU5MjE3MCwiZXhwIjoxNjkyNTk1NzcwfQ.Lqa03FEsuNzsWPPrFnSUtQLmTVjYzdXIdI0coDx-ntY7YfAeRjCpVGAklgn7_4mXKKS379jnYoxCt6dJBlL8eg"
+
 
         val modifiedRequest = originalRequest.newBuilder()
             .header("Authorization", "Bearer $token")
