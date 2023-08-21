@@ -12,6 +12,7 @@ import com.shall_we.R
 import com.shall_we.databinding.FragmentPhoneAuthBinding
 import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RetrofitManager
+import com.shall_we.signup.AgreementFragment
 import com.shall_we.utils.initProductRecycler
 
 class PhoneAuthFragment : Fragment() {
@@ -49,15 +50,15 @@ class PhoneAuthFragment : Fragment() {
         }
         binding.nextBtn.setOnClickListener {
             // 인증번호 검증 -> 번호 맞을때만 다음 프래그먼트로 넘기기
-//            val newFragment = kakaoLoginFragment() // 전환할 다른 프래그먼트 객체 생성
-//            val bundle = Bundle()
-//            newFragment.arguments = bundle
-//
-//            // 프래그먼트 전환
-//            parentFragmentManager.beginTransaction()
-//                .replace(R.id.fragmentContainerView3, newFragment)
-//                .addToBackStack(null)
-//                .commit()
+            val newFragment = AgreementFragment() // 전환할 다른 프래그먼트 객체 생성
+            val bundle = Bundle()
+            newFragment.arguments = bundle
+
+            // 프래그먼트 전환
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView3, newFragment)
+                .addToBackStack(null)
+                .commit()
         }
         return binding.root
     }
