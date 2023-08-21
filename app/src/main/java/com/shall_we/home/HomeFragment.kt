@@ -3,6 +3,8 @@ package com.shall_we.home
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +25,14 @@ import com.shall_we.retrofit.RetrofitManager
 class HomeFragment : Fragment() {
     private lateinit var bannerViewPagerAdapter: BannerViewPagerAdapter
     private lateinit var viewModel : HomeFragmentViewModel
+    private lateinit var pager : ViewPager2
+    var currentPosition = 0
+
+    val handler= Handler(Looper.getMainLooper()){
+        setPage()
+        true
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -35,35 +45,29 @@ class HomeFragment : Fragment() {
         // Inflate the layout for this fragment
         val binding = FragmentHomeBinding.inflate(inflater,container,false)
 
-
+        pager = binding.viewPager2
 
         viewModel = ViewModelProvider(this).get(HomeFragmentViewModel::class.java)
         viewModel.setBannerItems(
             listOf(
-                BannerItem(R.drawable.banner_img),
-                BannerItem(R.drawable.banner_img),
-                BannerItem(R.drawable.banner_img),
-                BannerItem(R.drawable.banner_img),
-                BannerItem(R.drawable.banner_img),
-                BannerItem(R.drawable.banner_img),
-                BannerItem(R.drawable.banner_img),
-                BannerItem(R.drawable.banner_img),
-                BannerItem(R.drawable.banner_img),
-                BannerItem(R.drawable.banner_img) //10개
+                BannerItem(R.drawable.banner_1),
+                BannerItem(R.drawable.banner_2)
                 )
         )
-        binding.viewPager2.apply {
+        pager.apply {
             bannerViewPagerAdapter = BannerViewPagerAdapter()
             adapter = bannerViewPagerAdapter
             registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback(){
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
-                    binding.tvPageNumber.text = "${position+1} | 10"
+                    binding.tvPageNumber.text = "${position+1} | 2"
                 }
             })
         }
         subscribeObservers()
-
+        //뷰페이저 넘기는 쓰레드
+        val thread=Thread(PagerRunnable())
+        thread.start()
         binding.mainSearchView.clearFocus()
         val hintColor = Color.parseColor("#FEA3B4") // 원하는 힌트 색상으로 변경
         val searchEditText =
@@ -93,13 +97,27 @@ class HomeFragment : Fragment() {
         }
         return binding.root
     }
+    //페이지 변경하기
+    fun setPage(){
+        if(currentPosition==2) currentPosition=0
+        pager.setCurrentItem(currentPosition,true)
+        currentPosition+=1
+    }
 
+    //2초 마다 페이지 넘기기
+    inner class PagerRunnable:Runnable {
+        override fun run() {
+            while (true) {
+                Thread.sleep(5000)
+                handler.sendEmptyMessage(0)
+            }
+        }
+    }
 
     private fun subscribeObservers() {
         viewModel.bannerItemList.observe(viewLifecycleOwner, Observer { bannerItemList ->
             bannerViewPagerAdapter.submitList(bannerItemList)
         })
     }
-
 
 }

@@ -43,10 +43,10 @@ class RetrofitManager {
                                 val price : String = resultItemObject.get("price").asString
                                 val formattedPrice = String.format("%,d", price.toInt())
 
-//                                val img : String = resultItemObject.get("giftImgUrl").asString
+                                val img : String = resultItemObject.get("giftImgUrl").asString
                                 val giftid : Int = resultItemObject.get("experienceGiftId").asInt
 
-                                val productItem = ProductData(title = title, subtitle = subtitle, price = formattedPrice, img = "img", giftid = giftid)
+                                val productItem = ProductData(title = title, subtitle = subtitle, price = formattedPrice, img = img, giftid = giftid)
 
                                 parsedProductDataArray.add(productItem)
                             }
@@ -88,10 +88,10 @@ class RetrofitManager {
                                 val price : String = resultItemObject.get("price").asString
                                 val formattedPrice = String.format("%,d", price.toInt())
 
-//                                val img : String = resultItemObject.get("giftImgUrl").asString
+                                val img : String = resultItemObject.get("giftImgUrl").asString
                                 val giftid : Int = resultItemObject.get("experienceGiftId").asInt
 
-                                val productItem = ProductData(title = title, subtitle = subtitle, price = formattedPrice, img = "img", giftid = giftid)
+                                val productItem = ProductData(title = title, subtitle = subtitle, price = formattedPrice, img = img, giftid = giftid)
                                 parsedProductDataArray.add(productItem)
                             }
                             completion(RESPONSE_STATE.OKAY,parsedProductDataArray)
@@ -132,10 +132,10 @@ class RetrofitManager {
                                 val price : String = resultItemObject.get("price").asString
                                 val formattedPrice = String.format("%,d", price.toInt())
 
-//                                val img : String = resultItemObject.get("giftImgUrl").asString
+                                val img : String = resultItemObject.get("giftImgUrl").asString
                                 val giftid : Int = resultItemObject.get("experienceGiftId").asInt
 
-                                val productItem = ProductData(title = title, subtitle = subtitle, price = formattedPrice, img = "img", giftid = giftid)
+                                val productItem = ProductData(title = title, subtitle = subtitle, price = formattedPrice, img = img, giftid = giftid)
 
                                 parsedProductDataArray.add(productItem)
                             }
@@ -155,9 +155,51 @@ class RetrofitManager {
         })
     }
 
-    fun sendOne(phoneNumber: String,completion: (RESPONSE_STATE, JsonElement?) -> Unit){
-        val call = iRetrofit?.sendOne(phoneNumber) ?: return
+    fun experienceGiftPopular(completion:(RESPONSE_STATE,ArrayList<ProductData>?) -> Unit){
+        val call = iRetrofit?.experienceGiftPopular() ?:return
 
+        call.enqueue(object : retrofit2.Callback<JsonElement>{
+            // 응답 성공
+            override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
+                Log.d("retrofit","RetrofitManager1 - onResponse() called / response : ${response.code()}")
+
+                when(response.code()){
+                    200 -> {
+                        response.body()?.let{
+                            var parsedProductDataArray = ArrayList<ProductData>()
+                            val body = it.asJsonObject
+                            val data = body.getAsJsonArray("data")
+
+                            data.forEach { resultItem ->
+                                val resultItemObject = resultItem.asJsonObject
+                                val title : String = resultItemObject.get("title").asString
+                                val subtitle : String = resultItemObject.get("subtitle").asString
+                                val price : String = resultItemObject.get("price").asString
+                                val formattedPrice = String.format("%,d", price.toInt())
+                                val img : String = resultItemObject.get("giftImgUrl").asString
+                                val giftid : Int = resultItemObject.get("experienceGiftId").asInt
+
+                                val productItem = ProductData(title = title, subtitle = subtitle, price = formattedPrice, img = img, giftid = giftid)
+                                parsedProductDataArray.add(productItem)
+                            }
+                            completion(RESPONSE_STATE.OKAY,parsedProductDataArray)
+                        }
+                    }
+                }
+            }
+
+            // 응답 실패
+            override fun onFailure(call: Call<JsonElement>, t: Throwable) {
+                Log.d("retrofit","RetrofitManager - onFailure() called / t: $t")
+                completion(RESPONSE_STATE.FAIL, null)
+
+            }
+
+        })
+    }
+
+  fun sendOne(phoneNumber: String,completion: (RESPONSE_STATE, JsonElement?) -> Unit){
+        val call = iRetrofit?.sendOne(phoneNumber) ?: return
         call.enqueue(object : Callback<JsonElement> {
             // 응답 성공인 경우
             override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {

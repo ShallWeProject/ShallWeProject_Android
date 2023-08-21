@@ -49,4 +49,7 @@ interface IRetrofit {
     @POST(API.VALID_VERIFICATION)
     fun validVerification(@Body verificationCode: String, @Body phoneNumber:String): Call<JsonElement>
 
+    @GET(API.EXPERIENCE_GIFT_POPULAR)
+    fun experienceGiftPopular() : Call<JsonElement>
+
 }

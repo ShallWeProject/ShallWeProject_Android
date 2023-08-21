@@ -22,7 +22,8 @@ object RetrofitClient {
     private val authInterceptor = Interceptor { chain ->
         val originalRequest = chain.request()
         // val token : String? = sharedPreferences.getString(ACCESS_TOKEN, null)
-        val token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMCIsImlhdCI6MTY5MjM2NTQxMywiZXhwIjoxNjkyMzY5MDEzfQ.PTewLc2lsrBaSlsWCfgr5cqCA0f4JDEZnLn5TDQmbqGMUWAHH3iniWrgJoqjMScTHQbqQTRLwc8OQeHHEVbIGA"
+        val token = ""
+
         val modifiedRequest = originalRequest.newBuilder()
             .header("Authorization", "Bearer $token")
             .build()

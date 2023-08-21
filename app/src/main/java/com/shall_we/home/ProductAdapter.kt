@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.shall_we.R
 
 class ProductAdapter(private val context: Context) : RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
@@ -55,7 +56,7 @@ class ProductAdapter(private val context: Context) : RecyclerView.Adapter<Produc
             txtComment.text = item.subtitle
             txtPrice.text = item.price
 
-//            Glide.with(App.instance).load(item.img).into(imgProfile)
+            Glide.with(context).load(item.img).into(imgProfile)
 
         }
         init {

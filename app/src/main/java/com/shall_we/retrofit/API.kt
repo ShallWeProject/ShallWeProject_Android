@@ -23,6 +23,9 @@ object API {
     const val EXPERIENCE_GIFT="api/v1/experience/gift"
 
     const val EXPERIENCE_GIFT_EXPERIENCE_ID="api/v1/experience/gift/details/{ExperienceGiftId}"
+
+    const val EXPERIENCE_GIFT_POPULAR = "api/v1/experience/gift/popular"
+
 }
 
 enum class RESPONSE_STATE {
