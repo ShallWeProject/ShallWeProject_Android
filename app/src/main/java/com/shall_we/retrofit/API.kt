@@ -20,6 +20,7 @@ object API {
     const val SEND_ONE = "auth/send-one"
 
     const val VALID_VERIFICATION = "auth/valid-verification-code"
+
     const val EXPERIENCE_GIFT="api/v1/experience/gift"
 
     const val EXPERIENCE_GIFT_EXPERIENCE_ID="api/v1/experience/gift/details/{ExperienceGiftId}"
@@ -34,6 +35,12 @@ object API {
     const val EXPERIENCE_GIFT_POPULAR = "api/v1/experience/gift/popular"
 
     const val USERS="/api/v1/users"
+
+    //예약정보불러오기,예약수정
+    const val RESERVATIONS="api/v1/reservations/user"
+    //const val RESERVATIONS_USER="api/v1/reservations/user"
+    //해당 경험 선물에 생성된 예약 조회
+    const val RESERVATIONS_GIFT="api/v1/reservations/giftId"
 
 }
 
