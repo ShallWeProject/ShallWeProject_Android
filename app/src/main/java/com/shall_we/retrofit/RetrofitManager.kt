@@ -1,9 +1,14 @@
 package com.shall_we.retrofit
 
 import android.util.Log
+import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.shall_we.home.ProductData
+import com.shall_we.login.data.Auth
+import com.shall_we.login.data.AuthLogin
+import com.shall_we.login.data.AuthResponse
 import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.Response
 
 class RetrofitManager {
@@ -193,6 +198,50 @@ class RetrofitManager {
         })
     }
 
+  fun sendOne(phoneNumber: String,completion: (RESPONSE_STATE, JsonElement?) -> Unit){
+        val call = iRetrofit?.sendOne(phoneNumber) ?: return
+        call.enqueue(object : Callback<JsonElement> {
+            // 응답 성공인 경우
+            override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
+                Log.d("retrofit", "RetrofitManager - onResponse() called / response : ${response.code()}")
 
+                when (response.code()) {
+                    200 -> {
+                        response.body()?.let {
+                            completion(RESPONSE_STATE.OKAY, it)
+                        }
+                    }
+                }
+            }
+
+            // 응답 실패인 경우
+            override fun onFailure(call: Call<JsonElement>, t: Throwable) {
+                Log.d("retrofit", "RetrofitManager - onFailure() called / t: $t")
+                completion(RESPONSE_STATE.FAIL, null)
+            }
+        })
+    }
+    fun validVerification(phoneNumber: String,completion: (RESPONSE_STATE, JsonElement?) -> Unit){
+        val call = iRetrofit?.sendOne(phoneNumber) ?: return
+
+        call.enqueue(object : Callback<JsonElement> {
+            // 응답 성공인 경우
+            override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
+                Log.d("retrofit", "RetrofitManager - onResponse() called / response : ${response.code()}")
+
+                when (response.code()) {
+                    200 -> {
+                        completion(RESPONSE_STATE.OKAY, response.body())
+                    }
+                }
+            }
+
+            // 응답 실패인 경우
+            override fun onFailure(call: Call<JsonElement>, t: Throwable) {
+                Log.d("retrofit", "RetrofitManager - onFailure() called / t: $t")
+                completion(RESPONSE_STATE.FAIL, null)
+            }
+        })
+    }
 
 }
