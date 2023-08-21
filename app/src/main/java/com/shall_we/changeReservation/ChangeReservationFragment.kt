@@ -5,56 +5,80 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.prolificinteractive.materialcalendarview.CalendarDay
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener
+import com.prolificinteractive.materialcalendarview.format.TitleFormatter
 import com.shall_we.R
+import com.shall_we.base.BaseFragment
+import com.shall_we.databinding.FragmentChangeReservationBinding
+import com.shall_we.giftExperience.GiftExperienceFragment
+import java.text.SimpleDateFormat
+import java.util.Locale
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [ChangeReservationFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class ChangeReservationFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+class ChangeReservationFragment : BaseFragment<FragmentChangeReservationBinding>(R.layout.fragment_change_reservation) {
+    private lateinit var calendarView: MaterialCalendarView
+    private val locale: Locale = Locale("ko")
+    override fun init() {
+        val tabs = requireActivity().findViewById<View>(R.id.tabs)
+        tabs.visibility = View.GONE
+        calendarView = binding.calendar
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+        var isButtonSelected = false
+
+
+        calendarView.setOnDateChangedListener(object : OnDateSelectedListener {
+            override fun onDateSelected(
+                widget: MaterialCalendarView,
+                date: CalendarDay,
+                selected: Boolean
+            ) {
+                if (selected) {
+                    // 특정 날짜가 선택되면 버튼을 표시
+                    binding.btnbtn.visibility = View.VISIBLE
+                } else {
+                    // 선택이 취소되면 버튼을 숨김
+                    binding.btnbtn.visibility = View.INVISIBLE
+                }
+            }
+        })
+
+        calendarView.setTitleFormatter(object : TitleFormatter {
+            override fun format(calendarDay: CalendarDay?): CharSequence {
+                val monthFormat = SimpleDateFormat("MMMM yyyy", locale)
+                return monthFormat.format(calendarDay?.date)
+            }
+        })
+
+        binding.btnbtn.setOnClickListener {
+            isButtonSelected = !isButtonSelected
+            binding.btnbtn.isSelected = isButtonSelected
+        }
+        binding.btnbtnbtn.setOnClickListener {
+            val customDialog = CustomAlertDialog(requireContext())
+
+            customDialog.setTitle("예약변경")
+            customDialog.setMessage("9일 11시")
+
+            val alertDialog = customDialog.create()
+            alertDialog.show()
+
+            customDialog.setPositiveButton("변경하기", View.OnClickListener {
+                // 프래그먼트 이동 로직 추가
+                binding.btnbtn.visibility=View.GONE
+                binding.btnbtnbtn.visibility=View.GONE
+                val transaction = requireActivity().supportFragmentManager.beginTransaction()
+                 transaction.replace(R.id.change_reservation_layout, ChangedReservationFragment())
+                transaction.addToBackStack(null)
+                transaction.commit()
+
+                alertDialog.dismiss()
+            })
+
+
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_change_reservation, container, false)
-    }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ChangeReservationFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ChangeReservationFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
 }

@@ -1,12 +1,18 @@
 package com.shall_we.retrofit
 
 import android.util.Log
+import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.shall_we.home.ProductData
+import com.shall_we.signup.UserData
+import com.shall_we.login.data.Auth
+import com.shall_we.login.data.AuthLogin
+import com.shall_we.login.data.AuthResponse
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import com.shall_we.myAlbum.MyAlbumData
 import com.shall_we.mypage.MyGiftData
-import retrofit2.Call
-import retrofit2.Response
 
 class RetrofitManager {
     companion object{
@@ -40,10 +46,10 @@ class RetrofitManager {
                                 val price : String = resultItemObject.get("price").asString
                                 val formattedPrice = String.format("%,d", price.toInt())
 
-//                                val img : String = resultItemObject.get("giftImgUrl").asString
+                                val img : String = resultItemObject.get("giftImgUrl").asString
                                 val giftid : Int = resultItemObject.get("experienceGiftId").asInt
 
-                                val productItem = ProductData(title = title, subtitle = subtitle, price = formattedPrice, img = "img", giftid = giftid)
+                                val productItem = ProductData(title = title, subtitle = subtitle, price = formattedPrice, img = img, giftid = giftid)
 
                                 parsedProductDataArray.add(productItem)
                             }
@@ -85,10 +91,10 @@ class RetrofitManager {
                                 val price : String = resultItemObject.get("price").asString
                                 val formattedPrice = String.format("%,d", price.toInt())
 
-//                                val img : String = resultItemObject.get("giftImgUrl").asString
+                                val img : String = resultItemObject.get("giftImgUrl").asString
                                 val giftid : Int = resultItemObject.get("experienceGiftId").asInt
 
-                                val productItem = ProductData(title = title, subtitle = subtitle, price = formattedPrice, img = "img", giftid = giftid)
+                                val productItem = ProductData(title = title, subtitle = subtitle, price = formattedPrice, img = img, giftid = giftid)
                                 parsedProductDataArray.add(productItem)
                             }
                             completion(RESPONSE_STATE.OKAY,parsedProductDataArray)
@@ -107,7 +113,7 @@ class RetrofitManager {
         })
     }
 
-    fun experienceGiftSearch(title: String, completion:(RESPONSE_STATE, ArrayList<ProductData>?) -> Unit){
+    fun experienceGiftSearch(title: String, completion:(RESPONSE_STATE,ArrayList<ProductData>?) -> Unit){
         val call = iRetrofit?.experienceGiftSearch(title = title) ?:return
 
         call.enqueue(object : retrofit2.Callback<JsonElement>{
@@ -129,10 +135,10 @@ class RetrofitManager {
                                 val price : String = resultItemObject.get("price").asString
                                 val formattedPrice = String.format("%,d", price.toInt())
 
-//                                val img : String = resultItemObject.get("giftImgUrl").asString
+                                val img : String = resultItemObject.get("giftImgUrl").asString
                                 val giftid : Int = resultItemObject.get("experienceGiftId").asInt
 
-                                val productItem = ProductData(title = title, subtitle = subtitle, price = formattedPrice, img = "img", giftid = giftid)
+                                val productItem = ProductData(title = title, subtitle = subtitle, price = formattedPrice, img = img, giftid = giftid)
 
                                 parsedProductDataArray.add(productItem)
                             }
@@ -152,6 +158,126 @@ class RetrofitManager {
         })
     }
 
+    fun experienceGiftPopular(completion:(RESPONSE_STATE,ArrayList<ProductData>?) -> Unit){
+        val call = iRetrofit?.experienceGiftPopular() ?:return
+
+        call.enqueue(object : retrofit2.Callback<JsonElement>{
+            // 응답 성공
+            override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
+                Log.d("retrofit","RetrofitManager1 - onResponse() called / response : ${response.code()}")
+
+                when(response.code()){
+                    200 -> {
+                        response.body()?.let{
+                            var parsedProductDataArray = ArrayList<ProductData>()
+                            val body = it.asJsonObject
+                            val data = body.getAsJsonArray("data")
+
+                            data.forEach { resultItem ->
+                                val resultItemObject = resultItem.asJsonObject
+                                val title : String = resultItemObject.get("title").asString
+                                val subtitle : String = resultItemObject.get("subtitle").asString
+                                val price : String = resultItemObject.get("price").asString
+                                val formattedPrice = String.format("%,d", price.toInt())
+                                val img : String = resultItemObject.get("giftImgUrl").asString
+                                val giftid : Int = resultItemObject.get("experienceGiftId").asInt
+
+                                val productItem = ProductData(title = title, subtitle = subtitle, price = formattedPrice, img = img, giftid = giftid)
+                                parsedProductDataArray.add(productItem)
+                            }
+                            completion(RESPONSE_STATE.OKAY,parsedProductDataArray)
+                        }
+                    }
+                }
+            }
+
+            // 응답 실패
+            override fun onFailure(call: Call<JsonElement>, t: Throwable) {
+                Log.d("retrofit","RetrofitManager - onFailure() called / t: $t")
+                completion(RESPONSE_STATE.FAIL, null)
+
+            }
+
+        })
+    }
+
+  fun sendOne(phoneNumber: SendOneArray, completion: (RESPONSE_STATE, JsonElement?) -> Unit){
+        val call = iRetrofit?.sendOne(phoneNumber) ?: return
+        call.enqueue(object : Callback<JsonElement> {
+            // 응답 성공인 경우
+            override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
+                Log.d("retrofit", "RetrofitManager - onResponse() called / response : ${response.message()}")
+
+                when (response.code()) {
+                    200 -> {
+                        response.body()?.let {
+                            completion(RESPONSE_STATE.OKAY, it)
+                        }
+                    }
+                }
+            }
+
+            // 응답 실패인 경우
+            override fun onFailure(call: Call<JsonElement>, t: Throwable) {
+                Log.d("retrofit", "RetrofitManager - onFailure() called / t: $t")
+                completion(RESPONSE_STATE.FAIL, null)
+            }
+        })
+    }
+
+    fun usersPatch(userData: UserData, completion:(RESPONSE_STATE) -> Unit){
+        val call = iRetrofit?.usersPatch(userData = userData) ?:return
+
+        call.enqueue(object : retrofit2.Callback<JsonElement> {
+            // 응답 성공
+            override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
+                Log.d(
+                    "retrofit",
+                    "RetrofitManager - onResponse() called / response : ${response.code()}"
+                )
+
+                when (response.code()) {
+                    200 -> {
+                        response.body()?.let {
+                            val body = it.asJsonObject
+                            completion(RESPONSE_STATE.OKAY)
+                        }
+                    }
+                }
+            }
+
+            // 응답 실패
+            override fun onFailure(call: Call<JsonElement>, t: Throwable) {
+                Log.d("retrofit", "RetrofitManager - onFailure() called / t: $t")
+                completion(RESPONSE_STATE.FAIL)
+
+            }
+        })
+        }
+
+
+    fun validVerification(validVerificationArray: ValidVerificationArray,completion: (RESPONSE_STATE, Int?) -> Unit){
+        val call = iRetrofit?.validVerification(validVerificationArray) ?: return
+        call.enqueue(object : Callback<JsonElement> {
+            // 응답 성공인 경우
+            override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
+                Log.d(
+                    "retrofit",
+                    "RetrofitManager - onResponse() called / response : ${response.code()}"
+                )
+                completion(RESPONSE_STATE.OKAY, response.code())
+
+            }
+
+            // 응답 실패인 경우
+            override fun onFailure(call: Call<JsonElement>, t: Throwable) {
+                Log.d("retrofit", "RetrofitManager - onFailure() called / t: $t")
+                completion(RESPONSE_STATE.FAIL, null)
+            }
+        })
+    }
+
+    
     fun memoryPhoto(date: String, completion:(RESPONSE_STATE, ArrayList<MyAlbumData>?) -> Unit){
         val call = iRetrofit?.memoryPhoto(date=date) ?:return
 

@@ -162,151 +162,54 @@
             app:layout_constraintTop_toBottomOf="@id/exgift_btn01"
             android:layout_marginTop="10dp"/>
         <TextView
-
-            android:id="@+id/giftreserve_text01"
-            android:layout_width="49dp"
-            android:layout_height="17dp"
-            android:layout_marginTop="20dp"
-            android:text="보내는분"
-            android:textColor="@color/black"
-            android:textSize="12dp"
-            android:textStyle="bold"
-            app:layout_constraintLeft_toLeftOf="@+id/giftreserve_edittext01"
-            app:layout_constraintTop_toBottomOf="@id/exgift_btn01" />
-
-        <EditText
-            android:id="@+id/giftreserve_edittext01"
-            android:layout_width="328dp"
-            android:layout_height="39dp"
-            android:background="@drawable/edittext_design02"
-            android:hint="    이름을 입력해주세요"
-            android:textSize="12dp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/giftreserve_text01" />
-        
-        <TextView
-            android:background="#FEF3F2"
-            android:layout_marginTop="10dp"
-            android:id="@+id/space"
+            android:id="@id/exgift_text07"
             android:layout_width="match_parent"
-            android:layout_height="3dp"
-            app:layout_constraintTop_toBottomOf="@+id/giftreserve_edittext01"/>
-
-        <TextView
-            android:id="@+id/giftreserve_text02"
-            android:layout_marginTop="10dp"
-            android:layout_width="36dp"
-            android:layout_height="17dp"
-            android:textColor="@color/black"
-            android:text="받는 분"
-            android:textSize="12dp"
-            android:textStyle="bold"
-            app:layout_constraintLeft_toLeftOf="@+id/giftreserve_edittext02"
-            app:layout_constraintTop_toBottomOf="@+id/space" />
-
-        <Spinner
-            android:background="@drawable/edittext_design02"
-            android:id="@+id/spinner"
-            android:layout_width="103dp"
-            android:textSize="12dp"
-            android:layout_height="39dp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintStart_toStartOf="@+id/giftreserve_edittext02"
-            app:layout_constraintTop_toBottomOf="@+id/giftreserve_edittext02" />
-
-        <EditText
-            android:textSize="12dp"
-            android:id="@id/giftreserve_edittext04"
-            android:layout_width="103dp"
-            android:layout_height="39dp"
-            android:background="@drawable/edittext_design02"
-            app:layout_constraintLeft_toRightOf="@id/spinner"
-            app:layout_constraintTop_toBottomOf="@id/giftreserve_edittext02"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp" />
-        <EditText
-            android:textSize="12dp"
-            android:id="@id/giftreserve_edittext05"
-            android:layout_width="103dp"
-            android:layout_height="39dp"
-            android:background="@drawable/edittext_design02"
-            app:layout_constraintLeft_toRightOf="@id/giftreserve_edittext04"
-            app:layout_constraintTop_toBottomOf="@id/giftreserve_edittext02"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp" />
-
-
-        <EditText
-            android:id="@+id/giftreserve_edittext02"
-            android:layout_width="328dp"
-            android:layout_height="39dp"
-            android:background="@drawable/edittext_design02"
-            android:hint="    이름을 입력해주세요"
-            android:textSize="12dp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/giftreserve_text02" />
-
-        <TextView
-            android:layout_marginTop="10dp"
-            android:id="@+id/space02"
-            android:layout_width="match_parent"
-            android:layout_height="3dp"
-            android:background="#FEF3F2"
-            app:layout_constraintTop_toBottomOf="@+id/spinner" />
-
-
-        <TextView
-            android:layout_marginTop="10dp"
-            android:layout_width="34dp"
             android:layout_height="wrap_content"
-            android:id="@+id/giftreserve_text03"
-            android:textStyle="bold"
             android:textColor="@color/black"
             android:textSize="12dp"
-            app:layout_constraintLeft_toLeftOf="@+id/giftreserve_edittext03"
-            android:text="초대장"
-            app:layout_constraintTop_toBottomOf="@+id/space02">
-            
-        </TextView>
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/page_02"
+            android:layout_margin="25dp"
+            android:text="예약 일시"/>
 
-        <EditText
-            android:id="@+id/giftreserve_edittext03"
-            android:layout_width="320dp"
-            android:layout_height="212dp"
-            android:background="@drawable/invitation"
-            android:hint="     내용을 입력해주세요 "
-            android:textSize="12dp"
+
+
+        <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+            android:id="@+id/calendar"
+            android:layout_width="328dp"
+            android:layout_height="336dp"
+            android:background="@drawable/calender_design"
+            app:mcv_selectionColor="#F15F79"
             android:layout_marginTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/giftreserve_text03" />
+            app:layout_constraintTop_toBottomOf="@+id/exgift_text07"/>
 
-        <ImageButton
-            android:id="@id/giftreserve_btn01"
-            android:layout_width="85dp"
-            android:layout_height="85dp"
-            android:background="@drawable/add_image"
-            android:layout_marginTop="10dp"
-            app:layout_constraintLeft_toLeftOf="@id/giftreserve_edittext03"
-            app:layout_constraintTop_toBottomOf="@+id/giftreserve_edittext03">
+        <Button
+            android:id="@+id/btnbtn"
+            android:layout_width="49dp"
+            android:layout_height="27dp"
+            android:background="@drawable/giftdetail_btn_selector"
+            android:text="13시"
+            android:textColor="#EDA5B2"
+            android:visibility="invisible"
+            android:layout_marginLeft="33dp"
+            android:layout_marginTop="15dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/calendar"></Button>
 
-        </ImageButton>
-
-        <ImageButton
-            android:id="@+id/giftreserve_btn02"
+        <Button
+            android:id="@+id/exgift_btn03"
             android:layout_width="328dp"
             android:layout_height="39dp"
-            android:background="@drawable/btn_pay"
+            android:background="@drawable/gift_btn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="15dp"
-            app:layout_constraintLeft_toLeftOf="@id/giftreserve_edittext03"
-            app:layout_constraintTop_toBottomOf="@+id/giftreserve_btn01"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintTop_toBottomOf="@+id/btnbtn" />
 
-        </ImageButton>
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

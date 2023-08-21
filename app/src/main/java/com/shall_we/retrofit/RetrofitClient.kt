@@ -1,6 +1,7 @@
 package com.shall_we.retrofit
 
 import android.util.Log
+import com.shall_we.App.Companion.sharedPreferences
 import com.shall_we.utils.isJsonArray
 import com.shall_we.utils.isJsonObject
 import okhttp3.Interceptor
@@ -19,7 +20,10 @@ object RetrofitClient {
     // Interceptor를 사용하여 Bearer Token을 헤더에 추가
     private val authInterceptor = Interceptor { chain ->
         val originalRequest = chain.request()
-        val token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMCIsImlhdCI6MTY5MjI3ODUxMSwiZXhwIjoxNjkyMjgyMTExfQ.2jnM-SrvJyAXfaTUrO3aaWbdhjT0z_jTwmJYNRHjIHBuZnDelhNMqO2muVwPB1bD1KlX3vVO6-4BB7dJ6CvRxw"
+        // val token : String? = sharedPreferences.getString(ACCESS_TOKEN, null)
+        val token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMyIsImlhdCI6MTY5MjU5MjE3MCwiZXhwIjoxNjkyNTk1NzcwfQ.Lqa03FEsuNzsWPPrFnSUtQLmTVjYzdXIdI0coDx-ntY7YfAeRjCpVGAklgn7_4mXKKS379jnYoxCt6dJBlL8eg"
+
+
         val modifiedRequest = originalRequest.newBuilder()
             .header("Authorization", "Bearer $token")
             .build()

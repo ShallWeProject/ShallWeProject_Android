@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import androidx.fragment.app.FragmentManager
 
 import androidx.recyclerview.widget.RecyclerView
 import com.shall_we.R
+import com.shall_we.changeReservation.ChangeReservationFragment
 import com.shall_we.databinding.ItemGiftboxBinding
 import com.shall_we.giftExperience.GiftExperienceFragment
 import com.shall_we.retrofit.RetrofitManager
@@ -127,12 +129,15 @@ class MyGiftAdapter(private val context: Context, private val parentFragmentMana
         init {
             // 예약 변경으로 이동
             binding.tvChangeReserv.setOnClickListener {
+                // 클릭한 TextView의 위치(position)을 가져옴
                 val position = adapterPosition
+                Log.d("clicked?","clicked")
+                // 해당 위치에 있는 아이템 데이터 가져오기
                 val itemData = datas[position]
-                val giftExperienceFragment = GiftExperienceFragment() // 전환할 프래그먼트 인스턴스 생성
+                val giftReservationFragment = ChangeReservationFragment() // 전환할 프래그먼트 인스턴스 생성
                 val fragmentTransaction = parentFragmentManager.beginTransaction()
                 // 기존 프래그먼트를 숨기고 새로운 프래그먼트로 교체
-                fragmentTransaction.replace(R.id.mypage_layout,giftExperienceFragment, "mypage")
+                fragmentTransaction.replace(R.id.mypage_layout,giftReservationFragment, "mypage")
                 fragmentTransaction.addToBackStack(null)
                 fragmentTransaction.commitAllowingStateLoss()
 

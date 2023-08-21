@@ -1,14 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     tools:context=".changeReservation.ChangeReservationFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-</FrameLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/change_reservation_layout"
+        android:background="@color/white"
+        android:backgroundTint="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <TextView
+        android:textColor="@color/black"
+        android:id="@+id/exgift_text01"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="경험 선택"
+        android:textStyle="bold"
+        android:layout_margin="25dp"
+        android:textSize="12dp"></TextView>
+
+    <androidx.cardview.widget.CardView
+        android:translationZ="-100dp"
+        android:id="@+id/exgift_image01"
+        android:layout_width="170dp"
+        android:layout_height="120dp"
+        app:cardCornerRadius="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="25dp"
+        app:layout_constraintTop_toBottomOf="@id/exgift_text01"
+        app:layout_constraintLeft_toLeftOf="parent"
+        tools:ignore="MissingConstraints">
+
+        <ImageView
+            android:id="@+id/samplePic"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/detail_ex"
+            />
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@id/exgift_text02"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="11dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="20dp"
+        app:layout_constraintTop_toBottomOf="@id/exgift_text01"
+        android:text="[성수]"
+        android:textColor="@color/black"
+        app:layout_constraintLeft_toRightOf="@id/exgift_image01"
+        android:textStyle="bold"></TextView>
+
+    <TextView
+        android:id="@id/exgift_text03"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="11dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintTop_toBottomOf="@id/exgift_text01"
+        android:text="인기 베이킹 클래스"
+        android:textColor="@color/black"
+        app:layout_constraintLeft_toRightOf="@id/exgift_text02"
+        android:textStyle="bold"></TextView>
+
+    <TextView
+        android:id="@id/exgift_text04"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12dp"
+        android:textColor="@color/black"
+        android:text="기념일 레터링 케이크\n사지말고 함께 만들어요"
+        app:layout_constraintTop_toBottomOf="@id/exgift_text03"
+        app:layout_constraintLeft_toRightOf="@id/exgift_image01"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"/>
+
+    <TextView
+        android:id="@+id/page_01"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:background="@color/rose50"
+        app:layout_constraintTop_toBottomOf="@id/exgift_image01"
+        android:layout_marginTop="10dp"/>
+
+
+
+    <TextView
+        android:id="@id/exgift_text07"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="12dp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/page_01"
+        android:layout_margin="25dp"
+        android:text="예약 일시"/>
+
+
+
+    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+        android:id="@+id/calendar"
+        android:layout_width="328dp"
+        android:layout_height="336dp"
+        android:background="@drawable/calender_design"
+        app:mcv_selectionColor="#F15F79"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/exgift_text07"/>
+
+    <Button
+        android:id="@+id/btnbtn"
+        android:layout_width="49dp"
+        android:layout_height="27dp"
+        android:background="@drawable/giftdetail_btn_selector"
+        android:text="13시"
+        android:textColor="#EDA5B2"
+        android:visibility="invisible"
+        android:layout_marginLeft="33dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/calendar"></Button>
+
+        <Button
+            android:id="@+id/btnbtnbtn"
+            android:layout_width="328dp"
+            android:layout_height="39dp"
+            android:backgroundTint="#F15F79"
+            android:textSize="15dp"
+            android:textColor="#FFFFFF"
+            android:text="변경하기"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/btn_design"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnbtn" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>
