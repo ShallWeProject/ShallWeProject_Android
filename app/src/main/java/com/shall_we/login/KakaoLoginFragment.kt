@@ -102,6 +102,7 @@ class kakaoLoginFragment : Fragment() , IAuthSign {
             else if (user != null) {
                 Log.i("login", "사용자 정보 요청 성공" +
                         "\n회원번호: ${user.id}" +
+                        "\n회원번호: ${user.kakaoAccount?.birthday}" +
                         "\n이메일: ${user.kakaoAccount?.email}" +
                         "\n닉네임: ${user.kakaoAccount?.profile?.nickname}" +
                         "\n프로필사진: ${user.kakaoAccount?.profile?.thumbnailImageUrl}")
