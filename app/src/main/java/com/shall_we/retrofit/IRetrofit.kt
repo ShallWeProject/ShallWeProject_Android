@@ -1,6 +1,10 @@
 package com.shall_we.retrofit
 
 import com.google.gson.JsonElement
+import retrofit2.Call
+import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.PATCH
 import com.shall_we.login.data.Auth
 import com.shall_we.login.data.AuthLogin
 import com.shall_we.login.data.AuthResponse
@@ -51,5 +55,8 @@ interface IRetrofit {
 
     @GET(API.EXPERIENCE_GIFT_POPULAR)
     fun experienceGiftPopular() : Call<JsonElement>
+
+    @PATCH(API.USERS)
+    fun usersPatch(@Body userData: com.shall_we.signup.UserData) : Call<JsonElement>
 
 }

@@ -87,7 +87,10 @@ class AgreementFragment : Fragment() {
             agreementDialog(it, resources.getString(R.string.agreement_personal))
         }
         binding.btnNext.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putBoolean("isChecked", binding.cbAgree4.isChecked)
             val profileFragment = ProfileFragment() // 전환할 프래그먼트 인스턴스 생성
+            profileFragment.arguments = bundle
             val fragmentTransaction = parentFragmentManager.beginTransaction()
             fragmentTransaction.replace(R.id.agreement_layout, profileFragment, "profile")
             fragmentTransaction.addToBackStack(null)
