@@ -35,10 +35,9 @@ class ProductListFragment : Fragment() , ProductAdapter.OnItemClickListener{
 
         // 프래그먼트 전환
         parentFragmentManager.beginTransaction()
-            .replace(R.id.home_layout, newFragment)
+            .replace(R.id.nav_host_fragment, newFragment)
             .addToBackStack(null)
             .commit()
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

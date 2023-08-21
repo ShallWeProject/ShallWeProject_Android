@@ -17,6 +17,7 @@ import com.shall_we.R
 import com.shall_we.changeReservation.ChangeReservationFragment
 import com.shall_we.databinding.ItemGiftboxBinding
 import com.shall_we.giftExperience.GiftExperienceFragment
+import com.shall_we.retrofit.RetrofitManager
 
 
 class MyGiftAdapter(private val context: Context, private val parentFragmentManager: FragmentManager) : RecyclerView.Adapter<MyGiftAdapter.ViewHolder>(){
@@ -140,36 +141,21 @@ class MyGiftAdapter(private val context: Context, private val parentFragmentMana
                 fragmentTransaction.addToBackStack(null)
                 fragmentTransaction.commitAllowingStateLoss()
 
-
-
-
 //                // 클릭한 아이템 데이터 처리 (예: 다른 화면으로 이동 등)
 //                // 특정 프래그먼트로 이동하려면 findNavController()를 사용하여 목적지로 이동
 //                // 예를 들어, 목적지의 id가 myAlbumFragment인 경우:
 //                val action = MyGiftReceivedFragmentDirections.actionMyGiftReceivedFragmentToMyAlbumFragment()
 //                findNavController().navigate(action)
 
-//                val myGiftReceivedFragment = MyGiftReceivedFragment()
-//                val fragmentTransaction = parentFragmentManager.beginTransaction()
-//                fragmentTransaction.replace(R.id.mypage_layout, myAlbumFragment, "myAlbumFragment")
-//                fragmentTransaction.addToBackStack(null)
-//                fragmentTransaction.commitAllowingStateLoss()
-//                Log.d("clicked","change")
-
-//                val newFragment = ChangeReservationFragment.newInstance("", "")
-//                val fragmentTransaction = parentFragmentManager.beginTransaction()
-//                fragmentTransaction.replace(R.id.myalbum, newFragment, "changeReservationFragment")
-//                fragmentTransaction.addToBackStack(null)
-//                fragmentTransaction.commitAllowingStateLoss()
             }
 
             // 예약 취소로 이동
             binding.tvCancelReserv.setOnClickListener {
-                cuDialog(it, position)
+                cuDialog(it, datas[position].idx)
             }
         }
     }
-    fun cuDialog(view: View, position: Int) {
+    fun cuDialog(view: View, id: Int) {
         val myLayout = LayoutInflater.from(context).inflate(R.layout.dialog_cancel_reservation, null)
         val build = AlertDialog.Builder(view.context).apply {
             setView(myLayout)
@@ -180,12 +166,13 @@ class MyGiftAdapter(private val context: Context, private val parentFragmentMana
         dialog.show()
 
         myLayout.findViewById<Button>(R.id.btn_cancel_reservation).setOnClickListener {
+            // RetrofitManager.instance.deleteReservation
             Toast.makeText(view.context, "예약이 취소되었습니다.", Toast.LENGTH_SHORT).show()
             datas.apply {
-                removeAt(position)
+                removeAt(id)
             }
-            notifyItemRemoved(position)
-            notifyItemRangeChanged(position, itemCount)
+            notifyItemRemoved(id)
+            notifyItemRangeChanged(id, itemCount)
             dialog.dismiss()
         }
         myLayout.findViewById<Button>(R.id.btn_cancel).setOnClickListener {

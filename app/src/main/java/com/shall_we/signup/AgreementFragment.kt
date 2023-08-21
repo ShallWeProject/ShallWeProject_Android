@@ -18,6 +18,8 @@ import com.shall_we.databinding.FragmentAgreementBinding
 class AgreementFragment : Fragment() {
     private lateinit var binding: FragmentAgreementBinding
 
+    private lateinit var phone : String
+
     fun initAgreement() {
 
         val checkList = listOf(
@@ -87,11 +89,17 @@ class AgreementFragment : Fragment() {
             agreementDialog(it, resources.getString(R.string.agreement_personal))
         }
         binding.btnNext.setOnClickListener {
-            val profileFragment = ProfileFragment() // 전환할 프래그먼트 인스턴스 생성
-            val fragmentTransaction = parentFragmentManager.beginTransaction()
-            fragmentTransaction.replace(R.id.agreement_layout, profileFragment, "profile")
-            fragmentTransaction.addToBackStack(null)
-            fragmentTransaction.commitAllowingStateLoss()
+            val bundle = Bundle()
+            bundle.putString("phone", phone)
+            bundle.putBoolean("isChecked", binding.cbAgree4.isChecked)
+            val newFragment = ProfileFragment() // 전환할 다른 프래그먼트 객체 생성
+            newFragment.arguments = bundle
+
+            // 프래그먼트 전환
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView3, newFragment)
+                .addToBackStack(null)
+                .commit()
 
         }
 
@@ -127,6 +135,9 @@ class AgreementFragment : Fragment() {
     ): View? {
         // 바인딩 초기화 및 반환
         binding = FragmentAgreementBinding.inflate(inflater, container, false)
+
+        phone = arguments?.getString("phone", "").toString()
+
         return binding.root
     }
 

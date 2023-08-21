@@ -4,9 +4,13 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.gson.JsonElement
+import com.shall_we.dto.ExperienceDetailRes
 import com.shall_we.dto.ExperienceGiftDto
 import com.shall_we.dto.ExperienceMainRes
 import com.shall_we.dto.ExperienceReq
+import com.shall_we.dto.ExplanationRes
+import com.shall_we.retrofit.RESPONSE_STATE
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -28,50 +32,94 @@ class ExperienceDetailViewModel:ViewModel() {
 
     fun get_experience_gift() {
         ExperienceDetailService.experienceDetailService?.get_experience_gift()?.enqueue(object :
-            Callback<ExperienceMainRes> {
+            Callback<JsonElement> {
             override fun onResponse(
-                call: Call<ExperienceMainRes>,
-                response: Response<ExperienceMainRes>
+                call: Call<JsonElement>,
+                response: Response<JsonElement>
             ) {
                 if (response.isSuccessful) {
-                    Log.d("whatisthis", "_experience_gift_data, response 성공")
-                    _experience_gift_data.value = (response.body())
-                    Log.d("whatisthis", response.body()?.expCategoryRes.toString())
-                } else {
-                    _experience_detail_data.postValue(ExperienceGiftDto())
-                    Log.d("whatisthis", "_experience_gift_data, response 못받음")
+                    Log.d("what?",response.toString())
                 }
             }
 
-            override fun onFailure(call: Call<ExperienceMainRes>, t: Throwable) {
-                _experience_gift_data.value = ExperienceMainRes(emptyList(), emptyList())
+            override fun onFailure(call: Call<JsonElement>, t: Throwable) {
+
                 Log.d("whatisthis", "_experience_gift_data, 호출 실패: ${t.localizedMessage}")
             }
         })
     }
-    fun get_experience_detail_data(ExperienceGiftId:Int) {
-        ExperienceDetailService.experienceDetailService?.get_experience_detail_data(ExperienceGiftId)?.enqueue(object :
-            Callback<ExperienceGiftDto> {
-            override fun onResponse(
-                call: Call<ExperienceGiftDto>,
-                response: Response<ExperienceGiftDto>
-            ) {
-                if (response.isSuccessful) {
-                    Log.d("whatisthis", "_experience_detail_data, response 성공")
-                    _experience_detail_data.value = (response.body())
-                } else {
-                    _experience_detail_data.postValue(ExperienceGiftDto())
-                    Log.d("whatisthis", "_experience_detail_data, response 못받음")
-                }
-            }
+    fun get_experience_detail_data(
+        ExperienceGiftId: Int,
+        completion: (RESPONSE_STATE, ArrayList<ExperienceDetailRes>?) -> Unit
+    ) {
+        ExperienceDetailService.experienceDetailService?.get_experience_detail_data(ExperienceGiftId)
+            ?.enqueue(object : Callback<JsonElement> {
+                override fun onResponse(
+                    call: Call<JsonElement>,
+                    response: Response<JsonElement>
+                ) {
+                    if (response.isSuccessful) {
+                        Log.d("whatisthis", "_experience_detail_data, response 성공")
 
-            override fun onFailure(call: Call<ExperienceGiftDto>, t: Throwable) {
-                Log.d(
-                    "whatisthis",
-                    " get_experience_detail_data, 네트워크 오류가 발생했습니다." + t.message.toString()
-                )
-            }
-        })
+                        response.body()?.let {
+                            val parsedDataArray = ArrayList<ExperienceDetailRes>()
+                            val body = it.asJsonObject
+
+                            val data = body.getAsJsonObject("data")
+
+                            val giftImageUrl = data.get("giftImgUrl").asString
+                            //val thumbnail = data.get("thumbnail").asString
+                            val title = data.get("title").asString
+                            val subtitle = data.get("subtitle").asString
+                            val price = data.get("price").asInt
+                            //val description = data.get("description").asString
+                            //val experienceCategory = data.get("expCategory").asString
+                            //val statementCategory = data.get("sttCategory").asString
+                            val experienceGiftId = data.get("experienceGiftId").asInt
+
+                            val explanationResJsonArray = data.getAsJsonArray("explanation")
+                            val explanationResList = ArrayList<ExplanationRes>()
+                            explanationResJsonArray?.forEach { expItem ->
+                                val expItemObject = expItem.asJsonObject
+                                val description = expItemObject.get("description").asString
+                                val explanationUrl = expItemObject.get("explanationUrl").asString
+
+                                val explanationRes = ExplanationRes(
+                                    description = description,
+                                    explanationUrl=explanationUrl)
+                                explanationResList.add(explanationRes)
+                            }
+
+                            val experienceDetailRes = ExperienceDetailRes(
+                                giftImageUrl = giftImageUrl,
+                                //thumbnail = thumbnail,
+                                title = title,
+                                subtitle = subtitle,
+                                price = price,
+                                explanation = explanationResList,
+                                //description = description,
+                                // experienceCategory = experienceCategory,
+                                //statementCategory = statementCategory,
+                                experienceGiftId = experienceGiftId
+                            )
+
+                            parsedDataArray.add(experienceDetailRes)
+                            completion(RESPONSE_STATE.OKAY, parsedDataArray)
+                        }
+                    } else {
+                        Log.d("whatisthis", "_experience_detail_data, response 못받음")
+                        completion(RESPONSE_STATE.FAIL, null)
+                    }
+                }
+
+                override fun onFailure(call: Call<JsonElement>, t: Throwable) {
+                    Log.d(
+                        "whatisthis",
+                        "get_experience_detail_data, 네트워크 오류가 발생했습니다. " + t.message.toString()
+                    )
+                    completion(RESPONSE_STATE.FAIL, null)
+                }
+            })
     }
 
     fun set_experience_gift(experienceReq: ExperienceReq) {

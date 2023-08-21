@@ -11,31 +11,8 @@
         <item>가격높은순</item>
         <item>가격낮은순</item>
     </string-array>
-    <array name="category_img">
-        <item>@drawable/craft</item>
-        <item>@drawable/baking</item>
-        <item>@drawable/art</item>
-        <item>@drawable/outdoor</item>
-        <item>@drawable/sport</item>
-        <item>@drawable/category_photobook</item>
-        <item>@drawable/category_sent</item>
-        <item>@drawable/category_received</item>
-        <item>@drawable/category_faq</item>
-        <item>@drawable/category_mail</item>
-    </array>
-    <array name="category_text">
-        <item>"공예"</item>
-        <item>"베이킹"</item>
-        <item>"문화예술"</item>
-        <item>"아웃도어"</item>
-        <item>"스포츠"</item>
-        <item>"추억사진첩"</item>
-        <item>"보낸 선물"</item>
-        <item>"받은 선물"</item>
-        <item>"FAQ"</item>
-        <item>"메일 문의"</item>
+    <string name="kakao_app_key">532b0f3956990c31ad796b479b6f344b</string>
 
-    </array>
     <string name="agreement_service">
         제1조 목적\n
 본 약관은 셸위(이하 “셸위” 또는 “회사”라 함)가 제공하는 셸위 서비스(이하 “서비스”라 함)의 이용과 관련하여 회원과 회사 간의 권리와 의무, 책임사항, 기타 필요한 사항을 규정함을 목적으로 합니다.\n
