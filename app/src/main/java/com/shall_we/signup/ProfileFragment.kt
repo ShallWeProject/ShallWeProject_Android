@@ -93,7 +93,7 @@ class ProfileFragment : Fragment() {
                     Log.d("retrofit", "api 호출 성공 : ${responseState!!}")
                     val signupSuccessFragment = SignupSuccessFragment() // 전환할 프래그먼트 인스턴스 생성
                     val fragmentTransaction = parentFragmentManager.beginTransaction()
-                    fragmentTransaction.replace(R.id.signup_success_layout, signupSuccessFragment, "signup_success")
+                    fragmentTransaction.replace(R.id.fragmentContainerView3, signupSuccessFragment, "signup_success")
                     fragmentTransaction.addToBackStack(null)
                     fragmentTransaction.commitAllowingStateLoss()
 

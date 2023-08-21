@@ -92,7 +92,7 @@ class AgreementFragment : Fragment() {
             val profileFragment = ProfileFragment() // 전환할 프래그먼트 인스턴스 생성
             profileFragment.arguments = bundle
             val fragmentTransaction = parentFragmentManager.beginTransaction()
-            fragmentTransaction.replace(R.id.agreement_layout, profileFragment, "profile")
+            fragmentTransaction.replace(R.id.fragmentContainerView3, profileFragment, "profile")
             fragmentTransaction.addToBackStack(null)
             fragmentTransaction.commitAllowingStateLoss()
 
