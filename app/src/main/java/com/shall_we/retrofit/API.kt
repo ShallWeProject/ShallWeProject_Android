@@ -24,6 +24,13 @@ object API {
 
     const val EXPERIENCE_GIFT_EXPERIENCE_ID="api/v1/experience/gift/details/{ExperienceGiftId}"
 
+    const val MEMORY_PHOTO = "/api/v1/memory-photo/{date}"
+
+    const val USERS_GIFT_SEND = "/api/v1/users/gift/send"
+
+    const val USERS_GIFT_RECEIVE = "/api/v1/users/gift/receive"
+
+    const val DELETE_RESERVATION = "/api/v1/reservations"
     const val EXPERIENCE_GIFT_POPULAR = "api/v1/experience/gift/popular"
 
     const val USERS="/api/v1/users"

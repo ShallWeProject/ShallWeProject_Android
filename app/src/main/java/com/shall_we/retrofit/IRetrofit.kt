@@ -26,6 +26,17 @@ interface IRetrofit {
     @GET(API.EXPERIENCE_GIFT_SEARCH)
     fun experienceGiftSearch(@Query("title") title : String) : Call<JsonElement>
 
+    @GET(API.USERS_GIFT_SEND)
+    fun usersGiftSend() : Call<JsonElement>
+
+    @GET(API.USERS_GIFT_RECEIVE)
+    fun usersGiftReceive() : Call<JsonElement>
+
+    @GET(API.MEMORY_PHOTO)
+    fun memoryPhoto(@Path("date") date: String) : Call<JsonElement>
+
+    @GET(API.DELETE_RESERVATION)
+    fun experienceGiftSttCategory(id: Int): Call<JsonElement>
     //유저 로그인
     @POST(API.AUTH_SIGN_IN)
     fun authSignIn(@Body auth: AuthLogin): Call<AuthResponse>

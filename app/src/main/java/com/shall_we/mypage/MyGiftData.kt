@@ -7,6 +7,5 @@ data class MyGiftData(
     val date: String,
     val time: String,
     val cancellation: Boolean,
-    val messageImgUrl: Int,
     val message: String
     )
