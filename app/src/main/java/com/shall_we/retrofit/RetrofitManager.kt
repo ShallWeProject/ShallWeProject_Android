@@ -199,12 +199,12 @@ class RetrofitManager {
         })
     }
 
-  fun sendOne(phoneNumber: String,completion: (RESPONSE_STATE, JsonElement?) -> Unit){
+  fun sendOne(phoneNumber: SendOneArray, completion: (RESPONSE_STATE, JsonElement?) -> Unit){
         val call = iRetrofit?.sendOne(phoneNumber) ?: return
         call.enqueue(object : Callback<JsonElement> {
             // 응답 성공인 경우
             override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
-                Log.d("retrofit", "RetrofitManager - onResponse() called / response : ${response.code()}")
+                Log.d("retrofit", "RetrofitManager - onResponse() called / response : ${response.message()}")
 
                 when (response.code()) {
                     200 -> {
@@ -254,21 +254,17 @@ class RetrofitManager {
         }
 
 
-    fun validVerification(phoneNumber: String,completion: (RESPONSE_STATE, JsonElement?) -> Unit){
-        val call = iRetrofit?.sendOne(phoneNumber) ?: return
-          call.enqueue(object : Callback<JsonElement> {
+    fun validVerification(validVerificationArray: ValidVerificationArray,completion: (RESPONSE_STATE, Int?) -> Unit){
+        val call = iRetrofit?.validVerification(validVerificationArray) ?: return
+        call.enqueue(object : Callback<JsonElement> {
             // 응답 성공인 경우
             override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
                 Log.d(
                     "retrofit",
                     "RetrofitManager - onResponse() called / response : ${response.code()}"
                 )
+                completion(RESPONSE_STATE.OKAY, response.code())
 
-                when (response.code()) {
-                    200 -> {
-                        completion(RESPONSE_STATE.OKAY, response.body())
-                    }
-                }
             }
 
             // 응답 실패인 경우
