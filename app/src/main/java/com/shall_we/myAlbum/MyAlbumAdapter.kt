@@ -4,19 +4,26 @@ import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.shall_we.R
+import com.shall_we.databinding.FragmentMyAlbumBinding
 import com.shall_we.databinding.ItemAlbumBinding
 
 
 class MyAlbumAdapter(private val context: Context) : RecyclerView.Adapter<MyAlbumAdapter.ViewHolder>() {
-    var datas = mutableListOf<MyAlbumPhotoData>()
+    var datas = mutableListOf<MyAlbumData>()
 
+
+    fun setImageList(list: List<MyAlbumData>) {
+        datas.addAll(list)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemAlbumBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -31,15 +38,13 @@ class MyAlbumAdapter(private val context: Context) : RecyclerView.Adapter<MyAlbu
 
         // 여기서 데이터를 바인딩하여 ViewHolder에 표시합니다.
         // 예를 들어, ImageView에 이미지 설정하기
-        holder.binding.ivAlbum.setImageResource(data.imgUrl)
+        // holder.binding.ivAlbum.setImageResource(data.imgUrl)
 
         holder.binding.root.setOnClickListener {
             picDialog(it, position)
         }
-        // 나머지 데이터들도 바인딩하기 (TextView 등)
 
-        // 클릭 이벤트 등을 설정하려면 여기서도 추가해줄 수 있습니다.
-
+        holder.bind()
     }
 
     fun picDialog(view: View, position: Int) {
@@ -53,7 +58,7 @@ class MyAlbumAdapter(private val context: Context) : RecyclerView.Adapter<MyAlbu
         else {
             val myLayout = LayoutInflater.from(context).inflate(R.layout.dialog_photoviewer, null)
             val imageView = myLayout.findViewById<ImageView>(R.id.iv_photo)
-            imageView.setImageResource(datas[position].imgUrl)
+            // imageView.setImageResource(datas[position].memoryImgs[position])
             val build = AlertDialog.Builder(view.context).apply {
                 setView(myLayout)
             }
@@ -70,5 +75,12 @@ class MyAlbumAdapter(private val context: Context) : RecyclerView.Adapter<MyAlbu
         return datas.size
     }
 
-    inner class ViewHolder(val binding: ItemAlbumBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class ViewHolder(val binding: ItemAlbumBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind() {
+//            val item = datas[absoluteAdapterPosition]
+//            Glide.with(itemView)
+//                .load(item)
+//                .into(binding.ivAlbum)
+        }
+    }
 }

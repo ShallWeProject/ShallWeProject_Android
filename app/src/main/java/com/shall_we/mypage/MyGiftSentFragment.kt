@@ -44,7 +44,6 @@ class MyGiftSentFragment : Fragment() {
                     "2023.08.13",
                     "20시",
                     false,
-                    R.drawable.message_img,
                     "취뽀 축하한다~~~ 주당인 널 위해 칵테일 클래스를 찾아와봤어~ 내 센스 한 번만 칭찬해주고ㅋㅎ 무쪼록 우리 광란의 밤을 보내보자고~!~!! 스냅사진도 신청했으니까 드레스코드도 블랙으로 꼭 맞춰와라잉! 다시 한 번 축하해!!"
 
                 )
@@ -57,7 +56,6 @@ class MyGiftSentFragment : Fragment() {
                     "2023.04.23",
                     "16시",
                     false,
-                    R.drawable.message_img2,
                     "100일 넌무너무 축하해 !! 100일 기념으로 케이크 같이 만드는거 어때? 직접 케이크 만들고 성수 맛집 가장 !!!"
                 ),
             )
