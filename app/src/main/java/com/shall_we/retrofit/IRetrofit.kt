@@ -44,11 +44,11 @@ interface IRetrofit {
 
     // 인증 문자 전송
     @POST(API.SEND_ONE)
-    fun sendOne(@Body phoneNumber: String): Call<JsonElement>
+    fun sendOne(@Body phoneNumber: SendOneArray): Call<JsonElement>
 
     // 인증 번호 검증
     @POST(API.VALID_VERIFICATION)
-    fun validVerification(@Body verificationCode: String, @Body phoneNumber:String): Call<JsonElement>
+    fun validVerification(@Body validVerificationArray : ValidVerificationArray): Call<JsonElement>
 
     @GET(API.EXPERIENCE_GIFT_POPULAR)
     fun experienceGiftPopular() : Call<JsonElement>
@@ -57,3 +57,7 @@ interface IRetrofit {
     fun usersPatch(@Body userData: com.shall_we.signup.UserData) : Call<JsonElement>
 
 }
+
+data class ValidVerificationArray(val verificationCode: String, val phoneNumber:String)
+
+data class SendOneArray(val phoneNumber: String)

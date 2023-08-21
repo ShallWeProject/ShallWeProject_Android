@@ -4,9 +4,11 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.gson.JsonElement
 import com.shall_we.dto.ExperienceGiftDto
 import com.shall_we.dto.ExperienceMainRes
 import com.shall_we.dto.ExperienceReq
+import com.shall_we.retrofit.RESPONSE_STATE
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -38,7 +40,7 @@ class ExperienceDetailViewModel:ViewModel() {
                     _experience_gift_data.value = (response.body())
                     Log.d("whatisthis", response.body()?.expCategoryRes.toString())
                 } else {
-                    _experience_detail_data.postValue(ExperienceGiftDto())
+//                    _experience_detail_data.postValue(ExperienceGiftDto())
                     Log.d("whatisthis", "_experience_gift_data, response 못받음")
                 }
             }

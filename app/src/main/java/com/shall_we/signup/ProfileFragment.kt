@@ -65,7 +65,7 @@ class ProfileFragment : Fragment() {
 
         binding.btnNextProfile.setOnClickListener {
             //Todo: 앞에서 번호 받아와서 업데이트
-            phone = "010-1111-1111"
+            phone = arguments?.getString("phone", "").toString()
             age = binding.edtAge.text.toString().toInt()
             gender = "UNKNOWN"
             if (binding.btnMan.isChecked)
