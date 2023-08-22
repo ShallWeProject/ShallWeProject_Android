@@ -1,10 +1,12 @@
 package com.shall_we.signup
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.shall_we.MainActivity
 import com.shall_we.R
 import com.shall_we.databinding.FragmentLoginSuccessBinding
 import com.shall_we.home.HomeFragment
@@ -20,12 +22,8 @@ class LoginSuccessFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.btnHome.setOnClickListener {
-            val homeFragment = HomeFragment() // 전환할 프래그먼트 인스턴스 생성
-            val fragmentTransaction = parentFragmentManager.beginTransaction()
-            // 기존 프래그먼트를 숨기고 새로운 프래그먼트로 교체
-            fragmentTransaction.replace(R.id.home_layout, homeFragment, "home")
-            fragmentTransaction.addToBackStack(null)
-            fragmentTransaction.commitAllowingStateLoss()
+            val intent = Intent(activity, MainActivity::class.java)
+            startActivity(intent)
         }
     }
 

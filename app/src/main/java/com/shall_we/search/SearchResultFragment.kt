@@ -1,6 +1,7 @@
 package com.shall_we.search
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +27,7 @@ class SearchResultFragment : BaseFragment<FragmentSearchResultBinding>(R.layout.
         // 클릭된 아이템의 정보를 사용하여 다른 프래그먼트로 전환하는 로직을 작성
         val newFragment = ExperienceDetailFragment() // 전환할 다른 프래그먼트 객체 생성
         val bundle = Bundle()
-        bundle.putInt("id", item.giftid) // 클릭된 아이템의 이름을 "title" 키로 전달
+        bundle.putInt("id", item.giftid)
         newFragment.arguments = bundle
 
         // 프래그먼트 전환

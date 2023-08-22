@@ -108,13 +108,7 @@ class SearchHistoryFragment : BaseFragment<FragmentSearchHistoryBinding>(R.layou
 
         this.insertSearchTermHistory(searchTerm = queryString)
 
-        searchResultCall(queryString)
-    }
-
-    @SuppressLint("SetTextI18n")
-    fun searchResultCall(queryString : String) {
-        // 검색 API 불러오기
-        this.searchPhotoApiCall(queryString)
+        searchPhotoApiCall(queryString)
     }
 
     private fun searchPhotoApiCall(query: String){
@@ -133,6 +127,8 @@ class SearchHistoryFragment : BaseFragment<FragmentSearchHistoryBinding>(R.layou
                     else{
                         bundle.putBoolean("status", true)
                         bundle.putSerializable("data", responseBody)
+                        Log.d("retrofit", "$responseBody")
+
                     }
                     newFragment.arguments = bundle
 

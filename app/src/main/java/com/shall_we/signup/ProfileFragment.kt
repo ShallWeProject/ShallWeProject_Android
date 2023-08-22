@@ -16,11 +16,12 @@ import com.shall_we.retrofit.RetrofitManager
 class ProfileFragment : Fragment() {
     private lateinit var binding: FragmentProfileBinding
 
+    var phone: String = ""
+    var age: Int = 0
+    var gender: String = ""
+    var marketingAgree: Boolean = false
+
     private fun initProfile() {
-        var phone: String
-        var age: Int
-        var gender: String
-        var marketingAgree: Boolean
 
         fun checkRbChecked(): Boolean {
             if (binding.btnMan.isChecked || binding.btnWoman.isChecked || binding.btnNone.isChecked) {
@@ -68,29 +69,28 @@ class ProfileFragment : Fragment() {
             phone = arguments?.getString("phone", "").toString()
             age = binding.edtAge.text.toString().toInt()
             gender = "UNKNOWN"
-            if (binding.btnMan.isChecked)
-                gender = "MALE"
-            else if (binding.btnWoman.isChecked)
-                gender = "FEMALE"
-            else if (binding.btnNone.isChecked)
-                gender = "UNKNOWN"
+            if (binding.btnMan.isChecked) gender = "MALE"
+            else if (binding.btnWoman.isChecked) gender = "FEMALE"
+            else if (binding.btnNone.isChecked) gender = "UNKNOWN"
 
             val isChecked = arguments?.getBoolean("isChecked", false)  // 기본값은 false
-            if (isChecked == true)
-                marketingAgree = true
-            else
-                marketingAgree = false
+            if (isChecked == true) marketingAgree = true
+            else marketingAgree = false
 
-            var userData = UserData(phone, marketingAgree, age, gender)
-            usersPatchApiCall(userData)
+            var userData : UserData = UserData(phone, marketingAgree, age, gender)
+            Log.d("retrofit", "api 호출 성공 : ${userData}")
+
+            usersPatchApiCall()
         }
     }
-    private fun usersPatchApiCall(userData: UserData){
+    private fun usersPatchApiCall(){
         //레트로핏 연결
-        RetrofitManager.instance.usersPatch(userData = userData, completion = { responseState ->
+        var userData : UserData = UserData(phone, marketingAgree, age, gender)
+
+        RetrofitManager.instance.usersPatch(userData, completion = { responseState, responseCode ->
             when (responseState) {
                 RESPONSE_STATE.OKAY -> {
-                    Log.d("retrofit", "api 호출 성공 : ${responseState!!}")
+                    Log.d("retrofit", "usersPatch api 호출 성공 : ${responseCode!!}")
                     val signupSuccessFragment = SignupSuccessFragment() // 전환할 프래그먼트 인스턴스 생성
                     val fragmentTransaction = parentFragmentManager.beginTransaction()
                     fragmentTransaction.replace(R.id.fragmentContainerView3, signupSuccessFragment, "signup_success")
