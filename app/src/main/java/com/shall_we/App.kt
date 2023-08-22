@@ -15,8 +15,8 @@ class App : Application() {
 
         lateinit var sharedPreferences: SharedPreferences
 
-        var accessToken = ACCESS_TOKEN
-        var refreshToken = REFRESH_TOKEN
+        var accessToken:String? = ACCESS_TOKEN
+        var refreshToken:String? = REFRESH_TOKEN
         var auth = Auth("PROVIDER_ID", "USER_EMAIL", "USER_NAME", "USER_IMG_URL")
     }
 

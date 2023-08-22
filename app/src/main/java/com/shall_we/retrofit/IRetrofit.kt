@@ -10,6 +10,7 @@ import com.shall_we.login.data.AuthLogin
 import com.shall_we.login.data.AuthResponse
 import com.shall_we.login.data.AuthSignOutResponse
 import com.shall_we.dto.ExperienceGiftDto
+import com.shall_we.signup.UserData
 import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -51,7 +52,7 @@ interface IRetrofit {
 
     // 토큰갱신
     @POST(API.AUTH_REFRESH)
-    fun tokenRefresh(@Body refreshToken :String): Call<AuthResponse>
+    fun tokenRefresh(@Body refreshTokenArray :RefreshTokenArray): Call<AuthResponse>
 
     // 인증 문자 전송
     @POST(API.SEND_ONE)
@@ -65,10 +66,12 @@ interface IRetrofit {
     fun experienceGiftPopular() : Call<JsonElement>
 
     @PATCH(API.USERS)
-    fun usersPatch(@Body userData: com.shall_we.signup.UserData) : Call<JsonElement>
+    fun usersPatch(@Body userData: UserData) : Call<JsonElement>
 
 }
 
 data class ValidVerificationArray(val verificationCode: String, val phoneNumber:String)
 
 data class SendOneArray(val phoneNumber: String)
+
+data class RefreshTokenArray(val refreshToken:String)
