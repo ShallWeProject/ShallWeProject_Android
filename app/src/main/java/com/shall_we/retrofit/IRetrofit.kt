@@ -19,6 +19,7 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.Url
 
 interface IRetrofit {
 
@@ -37,10 +38,10 @@ interface IRetrofit {
     @GET(API.USERS_GIFT_RECEIVE)
     fun usersGiftReceive() : Call<JsonElement>
 
-    @GET(API.MEMORY_PHOTO)
+    @GET(API.GET_MEMORY_PHOTO)
     fun getMemoryPhoto(@Path("date") date: String) : Call<JsonElement>
 
-    @POST(API.MEMORY_PHOTO)
+    @POST(API.POST_MEMORY_PHOTO)
     fun postMemoryPhoto(@Body uploadPhotoArray: UploadPhotoArray) : Call<JsonElement>
 
     @DELETE(API.DELETE_RESERVATION)
@@ -79,11 +80,12 @@ interface IRetrofit {
     @PATCH(API.USERS)
     fun usersPatch(@Body userData: UserData) : Call<JsonElement>
 
-    @GET("/default/presignedURL-lambda")
-    fun getImgUrl(@Query("ext") ext: String,@Query("dir") dir: String, @Query("filename") filename: String): Call<JsonElement>
+    @POST("/default/presignedURL-lambda")
+    fun getImgUrl(@Body data: BodyData): Call<JsonElement>
+  
+    @PUT
+    fun uploadImg(@Url url: String, @Body imageBytes: ByteArray): Call<JsonElement>
 
-    @POST(API.UPLOAD_IMG)
-    fun uploadImg(@Body imageBytes: JsonElement): Call<JsonElement>
 }
 
 data class ValidVerificationArray(val verificationCode: String, val phoneNumber:String)
@@ -93,3 +95,5 @@ data class SendOneArray(val phoneNumber: String)
 data class RefreshTokenArray(val refreshToken:String)
 
 data class UploadPhotoArray(val memoryPhotoImgKey: String, val reservationId: Int)
+
+data class BodyData(val ext: String, val dir: String, val filename: String)

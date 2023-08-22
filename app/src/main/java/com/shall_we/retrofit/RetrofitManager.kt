@@ -26,6 +26,9 @@ class RetrofitManager {
     // 레트로핏 인터페이스 가져오기
     private val iRetrofit: IRetrofit? =
         RetrofitClient.getClient(API.BASE_URL)?.create(IRetrofit::class.java)
+    private val Retrofit: IRetrofit? =
+        RetrofitClient.getClient2("https://668h6987ib.execute-api.ap-northeast-2.amazonaws.com")?.create(IRetrofit::class.java)
+
 
     // 상황별 추천경험 조회 api
     fun experienceGiftSttCategory(
@@ -352,20 +355,20 @@ class RetrofitManager {
                             var parsedMyAlbumDataArray = ArrayList<MyAlbumData>()
                             val body = it.asJsonObject
                             val data = body.getAsJsonArray("data")
-//                            data.forEach { resultItem ->
-//                                val resultItemObject = resultItem.asJsonObject
-//                                val reservationId : Int = resultItemObject.get("reservationId").asInt
-//                                val mutableList = resultItemObject.getAsJsonArray("memoryPhotoImages")
-//                                val memoryPhotoImages = mutableListOf<String>()
-//                                for (i in 0 until mutableList.size()) {
-//                                    val item = mutableList[i].asString
-//                                    memoryPhotoImages.add(item)
-//                                }
-//
-////                                val myAlbumItem = MyAlbumData(idx = reservationId, date = date, memoryImgs = memoryPhotoImages)
-//
-////                                parsedMyAlbumDataArray.add(myAlbumItem)
-//                            }
+                            data.forEach { resultItem ->
+                                val resultItemObject = resultItem.asJsonObject
+                                val reservationId : Int = resultItemObject.get("reservationId").asInt
+                                val mutableList = resultItemObject.getAsJsonArray("memoryPhotoImages")
+                                val memoryPhotoImages = mutableListOf<String>()
+                                for (i in 0 until mutableList.size()) {
+                                    val item = mutableList[i].asString
+                                    memoryPhotoImages.add(item)
+                                }
+
+                                val myAlbumItem = MyAlbumData(idx = reservationId, date = date, memoryImgs = memoryPhotoImages.toTypedArray())
+
+                                parsedMyAlbumDataArray.add(myAlbumItem)
+                            }
 
                             completion(RESPONSE_STATE.OKAY,parsedMyAlbumDataArray)
                         }
@@ -572,10 +575,9 @@ class RetrofitManager {
         })
     }
 
-
-    fun getImgUrl(ext: String, dir: String, filename: String, completion:(RESPONSE_STATE, imageKey: String, presignedUrl: String) -> Unit){
-        val getRetrofit = RetrofitClient.getClient("https://668h6987ib.execute-api.ap-northeast-2.amazonaws.com")?.create(IRetrofit::class.java)
-        val call = getRetrofit?.getImgUrl(ext = ext, dir = dir, filename = filename) ?:return
+    fun getImgUrl(data: BodyData, completion:(RESPONSE_STATE, imageKey: String, presignedUrl: String) -> Unit){
+//        val getRetrofit = RetrofitClient.getClient("https://668h6987ib.execute-api.ap-northeast-2.amazonaws.com")?.create(IRetrofit::class.java)
+        val call = Retrofit?.getImgUrl(data) ?:return
 
         call.enqueue(object : retrofit2.Callback<JsonElement>{
             // 응답 성공
@@ -605,14 +607,15 @@ class RetrofitManager {
         })
     }
 
-    fun uploadImg(imageBytes: JsonElement, completion:(RESPONSE_STATE) -> Unit){
-        val getRetrofit = RetrofitClient.getClient("https://shallwebucket.s3.ap-northeast-2.amazonaws.com")?.create(IRetrofit::class.java)
-        val call = getRetrofit?.uploadImg(imageBytes = imageBytes) ?:return
+    fun uploadImg(imageBytes: ByteArray, url: String,endPoint:String, completion:(RESPONSE_STATE) -> Unit){
+        val getRetrofit = RetrofitClient.getClient2(url)?.create(IRetrofit::class.java)
+        val call = getRetrofit?.uploadImg(url=endPoint, imageBytes = imageBytes) ?:return
+
 
         call.enqueue(object : retrofit2.Callback<JsonElement>{
             // 응답 성공
             override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
-                Log.d("retrofit","RetrofitManager - onResponse() called / response : ${response.code()}")
+                Log.d("retrofit","RetrofitManager - onResponse() called / response : ${response}")
 
                 when(response.code()){
                     200 -> {
@@ -635,7 +638,7 @@ class RetrofitManager {
         call.enqueue(object : retrofit2.Callback<JsonElement>{
             // 응답 성공
             override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
-                Log.d("retrofit","RetrofitManager - userGiftReceive onResponse() called / response : ${response.code()}")
+                Log.d("retrofit","RetrofitManager - postMemoryPhoto onResponse() called / response : ${response.code()}")
 
                 when(response.code()){
                     200 -> {
@@ -655,5 +658,4 @@ class RetrofitManager {
 
         })
     }
-
 }
