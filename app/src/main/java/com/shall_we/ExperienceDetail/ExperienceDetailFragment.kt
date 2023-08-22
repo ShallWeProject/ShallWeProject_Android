@@ -27,7 +27,7 @@ class ExperienceDetailFragment: BaseFragment<FragmentExperienceDetailBinding>(R.
     lateinit var experienceDetailViewModel: ExperienceDetailViewModel
     lateinit var reservationViewModel: ReservationViewModel
     private var experienceGiftId: Int = 1
-    lateinit var exDetailFragment: ExDetailFragment
+
 
     override fun init() {
 
@@ -109,7 +109,14 @@ class ExperienceDetailFragment: BaseFragment<FragmentExperienceDetailBinding>(R.
         {
             Log.d("clicked","clicked")
             binding.fab.visibility = View.GONE
+
+
+            val bundle = Bundle()
+            bundle.putInt("id", experienceGiftId) // 클릭된 아이템의 이름을 "title" 키로 전달
+
+
             val giftReservationFragment = GiftResevationFragment() // 전환할 프래그먼트 인스턴스 생성
+            giftReservationFragment.arguments = bundle
             val fragmentTransaction = parentFragmentManager.beginTransaction()
             // 기존 프래그먼트를 숨기고 새로운 프래그먼트로 교체
             fragmentTransaction.replace(R.id.exdetail_layout, giftReservationFragment, "giftreserve")

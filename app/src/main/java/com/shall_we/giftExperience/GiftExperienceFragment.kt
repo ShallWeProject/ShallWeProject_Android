@@ -16,15 +16,20 @@ import android.widget.Button
 import android.widget.CalendarView
 import android.widget.EditText
 import android.widget.TextView
+import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener
 import com.prolificinteractive.materialcalendarview.format.TitleFormatter
 import com.shall_we.ExperienceDetail.ExperienceDetailFragment
+import com.shall_we.ExperienceDetail.ExperienceDetailViewModel
 import com.shall_we.R
 import com.shall_we.base.BaseFragment
 import com.shall_we.changeReservation.CustomAlertDialog
 import com.shall_we.databinding.FragmentGiftExperienceBinding
+import com.shall_we.dto.ExperienceReq
+import com.shall_we.retrofit.RESPONSE_STATE
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -32,9 +37,53 @@ import java.util.Locale
 
 class GiftExperienceFragment : BaseFragment<FragmentGiftExperienceBinding>(R.layout.fragment_gift_experience) {
 
-
-
+    lateinit var experienceDetailViewModel: ExperienceDetailViewModel
+    private var experienceGiftId:Int=1
     override fun init() {
+        arguments?.let { // 아규먼트로부터 데이터를 불러옴
+
+            experienceGiftId = it.getInt("id") // id 키로 giftid 값을 불러와 저장하게 됩니다.
+
+
+        }
+
+
+        experienceDetailViewModel = ViewModelProvider(this).get(ExperienceDetailViewModel::class.java)
+        experienceDetailViewModel.get_experience_detail_data(experienceGiftId, completion = {
+                responseState, responseBody ->
+            when(responseState){
+                RESPONSE_STATE.OKAY -> {
+
+
+                    responseBody?.get(0)?.let { item ->
+
+                        val experienceReq = item.price?.let {
+                            ExperienceReq(
+                                title = item.title.toString(),
+                                thumbnail = "",
+                                price = item.price.toInt(),
+                                expCategoryId =1,
+                                sttCategory = 1,
+                                subtitleId =1,
+                                description = item.description.toString()
+
+                            )
+
+                        }
+                        if (experienceReq != null) {
+                            experienceDetailViewModel.set_experience_gift(experienceReq)
+                            Log.d("예약","완료")
+                        }
+
+                    }
+
+
+                }
+                RESPONSE_STATE.FAIL -> {
+                    Log.d("retrofit", "api 호출 에러")
+                }
+            }
+        })
 
                 binding.giftreserveEdittext01.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
