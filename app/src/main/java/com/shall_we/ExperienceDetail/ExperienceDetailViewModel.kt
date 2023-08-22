@@ -72,10 +72,11 @@ class ExperienceDetailViewModel:ViewModel() {
                             val title = data.get("title").asString
                             val subtitle = data.get("subtitle").asString
                             val price = data.get("price").asInt
-                            //val description = data.get("description").asString
+                            val description = if (!data.get("description").isJsonNull) data.get("description").asString else null
                             //val experienceCategory = data.get("expCategory").asString
                             //val statementCategory = data.get("sttCategory").asString
                             val experienceGiftId = data.get("experienceGiftId").asInt
+
 
                             val explanationResJsonArray = data.getAsJsonArray("explanation")
                             val explanationResList = ArrayList<ExplanationRes>()
@@ -97,14 +98,16 @@ class ExperienceDetailViewModel:ViewModel() {
                                 subtitle = subtitle,
                                 price = price,
                                 explanation = explanationResList,
-                                //description = description,
-                                // experienceCategory = experienceCategory,
+                                description = description,
+                                //experienceCategory = experienceCategory,
                                 //statementCategory = statementCategory,
                                 experienceGiftId = experienceGiftId
                             )
 
                             parsedDataArray.add(experienceDetailRes)
+
                             completion(RESPONSE_STATE.OKAY, parsedDataArray)
+
                         }
                     } else {
                         Log.d("whatisthis", "_experience_detail_data, response 못받음")
