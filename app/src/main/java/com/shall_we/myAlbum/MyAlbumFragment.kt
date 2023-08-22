@@ -1,7 +1,8 @@
 package com.shall_we.myAlbum
 
-import android.content.ContentUris
-import android.database.Cursor
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -12,27 +13,29 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.lifecycle.lifecycleScope
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.GridLayoutManager
 import com.shall_we.R
 import com.shall_we.databinding.FragmentMyAlbumBinding
+import com.shall_we.home.ProductData
 import com.shall_we.mypage.MyGiftData
 import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RetrofitManager
-import kotlinx.coroutines.launch
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
-class MyAlbumFragment : Fragment() {
+class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
     private lateinit var viewBinding: FragmentMyAlbumBinding
     private lateinit var adapter: MyAlbumAdapter
 
-    val albumData = mutableListOf<MyAlbumData>()
+    val albumData = ArrayList<MyAlbumPhotoData>()
+    val allPhotoData: ArrayList<MyAlbumPhotoData> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestPermission()
         RetrofitCallDate()
+
     }
 
     override fun onCreateView(
@@ -73,17 +76,17 @@ class MyAlbumFragment : Fragment() {
 //        albumadapter = MyAlbumAdapter(requireContext())
 //        viewBinding.recyclerAlbumView.adapter = albumadapter
         // adapter.datas = // 데이터 리스트 설정
-        adapter = MyAlbumAdapter(requireContext())
-        viewBinding.recyclerAlbumView.adapter = adapter
+//        adapter = MyAlbumAdapter(requireContext())
+//        viewBinding.recyclerAlbumView.adapter = adapter
         // adapter.datas = // 데이터 리스트 설정
 
-        albumData.apply {
-            add(
-                MyAlbumData(
-                idx = 1, date = "2023-08-21", memoryImgs = arrayOf("img1.jpg", "img2.jpg")
-                )
-            )
-        }
+//        albumData.apply {
+//            add(
+//                MyAlbumData(
+//                idx = 1, date = "2023-08-21", memoryImgs = arrayOf("img1.jpg", "img2.jpg")
+//                )
+//            )
+//        }
 
         // 현재 시각을 가져오기
         val currentDateTime = OffsetDateTime.now()
@@ -92,16 +95,22 @@ class MyAlbumFragment : Fragment() {
         val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
         val formattedDateTime = currentDateTime.format(formatter)
 
-        RetrofitCall(formattedDateTime)
+        initAlbum(allPhotoData)
+
+//        RetrofitCall(formattedDateTime)
     }
 
-    private fun initAlbum(resultData: ArrayList<MyAlbumData>) {
+    private fun initAlbum(resultData: ArrayList<MyAlbumPhotoData>) {
         adapter = MyAlbumAdapter(requireContext())
         viewBinding.recyclerAlbumView.adapter = adapter
+        adapter.setOnItemClickListener(this)
 
         albumData.apply {
+            add(MyAlbumPhotoData("add_photo.png"))
             addAll(resultData)
         }
+        Log.d("retrofit","$albumData")
+
         adapter.datas = albumData
         adapter.notifyDataSetChanged()
     }
@@ -128,13 +137,21 @@ class MyAlbumFragment : Fragment() {
     }
 
     private fun RetrofitCall(date: String) {
-        RetrofitManager.instance.memoryPhoto(
+        RetrofitManager.instance.getMemoryPhoto(
             date = date,
             completion = { responseState, responseBody ->
+
                 when (responseState) {
                     RESPONSE_STATE.OKAY -> {
                         Log.d("retrofit", "myalbum api : ${responseBody?.size}")
-                        initAlbum(responseBody!!)
+                        responseBody?.forEach { myAlbumData ->
+                            val photoUrls: List<String> = myAlbumData.memoryImgs.toList()
+                            photoUrls.forEach { url ->
+                                allPhotoData.add(MyAlbumPhotoData(url))
+                            }
+                        }
+
+                        initAlbum(allPhotoData)
                     }
 
                     RESPONSE_STATE.FAIL -> {
@@ -143,6 +160,7 @@ class MyAlbumFragment : Fragment() {
                 }
             })
     }
+
 
     private fun requestPermission() {
         val locationResultLauncher = registerForActivityResult(
@@ -155,6 +173,57 @@ class MyAlbumFragment : Fragment() {
         locationResultLauncher.launch(
             android.Manifest.permission.READ_EXTERNAL_STORAGE
         )
+    }
+    private val PICK_IMAGE_REQUEST = 1 // 요청 코드
+
+    // 갤러리 열기
+    fun openGallery() {
+        Log.d("gallery","갤러리")
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(intent, PICK_IMAGE_REQUEST)
+    }
+
+    // startActivityForResult로부터 결과 처리
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
+            // 선택한 이미지의 Uri 가져오기
+            var selectedImageUri: Uri? = data?.data
+            selectedImageUri =
+                selectedImageUri?.let { getImageAbsolutePath(it, requireContext())?.toUri() }// 선택한 이미지의 경로를 구하는 함수 호출
+
+            // Uri를 사용하여 이미지를 처리하거나 표시할 수 있습니다.
+            if (selectedImageUri != null) {
+                Toast.makeText(view?.context, "이미지의 URI는 $selectedImageUri 입 니 다", Toast.LENGTH_SHORT).show()
+                Log.d("Album Result", "$selectedImageUri")
+            }
+        }
+    }
+
+
+
+    // Uri에서 절대 경로 추출하기
+    private fun getImageAbsolutePath(uri: Uri, context: Context): String? {
+        val projection = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor = context.contentResolver.query(uri, projection, null, null, null)
+        var path: String? = null
+
+        cursor?.let {
+            if(it.moveToFirst()) {
+                val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+                path = it.getString(columnIndex)
+            }
+            it.close()
+        }
+
+        return path
+    }
+
+    override fun onItemClick() {
+            // 클릭된 아이템이 첫 번째 아이템(사진 추가 버튼)일 때
+            openGallery()
+
     }
 //    private fun getCursor(): Cursor? {
 //        //커서란?

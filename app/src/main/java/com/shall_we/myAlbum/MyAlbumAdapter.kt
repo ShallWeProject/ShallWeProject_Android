@@ -15,13 +15,23 @@ import com.bumptech.glide.Glide
 import com.shall_we.R
 import com.shall_we.databinding.FragmentMyAlbumBinding
 import com.shall_we.databinding.ItemAlbumBinding
+import com.shall_we.home.ProductData
 
 
 class MyAlbumAdapter(private val context: Context) : RecyclerView.Adapter<MyAlbumAdapter.ViewHolder>() {
-    var datas = mutableListOf<MyAlbumData>()
+    var datas = ArrayList<MyAlbumPhotoData>()
 
+    private var itemClickListener: OnItemClickListener? = null
 
-    fun setImageList(list: List<MyAlbumData>) {
+    // 클릭 리스너 인터페이스 정의
+    interface OnItemClickListener {
+        fun onItemClick()
+    }
+
+    fun setOnItemClickListener(listener: OnItemClickListener) {
+        itemClickListener = listener
+    }
+    fun setImageList(list: ArrayList<MyAlbumPhotoData>) {
         datas.addAll(list)
     }
 
@@ -44,13 +54,15 @@ class MyAlbumAdapter(private val context: Context) : RecyclerView.Adapter<MyAlbu
             picDialog(it, position)
         }
 
-        holder.bind()
+        holder.bind(datas[position])
     }
 
     fun picDialog(view: View, position: Int) {
         // 사진 추가
         if (position == 0) {
             Toast.makeText(view.context,    "사진 추가 기능", Toast.LENGTH_SHORT).show()
+            itemClickListener?.onItemClick()
+
             //openGalleryForImageSelection()
         }
 
@@ -58,7 +70,9 @@ class MyAlbumAdapter(private val context: Context) : RecyclerView.Adapter<MyAlbu
         else {
             val myLayout = LayoutInflater.from(context).inflate(R.layout.dialog_photoviewer, null)
             val imageView = myLayout.findViewById<ImageView>(R.id.iv_photo)
-            // imageView.setImageResource(datas[position].memoryImgs[position])
+
+            Glide.with(context).load(datas[position].imgUrl).into(imageView)
+
             val build = AlertDialog.Builder(view.context).apply {
                 setView(myLayout)
             }
@@ -66,6 +80,7 @@ class MyAlbumAdapter(private val context: Context) : RecyclerView.Adapter<MyAlbu
             dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
             dialog.show()
+
 
         }
     }
@@ -76,7 +91,18 @@ class MyAlbumAdapter(private val context: Context) : RecyclerView.Adapter<MyAlbu
     }
 
     inner class ViewHolder(val binding: ItemAlbumBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind() {
+        private val iv_album: ImageView = itemView.findViewById(R.id.iv_album)
+        fun bind(item : MyAlbumPhotoData) {
+            val position = adapterPosition
+
+            if (position == 0) {
+                Glide.with(context).load(R.drawable.add_photo).into(iv_album)
+            }
+
+            // 사진 뷰어
+            else {
+                Glide.with(context).load(datas[position].imgUrl).into(iv_album)
+            }
 //            val item = datas[absoluteAdapterPosition]
 //            Glide.with(itemView)
 //                .load(item)
