@@ -5,6 +5,7 @@ import com.shall_we.dto.ExperienceDetailRes
 import com.shall_we.dto.ExperienceGiftDto
 import com.shall_we.dto.ExperienceMainRes
 import com.shall_we.dto.ExperienceReq
+import com.shall_we.dto.ReservationRequest
 import com.shall_we.retrofit.API
 import com.shall_we.retrofit.RetrofitClient
 import retrofit2.Call
@@ -24,11 +25,11 @@ object ExperienceDetailService {
         @GET(API.EXPERIENCE_GIFT_EXPERIENCE_ID)
         fun  get_experience_detail_data(@Path("ExperienceGiftId") ExperienceGiftId: Int): Call<JsonElement>
 
-        //경험선물추가
-        @POST(API.EXPERIENCE_GIFT)
-        fun set_experience_gift(
-            @Body ExperienceReq: ExperienceReq
-        ): Call<ExperienceReq>
+       // 예약추가
+//        @POST(API.RESERVATIONS)
+//        fun set_experience_gift(
+//            @Body ReservationRequest: ReservationRequest
+//        ): Call<JsonElement>
     }
 
    // val experienceDetailService =
