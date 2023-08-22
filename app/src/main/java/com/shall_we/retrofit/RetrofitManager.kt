@@ -406,7 +406,7 @@ class RetrofitManager {
                                 val dateTime : String = resultItemObject.get("dateTime").asString
                                 val invitationComment : String = resultItemObject.get("invitationComment").asString
 
-                                val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
+                                val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
                                 val dateTimeStr = sdf.parse(dateTime)
 
                                 // Date 객체에서 날짜와 시간 추출
@@ -460,7 +460,7 @@ class RetrofitManager {
                                 val dateTime : String = resultItemObject.get("dateTime").asString
                                 val invitationComment : String = resultItemObject.get("invitationComment").asString
 
-                                val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
+                                val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
                                 val dateTimeStr = sdf.parse(dateTime)
 
                                 // Date 객체에서 날짜와 시간 추출

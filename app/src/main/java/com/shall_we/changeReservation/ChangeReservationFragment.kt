@@ -1,14 +1,12 @@
 package com.shall_we.changeReservation
 
+import android.database.Cursor
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.os.Bundle
+import android.net.Uri
+import android.provider.MediaStore
 import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener
@@ -17,10 +15,8 @@ import com.shall_we.R
 import com.shall_we.base.BaseFragment
 import com.shall_we.databinding.FragmentChangeReservationBinding
 import com.shall_we.dto.UpdateReservationReq
-import com.shall_we.giftExperience.GiftExperienceFragment
 import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RetrofitManager
-import com.shall_we.utils.initProductRecycler
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -176,4 +172,8 @@ class ChangeReservationFragment : BaseFragment<FragmentChangeReservationBinding>
             }
         })
     }
+
 }
+
+
+
