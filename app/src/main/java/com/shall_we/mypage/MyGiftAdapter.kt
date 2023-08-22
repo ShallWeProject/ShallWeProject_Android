@@ -50,6 +50,7 @@ class MyGiftAdapter(private val context: Context, private val parentFragmentMana
         if (data.cancellable == false) {
             holder.binding.tvCancelReserv.visibility = View.GONE
             holder.binding.tvChangeReserv.visibility = View.GONE
+            holder.binding.tvTime.visibility = View.GONE
         }
 
         if (holder.binding.tvMessage.visibility == View.VISIBLE) {
@@ -104,21 +105,20 @@ class MyGiftAdapter(private val context: Context, private val parentFragmentMana
             null,     // 끝 부분 Drawable 설정 (null이면 이전 설정 유지)
             null      // 아래쪽 Drawable 설정 (null이면 이전 설정 유지)
         )
-
         holder.binding.tvDate.setBackgroundResource(R.drawable.tv_date_selected)
         holder.binding.tvDate.setTextColor(Color.parseColor("#E31B54"))
+        holder.binding.tvTime.setCompoundDrawablesRelativeWithIntrinsicBounds(
+            holder.itemView.context.getDrawable(R.drawable.time_light_resize), // 시작 부분 Drawable 설정
+            null,     // 위쪽 Drawable 설정 (null이면 이전 설정 유지)
+            null,     // 끝 부분 Drawable 설정 (null이면 이전 설정 유지)
+            null      // 아래쪽 Drawable 설정 (null이면 이전 설정 유지)
+        )
+        holder.binding.tvTime.setBackgroundResource(R.drawable.tv_date_selected)
+        holder.binding.tvTime.setTextColor(Color.parseColor("#E31B54"))
+
         if (data.cancellable == true) {
             holder.binding.tvChangeReserv.visibility = View.VISIBLE
             holder.binding.tvCancelReserv.visibility = View.VISIBLE
-            holder.binding.tvTime.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                holder.itemView.context.getDrawable(R.drawable.time_light_resize), // 시작 부분 Drawable 설정
-                null,     // 위쪽 Drawable 설정 (null이면 이전 설정 유지)
-                null,     // 끝 부분 Drawable 설정 (null이면 이전 설정 유지)
-                null      // 아래쪽 Drawable 설정 (null이면 이전 설정 유지)
-            )
-            holder.binding.tvTime.setBackgroundResource(R.drawable.tv_date_selected)
-            holder.binding.tvTime.setTextColor(Color.parseColor("#E31B54"))
-
         }
     }
 
