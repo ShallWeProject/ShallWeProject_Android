@@ -17,6 +17,7 @@ import java.lang.Exception
 object RetrofitClient {
     // 레트로핏 클라이언트 선언
     var retrofitClient : Retrofit? = null
+
     // Interceptor를 사용하여 Bearer Token을 헤더에 추가
     private val authInterceptor = Interceptor { chain ->
         val originalRequest = chain.request()
@@ -43,6 +44,25 @@ object RetrofitClient {
                 //.client(client.build())
                 .build()
         }
+        return retrofitClient
+    }
+    fun getClient2(baseUrl : String): Retrofit? {
+        val loggingInterceptor = HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY // 요청 및 응답 바디를 포함한 모든 정보를 로그로 출력
+        }
+            val httpClient = OkHttpClient.Builder()
+                .addInterceptor(loggingInterceptor)
+
+                .build()
+
+            retrofitClient = Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(httpClient)
+                //.client(client.build())
+                .build()
+
+
         return retrofitClient
     }
 

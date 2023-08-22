@@ -9,11 +9,15 @@ import com.shall_we.login.data.Auth
 import com.shall_we.login.data.AuthLogin
 import com.shall_we.login.data.AuthResponse
 import com.shall_we.login.data.AuthSignOutResponse
+import com.shall_we.login.data.AuthTokenData
+import com.shall_we.signup.UserData
 import retrofit2.http.DELETE
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.Url
 
 interface IRetrofit {
 
@@ -32,10 +36,10 @@ interface IRetrofit {
     @GET(API.USERS_GIFT_RECEIVE)
     fun usersGiftReceive() : Call<JsonElement>
 
-    @GET(API.MEMORY_PHOTO)
+    @GET(API.GET_MEMORY_PHOTO)
     fun getMemoryPhoto(@Path("date") date: String) : Call<JsonElement>
 
-    @POST(API.MEMORY_PHOTO)
+    @POST(API.POST_MEMORY_PHOTO)
     fun postMemoryPhoto(@Body uploadPhotoArray: UploadPhotoArray) : Call<JsonElement>
 
     @DELETE(API.DELETE_RESERVATION)
@@ -54,7 +58,7 @@ interface IRetrofit {
 
     // 토큰갱신
     @POST(API.AUTH_REFRESH)
-    fun tokenRefresh(@Body refreshToken :String): Call<AuthResponse>
+    fun tokenRefresh(@Body refreshTokenArray :RefreshTokenArray): Call<AuthTokenData>
 
     // 인증 문자 전송
     @POST(API.SEND_ONE)
@@ -68,15 +72,20 @@ interface IRetrofit {
     fun experienceGiftPopular() : Call<JsonElement>
 
     @PATCH(API.USERS)
-    fun usersPatch(@Body userData: com.shall_we.signup.UserData) : Call<JsonElement>
+    fun usersPatch(@Body userData: UserData) : Call<JsonElement>
 
-    @GET("/default/presignedURL-lambda")
-    fun getImgUrl(@Query("ext") ext: String,@Query("dir") dir: String, @Query("filename") filename: String): Call<JsonElement>
-
-    @POST(API.UPLOAD_IMG)
-    fun uploadImg(@Body imageBytes: JsonElement): Call<JsonElement>
+    @POST("/default/presignedURL-lambda")
+    fun getImgUrl(@Body data: BodyData): Call<JsonElement>
+    @PUT
+    fun uploadImg(@Url url: String, @Body imageBytes: ByteArray): Call<JsonElement>
 }
 
 data class ValidVerificationArray(val verificationCode: String, val phoneNumber:String)
+
 data class SendOneArray(val phoneNumber: String)
+
+data class RefreshTokenArray(val refreshToken:String)
+
 data class UploadPhotoArray(val memoryPhotoImgKey: String, val reservationId: Int)
+
+data class BodyData(val ext: String, val dir: String, val filename: String)

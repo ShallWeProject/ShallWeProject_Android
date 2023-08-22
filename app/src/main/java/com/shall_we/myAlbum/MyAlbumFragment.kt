@@ -1,6 +1,8 @@
 package com.shall_we.myAlbum
 
-import android.content.ContentUris
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
@@ -12,27 +14,45 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.lifecycle.lifecycleScope
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.gson.JsonElement
 import com.shall_we.R
 import com.shall_we.databinding.FragmentMyAlbumBinding
 import com.shall_we.mypage.MyGiftData
+import com.shall_we.retrofit.API
+import com.shall_we.retrofit.BodyData
+import com.shall_we.retrofit.IRetrofit
 import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RetrofitManager
 import kotlinx.coroutines.launch
+import com.shall_we.retrofit.UploadPhotoArray
+import org.json.JSONObject
+import retrofit2.http.Url
+import java.io.ByteArrayOutputStream
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
-class MyAlbumFragment : Fragment() {
+class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
     private lateinit var viewBinding: FragmentMyAlbumBinding
     private lateinit var adapter: MyAlbumAdapter
 
-    val albumData = mutableListOf<MyAlbumData>()
+    val albumData = ArrayList<MyAlbumPhotoData>()
+    val allPhotoData: ArrayList<MyAlbumPhotoData> = ArrayList()
+    lateinit var giftData: ArrayList<MyGiftData>
+
+    lateinit var imageKey: String
+    lateinit var presignedUrl: String
+    var selectedImageUri: Uri= Uri.EMPTY
+    var filename: String = ""
+
+    var path: Uri= Uri.EMPTY
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestPermission()
         RetrofitCallDate()
+
     }
 
     override fun onCreateView(
@@ -43,24 +63,49 @@ class MyAlbumFragment : Fragment() {
 //        (activity as AppCompatActivity).findViewById<ExtendedFloatingActionButton>(R.id.fab_album).show()
 
         viewBinding.ivLeft.setOnClickListener {
-            val newFragment = MyAlbumFragment()
-            val fragmentTransaction = parentFragmentManager.beginTransaction()
-            fragmentTransaction.replace(R.id.myalbum, newFragment, "myAlbumFragment")
-            fragmentTransaction.addToBackStack(null)
-            fragmentTransaction.commitAllowingStateLoss()
+//            val body: UploadPhotoArray = UploadPhotoArray("uploads/add_photops0poq.png", 82)
+//            postMemoryPhoto(body)
+//            val newFragment = MyAlbumFragment()
+//            val fragmentTransaction = parentFragmentManager.beginTransaction()
+//            fragmentTransaction.replace(R.id.myalbum, newFragment, "myAlbumFragment")
+//            fragmentTransaction.addToBackStack(null)
+//            fragmentTransaction.commitAllowingStateLoss()
         }
 
 
         viewBinding.ivRight.setOnClickListener {
-            val newFragment = MyAlbumFragment()
-            val fragmentTransaction = parentFragmentManager.beginTransaction()
-            fragmentTransaction.replace(R.id.myalbum, newFragment, "myAlbumFragment")
-            fragmentTransaction.addToBackStack(null)
-            fragmentTransaction.commitAllowingStateLoss()
+//            val body: UploadPhotoArray = UploadPhotoArray("uploads/add_photops0poq.png", 82)
+//            postMemoryPhoto(body)
+//
+
+//            val newFragment = MyAlbumFragment()
+//            val fragmentTransaction = parentFragmentManager.beginTransaction()
+//            fragmentTransaction.replace(R.id.myalbum, newFragment, "myAlbumFragment")
+//            fragmentTransaction.addToBackStack(null)
+//            fragmentTransaction.commitAllowingStateLoss()
         }
 
         return viewBinding.root
     }
+
+    private fun postMemoryPhoto(uploadPhotoArray: UploadPhotoArray) {
+        RetrofitManager.instance.postMemoryPhoto(
+            uploadPhotoArray = uploadPhotoArray,
+            completion = { responseState ->
+
+                when (responseState) {
+                    RESPONSE_STATE.OKAY -> {
+                        Log.d("retrofit", "postmemoryphoto api : ${responseState}")
+
+                    }
+
+                    RESPONSE_STATE.FAIL -> {
+                        Log.d("retrofit", "api 호출 에러")
+                    }
+                }
+            })
+    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -73,41 +118,45 @@ class MyAlbumFragment : Fragment() {
 //        albumadapter = MyAlbumAdapter(requireContext())
 //        viewBinding.recyclerAlbumView.adapter = albumadapter
         // adapter.datas = // 데이터 리스트 설정
-        adapter = MyAlbumAdapter(requireContext())
-        viewBinding.recyclerAlbumView.adapter = adapter
+//        adapter = MyAlbumAdapter(requireContext())
+//        viewBinding.recyclerAlbumView.adapter = adapter
         // adapter.datas = // 데이터 리스트 설정
 
-        albumData.apply {
-            add(
-                MyAlbumData(
-                idx = 1, date = "2023-08-21", memoryImgs = arrayOf("img1.jpg", "img2.jpg")
-                )
-            )
-        }
+//        albumData.apply {
+//            add(
+//                MyAlbumData(
+//                idx = 1, date = "2023-08-21", memoryImgs = arrayOf("img1.jpg", "img2.jpg")
+//                )
+//            )
+//        }
 
-        // 현재 시각을 가져오기
-        val currentDateTime = OffsetDateTime.now()
 
-        // 시각을 ISO 8601 형식으로 포맷팅
-        val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
-        val formattedDateTime = currentDateTime.format(formatter)
+        initAlbum(allPhotoData)
 
-        RetrofitCall(formattedDateTime)
+//        RetrofitCall(formattedDateTime)
     }
 
-    private fun initAlbum(resultData: ArrayList<MyAlbumData>) {
+    private fun initAlbum(resultData: ArrayList<MyAlbumPhotoData>) {
         adapter = MyAlbumAdapter(requireContext())
         viewBinding.recyclerAlbumView.adapter = adapter
+        adapter.setOnItemClickListener(this)
 
         albumData.apply {
+            add(MyAlbumPhotoData("add_photo.png"))
             addAll(resultData)
         }
+        Log.d("retrofit","$albumData")
+
         adapter.datas = albumData
         adapter.notifyDataSetChanged()
     }
 
-    private fun getGiftDate(resultData: ArrayList<MyGiftData>) {
-
+    private fun getGiftDate(resultData: ArrayList<MyGiftData>) {  //: ArrayList<MyGiftData> {
+        giftData = ArrayList(resultData)
+        giftData.sortWith(compareByDescending<MyGiftData> { it.date.replace(".","").toInt() }.thenByDescending { it.time.replace("시","").toInt() })
+        // 클래스 데이터 2개 (cancellable이랑 message) 필요 없는데 없는 데이터클래스 생성 혹은 그냥 쓰기.?
+        Log.d("retrofit", "여기까지오션나요..?여기는 getGiftDate입니닷.^^ 원래 data는 $resultData 이고 수정된 data는 $giftData")
+        // return giftData
     }
 
 
@@ -127,14 +176,22 @@ class MyAlbumFragment : Fragment() {
             })
     }
 
-    private fun RetrofitCall(date: String) {
-        RetrofitManager.instance.memoryPhoto(
+    private fun getMemoryPhoto(date: String) {
+        RetrofitManager.instance.getMemoryPhoto(
             date = date,
             completion = { responseState, responseBody ->
+
                 when (responseState) {
                     RESPONSE_STATE.OKAY -> {
                         Log.d("retrofit", "myalbum api : ${responseBody?.size}")
-                        initAlbum(responseBody!!)
+                        responseBody?.forEach { myAlbumData ->
+                            val photoUrls: List<String> = myAlbumData.memoryImgs.toList()
+                            photoUrls.forEach { url ->
+                                allPhotoData.add(MyAlbumPhotoData(url))
+                            }
+                        }
+
+                        initAlbum(allPhotoData)
                     }
 
                     RESPONSE_STATE.FAIL -> {
@@ -155,6 +212,150 @@ class MyAlbumFragment : Fragment() {
         locationResultLauncher.launch(
             android.Manifest.permission.READ_EXTERNAL_STORAGE
         )
+    }
+    private val PICK_IMAGE_REQUEST = 1 // 요청 코드
+
+    // 갤러리 열기
+    fun openGallery() {
+        Log.d("gallery","갤러리")
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(intent, PICK_IMAGE_REQUEST)
+    }
+
+    // startActivityForResult로부터 결과 처리
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
+            // 선택한 이미지의 Uri 가져오기
+            selectedImageUri = data?.data!!
+            path = selectedImageUri
+            selectedImageUri =
+                selectedImageUri?.let { getImageAbsolutePath(it, requireContext())?.toUri() }!!// 선택한 이미지의 경로를 구하는 함수 호출
+
+            // Uri를 사용하여 이미지를 처리하거나 표시할 수 있습니다.
+            if (selectedImageUri != null) {
+                this.selectedImageUri = selectedImageUri
+                doit(selectedImageUri)
+
+                getImgUrl("jpg", "uploads", filename)
+
+            }
+
+        }
+    }
+
+    fun doit(selectedImageUri: Uri) {
+        Toast.makeText(view?.context, "이미지의 URI는 $selectedImageUri 입 니 다", Toast.LENGTH_SHORT).show()
+        Log.d("Album Result", "$selectedImageUri")
+        filename = selectedImageUri.toString().replace("/storage/emulated/0/Pictures/","").replace(".jpg","")
+        Log.d("filename", "$filename")
+
+
+
+
+    }
+    private fun getImgUrl(ext: String, dir: String, filename: String) {
+        val data: BodyData = BodyData(ext = ext, dir = dir, filename = filename)
+
+        Log.d("data","$data")
+        RetrofitManager.instance.getImgUrl(data,
+            completion = { responseState, imageKey, presignedUrl ->
+                when (responseState) {
+                    RESPONSE_STATE.OKAY -> {
+                        Log.d("retrofit", "getImgUrl api : ${responseState}")
+                        //API.UPLOAD_IMG=presignedUrl
+                        getImgUrlResult(imageKey, presignedUrl)
+
+                        //doit(selectedImageUri)
+
+                        // uploadimg의 엔드포인트 인터셉터로 변경해야할듯..
+                        val contentResolver = context?.contentResolver
+                        val inputStream = contentResolver?.openInputStream(path)
+                        val byteArrayOutputStream = ByteArrayOutputStream()
+                        val bufferSize = 1024
+                        val buffer = ByteArray(bufferSize)
+                        var len: Int
+                        if (inputStream != null) {
+                            while (inputStream.read(buffer).also { len = it } != -1) {
+                                byteArrayOutputStream.write(buffer, 0, len)
+                            }
+                        }
+                        val byteArray = byteArrayOutputStream.toByteArray()
+                        uploadImg(byteArray)
+
+
+                    }
+
+                    RESPONSE_STATE.FAIL -> {
+                        Log.d("retrofit", "api 호출 에러")
+                    }
+                }
+            })
+    }
+
+    private fun getImgUrlResult(imageKey: String, presignedUrl: String) {
+        this.imageKey = imageKey
+        this.presignedUrl = presignedUrl.toString().replace("\"https://shallwebucket.s3.ap-northeast-2.amazonaws.com/","").replace("\"","")
+        this.presignedUrl=this.presignedUrl
+        Log.d("presignedUrl","$this.presignedUrl")
+
+    }
+
+    private fun uploadImg(imageBytes: ByteArray) {
+        RetrofitManager.instance.uploadImg(
+            imageBytes = imageBytes,url="https://shallwebucket.s3.ap-northeast-2.amazonaws.com/", endPoint = this.presignedUrl,
+            completion = { responseState ->
+                when (responseState) {
+                    RESPONSE_STATE.OKAY -> {
+                        Log.d("retrofit", "uploadImg api : ${responseState}")
+                    }
+
+                    RESPONSE_STATE.FAIL -> {
+                        Log.d("retrofit", "uploadImg api 호출 에러")
+                    }
+                }
+                val uploadPhotoArray = UploadPhotoArray(imageKey, 60)
+                Log.d("post Memory Photo", "$uploadPhotoArray")
+                postMemoryPhoto(uploadPhotoArray)
+                getMemoryPhoto("2023-09-29T11:35:32")
+            })
+    }
+
+
+    // Uri에서 절대 경로 추출하기
+    private fun getImageAbsolutePath(uri: Uri, context: Context): String? {
+        Log.d("getImageAbsolutePath", "절대경로 추출하러 왔습니다 uri = $uri")
+        val projection = arrayOf(MediaStore.Images.Media.DATA)
+        var cursor: Cursor? = null
+        var path: String? = null
+        try {
+            cursor = context.contentResolver.query(uri, projection, null, null, null)
+            cursor?.let {
+                if (it.moveToFirst()) {
+                    val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+                    path = it.getString(columnIndex)
+                    Log.d("getImageAbsolutePath", "절대경로 추출하러 왔습니다 uri = $path")
+                }
+            }
+        } catch (e: Exception) {
+            // 오류 처리를 여기에 추가하십시오.
+            Log.e("getImageAbsolutePath", "절대경로 추출 오류: ${e.message}")
+        } finally {
+            cursor?.close()
+        }
+
+        return path
+    }
+
+    override fun onItemClick() {
+
+
+        // 클릭된 아이템이 첫 번째 아이템(사진 추가 버튼)일 때
+           openGallery()
+
+
+
     }
 //    private fun getCursor(): Cursor? {
 //        //커서란?
