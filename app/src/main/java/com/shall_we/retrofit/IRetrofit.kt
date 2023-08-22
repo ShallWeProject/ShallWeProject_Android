@@ -10,11 +10,13 @@ import com.shall_we.login.data.AuthLogin
 import com.shall_we.login.data.AuthResponse
 import com.shall_we.login.data.AuthSignOutResponse
 import com.shall_we.dto.ExperienceGiftDto
+import com.shall_we.dto.UpdateReservationReq
 import com.shall_we.login.data.AuthTokenData
 import com.shall_we.signup.UserData
 import retrofit2.http.DELETE
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -43,6 +45,10 @@ interface IRetrofit {
 
     @DELETE(API.DELETE_RESERVATION)
     fun deleteReservation(@Header("id") id: Int): Call<JsonElement>
+
+    @PUT(API.DELETE_RESERVATION)
+    fun putUpdateReservation(@Body updateReservationReq: UpdateReservationReq): Call<JsonElement>
+
     //유저 로그인
     @POST(API.AUTH_SIGN_IN)
     fun authSignIn(@Body auth: AuthLogin): Call<AuthResponse>
