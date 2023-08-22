@@ -37,7 +37,6 @@ class ExperienceDetailFragment: BaseFragment<FragmentExperienceDetailBinding>(R.
 
             experienceGiftId = it.getInt("id") // id 키로 giftid 값을 불러와 저장하게 됩니다.
 
-
         }
 
         initTab()
@@ -81,18 +80,18 @@ class ExperienceDetailFragment: BaseFragment<FragmentExperienceDetailBinding>(R.
 
 
        experienceDetailViewModel.get_experience_gift()
-       reservationViewModel.get_reservation( completion = {
-               responseState, responseBody ->
-           when(responseState){
-               RESPONSE_STATE.OKAY -> {
-                   Log.d("what??????????", responseBody.toString())
-
-               }
-               RESPONSE_STATE.FAIL -> {
-                   Log.d("retrofit", "api 호출 에러")
-               }
-           }
-       })
+//       reservationViewModel.get_reservation( completion = {
+//               responseState, responseBody ->
+//           when(responseState){
+//               RESPONSE_STATE.OKAY -> {
+//                   Log.d("what??????????", responseBody.toString())
+//
+//               }
+//               RESPONSE_STATE.FAIL -> {
+//                   Log.d("retrofit", "api 호출 에러")
+//               }
+//           }
+//       })
 
 
 

@@ -84,28 +84,34 @@ class ReservationViewModel:ViewModel() {
     }
 
     fun set_experience_gift(reservationRequest: ReservationRequest) {
-        ReservationService.reservationService?.set_experience_gift(reservationRequest)?.enqueue(object :
+        ReservationService.reservationService?.set_experience_gift(
+            ReservationRequest(
+                reservationRequest. experienceGiftId,
+                reservationRequest.persons,
+                reservationRequest.date,
+                reservationRequest.receiverName,
+                reservationRequest.phoneNumber,
+                reservationRequest.imageKey,
+                reservationRequest.invitationComment,
+                        reservationRequest.reservationStatus
+           ))?.enqueue(object :
             Callback<JsonElement> {
             override fun onResponse(
                 call: Call<JsonElement>,
                 response: Response<JsonElement>
             ) {
                 if (response.isSuccessful) {
-                    Log.d("whatisthis", "reservation_gift_set, response 성공")
-                    //_experience_gift_data.value = (response.body())
-
                     response.body()?.let {
-                        Log.d("whattt", it.toString())
+                        Log.d("set_experience_gift", it.toString())
                     }
-
                 } else {
-                    // _experience_gift_data.postValue(ExperienceGiftDto())
-                    Log.d("whatisthis", "reservation, response 못받음")
+                    // 실패한 응답 코드와 메시지 출력
+                    Log.d("set_experience_gift", "Error code: ${response.code()}, error message: ${response.message()}")
                 }
             }
 
             override fun onFailure(call: Call<JsonElement>, t: Throwable) {
-                // _experience_gift_data.value = ExperienceMainRes(emptyList(), emptyList())
+                // 상세한 오류 메시지 출력
                 Log.d("whatisthis", "_experience_gift_data, 호출 실패: ${t.localizedMessage}")
             }
         })
