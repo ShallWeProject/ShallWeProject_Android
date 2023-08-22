@@ -44,7 +44,6 @@ object RetrofitClient {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY // 요청 및 응답 바디를 포함한 모든 정보를 로그로 출력
         }
-        if(retrofitClient == null){
             val httpClient = OkHttpClient.Builder()
                 .addInterceptor(authInterceptor)
                 .addInterceptor(loggingInterceptor)
@@ -58,7 +57,7 @@ object RetrofitClient {
                 .client(httpClient)
                 //.client(client.build())
                 .build()
-        }
+
         return retrofitClient
     }
     fun getClient2(baseUrl : String): Retrofit? {

@@ -249,7 +249,7 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
     }
 
     fun doit(selectedImageUri: Uri) {
-        Toast.makeText(view?.context, "이미지의 URI는 $selectedImageUri 입 니 다", Toast.LENGTH_SHORT).show()
+//        Toast.makeText(view?.context, "이미지의 URI는 $selectedImageUri 입 니 다", Toast.LENGTH_SHORT).show()
         Log.d("Album Result", "$selectedImageUri")
         filename = selectedImageUri.toString().replace("/storage/emulated/0/Pictures/","").replace(".jpg","")
         Log.d("filename", "$filename")
@@ -323,18 +323,24 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
                 postMemoryPhoto(uploadPhotoArray)
                 getMemoryPhoto("2023-09-29T11:35:32")
             })
-    }
-            var selectedImageUri: Uri? = data?.data
-            selectedImageUri =
-                selectedImageUri?.let { getImageAbsolutePath(it, requireContext())?.toUri() }// 선택한 이미지의 경로를 구하는 함수 호출
+
+//            var selectedImageUri: Uri? = data?.data
+//            selectedImageUri =
+//                selectedImageUri?.let { getImageAbsolutePath(it, requireContext())?.toUri() }// 선택한 이미지의 경로를 구하는 함수 호출
 
             // Uri를 사용하여 이미지를 처리하거나 표시할 수 있습니다.
             if (selectedImageUri != null) {
-                Toast.makeText(view?.context, "이미지의 URI는 $selectedImageUri 입 니 다", Toast.LENGTH_SHORT).show()
                 Log.d("Album Result", "$selectedImageUri")
             }
         }
+
+    override fun onItemClick() {
+        // 클릭된 아이템이 첫 번째 아이템(사진 추가 버튼)일 때
+        openGallery()
+
+
     }
+}
 
 
     // Uri에서 절대 경로 추출하기
@@ -361,12 +367,7 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
         return path
     }
 
-    override fun onItemClick() {
-        // 클릭된 아이템이 첫 번째 아이템(사진 추가 버튼)일 때
-           openGallery()
 
-
-    }
 //    private fun getCursor(): Cursor? {
 //        //커서란?
 //        //ContentResolver.query() 클라이언트 메서드는 언제나 쿼리 선택 기준과 일치하는 행에 대해 쿼리 프로젝션이 지정한 열을 포함하는 Cursor를 반환합니다.
@@ -490,4 +491,3 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
 //    //cursor의 값을 가공하지 않고 바로 ui에 띄우고 싶다면 simpleCursorAdapter를 이용해서 listView에 띄우면 된다.
 //    //simpleCursorAdpater : 커서의 열을 XML 파일에 정의된 TextView 또는 ImageView로 매핑하는 간편한 어댑터입니다.
 //}
-}
