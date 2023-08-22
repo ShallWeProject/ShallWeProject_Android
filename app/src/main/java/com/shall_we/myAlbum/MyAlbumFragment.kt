@@ -137,7 +137,7 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
     }
 
     private fun RetrofitCall(date: String) {
-        RetrofitManager.instance.memoryPhoto(
+        RetrofitManager.instance.getMemoryPhoto(
             date = date,
             completion = { responseState, responseBody ->
 

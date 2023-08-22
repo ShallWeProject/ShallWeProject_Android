@@ -43,6 +43,8 @@ object API {
     //해당 경험 선물에 생성된 예약 조회
     const val RESERVATIONS_GIFT="api/v1/reservations/giftId"
 
+    const val UPLOAD_IMG=""
+
 }
 
 enum class RESPONSE_STATE {
