@@ -9,7 +9,6 @@ import com.shall_we.login.data.Auth
 import com.shall_we.login.data.AuthLogin
 import com.shall_we.login.data.AuthResponse
 import com.shall_we.login.data.AuthSignOutResponse
-import com.shall_we.dto.ExperienceGiftDto
 import retrofit2.http.DELETE
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -34,7 +33,10 @@ interface IRetrofit {
     fun usersGiftReceive() : Call<JsonElement>
 
     @GET(API.MEMORY_PHOTO)
-    fun memoryPhoto(@Path("date") date: String) : Call<JsonElement>
+    fun getMemoryPhoto(@Path("date") date: String) : Call<JsonElement>
+
+    @POST(API.MEMORY_PHOTO)
+    fun postMemoryPhoto(@Body uploadPhotoArray: UploadPhotoArray) : Call<JsonElement>
 
     @DELETE(API.DELETE_RESERVATION)
     fun deleteReservation(@Header("id") id: Int): Call<JsonElement>
@@ -68,8 +70,13 @@ interface IRetrofit {
     @PATCH(API.USERS)
     fun usersPatch(@Body userData: com.shall_we.signup.UserData) : Call<JsonElement>
 
+    @GET("/default/presignedURL-lambda")
+    fun getImgUrl(@Query("ext") ext: String,@Query("dir") dir: String, @Query("filename") filename: String): Call<JsonElement>
+
+    @POST(API.UPLOAD_IMG)
+    fun uploadImg(@Body imageBytes: JsonElement): Call<JsonElement>
 }
 
 data class ValidVerificationArray(val verificationCode: String, val phoneNumber:String)
-
 data class SendOneArray(val phoneNumber: String)
+data class UploadPhotoArray(val memoryPhotoImgKey: String, val reservationId: Int)
