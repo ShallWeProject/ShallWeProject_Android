@@ -34,9 +34,7 @@ object ReservationService {
         fun set_experience_gift(
             @Body reservationRequest: ReservationRequest
         ): Call<JsonElement>
-        //예약 수정
-        @PUT(API.RESERVATIONS)
-        fun put_reservation():Call<JsonElement>
+
     }
 
     val  reservationService: ReservationService.ReservationInterface?=RetrofitClient.getClient(API.BASE_URL)?.create(ReservationService.ReservationInterface::class.java)

@@ -52,8 +52,8 @@ class ProductAdapter(private val context: Context) : RecyclerView.Adapter<Produc
         val imgProfile: ImageView = itemView.findViewById(R.id.product_image)
 
         fun bind(item: ProductData) {
-            txtName.text = item.title
-            txtComment.text = item.subtitle
+            txtName.text = item.subtitle
+            txtComment.text = item.title
             txtPrice.text = item.price
 
             Glide.with(context).load(item.img).into(imgProfile)
