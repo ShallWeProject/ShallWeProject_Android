@@ -10,6 +10,7 @@ import com.shall_we.login.data.AuthLogin
 import com.shall_we.login.data.AuthResponse
 import com.shall_we.login.data.AuthSignOutResponse
 import com.shall_we.dto.ExperienceGiftDto
+import com.shall_we.login.data.AuthTokenData
 import com.shall_we.signup.UserData
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -52,7 +53,7 @@ interface IRetrofit {
 
     // 토큰갱신
     @POST(API.AUTH_REFRESH)
-    fun tokenRefresh(@Body refreshTokenArray :RefreshTokenArray): Call<AuthResponse>
+    fun tokenRefresh(@Body refreshTokenArray :RefreshTokenArray): Call<AuthTokenData>
 
     // 인증 문자 전송
     @POST(API.SEND_ONE)

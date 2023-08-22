@@ -8,6 +8,7 @@ import com.shall_we.signup.UserData
 import com.shall_we.login.data.Auth
 import com.shall_we.login.data.AuthLogin
 import com.shall_we.login.data.AuthResponse
+import com.shall_we.login.data.AuthTokenData
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -488,11 +489,11 @@ class RetrofitManager {
         })
     }
 
-    fun tokenRefresh(refreshToken: RefreshTokenArray, completion: (RESPONSE_STATE, AuthResponse?) -> Unit) {
+    fun tokenRefresh(refreshToken: RefreshTokenArray, completion: (RESPONSE_STATE, AuthTokenData?) -> Unit) {
         val call = iRetrofit?.tokenRefresh(refreshToken) ?: return
-        call.enqueue(object : Callback<AuthResponse> {
+        call.enqueue(object : Callback<AuthTokenData> {
             // 응답 성공인 경우
-            override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
+            override fun onResponse(call: Call<AuthTokenData>, response: Response<AuthTokenData>) {
                 if(response.code() == 200){
                     val authResponse = response.body()
                     if (authResponse != null) {
@@ -515,7 +516,7 @@ class RetrofitManager {
                 }
             }
 
-            override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
+            override fun onFailure(call: Call<AuthTokenData>, t: Throwable) {
             }
         })
     }

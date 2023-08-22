@@ -1,6 +1,7 @@
 package com.shall_we
 
 import android.app.Application
+import android.content.Context
 import android.content.SharedPreferences
 import com.kakao.sdk.auth.Constants.ACCESS_TOKEN
 import com.kakao.sdk.auth.Constants.REFRESH_TOKEN
@@ -12,6 +13,7 @@ class App : Application() {
 
     companion object{
         lateinit var instance: App
+        lateinit var context: Context
 
         lateinit var sharedPreferences: SharedPreferences
 
@@ -23,6 +25,8 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+
+        context = applicationContext
 
         KakaoSdk.init(this, getString(R.string.kakao_app_key))
         sharedPreferences =

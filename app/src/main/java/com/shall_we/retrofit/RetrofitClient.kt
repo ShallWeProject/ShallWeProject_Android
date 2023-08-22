@@ -1,5 +1,6 @@
 package com.shall_we.retrofit
 
+import android.content.Context
 import android.util.Log
 import com.shall_we.App
 import com.shall_we.App.Companion.sharedPreferences
@@ -63,6 +64,7 @@ object RetrofitClient {
 }
 class TokenAuthenticator: Authenticator {
     override fun authenticate(route: Route?, response: Response): Request? {
+        val context = App.context
         Log.i("Authenticator", response.toString())
         Log.i("Authenticator", "토큰 재발급 시도 ${App.refreshToken}")
         val refreshTokenArray = RefreshTokenArray(App.refreshToken!!)
@@ -72,7 +74,14 @@ class TokenAuthenticator: Authenticator {
                 when (responseState) {
                     RESPONSE_STATE.OKAY -> {
                         Log.d("retrofit", "category api : ${responseBody}")
+                        val sharedPref = context.getSharedPreferences("MY_APP_PREFS", Context.MODE_PRIVATE)
+                        val accessToken = responseBody?.accessToken
+                        sharedPref?.edit()?.putString("ACCESS_TOKEN", accessToken)?.apply()
+                        val refreshToken = responseBody?.refreshToken
+                        sharedPref?.edit()?.putString("REFRESH_TOKEN", refreshToken)?.apply()
 
+                        App.accessToken = sharedPref?.getString("ACCESS_TOKEN", null)
+                        App.refreshToken = sharedPref?.getString("REFRESH_TOKEN", null)
                     }
 
                     RESPONSE_STATE.FAIL -> {
@@ -80,7 +89,7 @@ class TokenAuthenticator: Authenticator {
 
                     }
                 }
-                newAccessToken = responseBody?.data?.accessToken
+
                 Log.i("Authenticator", "토큰 재발급 성공 : $newAccessToken")
 
             })
