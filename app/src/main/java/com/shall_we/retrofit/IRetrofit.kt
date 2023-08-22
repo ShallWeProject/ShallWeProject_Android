@@ -10,6 +10,7 @@ import com.shall_we.login.data.AuthLogin
 import com.shall_we.login.data.AuthResponse
 import com.shall_we.login.data.AuthSignOutResponse
 import com.shall_we.dto.ExperienceGiftDto
+import retrofit2.http.DELETE
 import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -35,7 +36,7 @@ interface IRetrofit {
     @GET(API.MEMORY_PHOTO)
     fun memoryPhoto(@Path("date") date: String) : Call<JsonElement>
 
-    @GET(API.DELETE_RESERVATION)
+    @DELETE(API.DELETE_RESERVATION)
     fun deleteReservation(@Header("id") id: Int): Call<JsonElement>
     //유저 로그인
     @POST(API.AUTH_SIGN_IN)
