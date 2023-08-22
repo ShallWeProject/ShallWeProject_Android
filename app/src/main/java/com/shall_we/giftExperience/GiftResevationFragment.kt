@@ -14,15 +14,20 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Toast
 import androidx.core.graphics.createBitmap
+import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener
 import com.prolificinteractive.materialcalendarview.format.TitleFormatter
 import com.shall_we.ExperienceDetail.ExperienceDetailFragment
+import com.shall_we.ExperienceDetail.ExperienceDetailViewModel
 import com.shall_we.R
 import com.shall_we.base.BaseFragment
 import com.shall_we.changeReservation.CustomAlertDialog
 import com.shall_we.databinding.FragmentGiftResevationBinding
+import com.shall_we.dto.ExperienceReq
+import com.shall_we.retrofit.RESPONSE_STATE
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -30,8 +35,54 @@ import java.util.Locale
 class GiftResevationFragment : BaseFragment<FragmentGiftResevationBinding>(R.layout.fragment_gift_resevation) {
     private var count: Int = 2
     private lateinit var calendarView: MaterialCalendarView
+    private var experienceGiftId:Int=1
+    lateinit var experienceDetailViewModel: ExperienceDetailViewModel
     private val locale: Locale = Locale("ko")
     override fun init() {
+
+        arguments?.let { // 아규먼트로부터 데이터를 불러옴
+
+            experienceGiftId = it.getInt("id") // id 키로 giftid 값을 불러와 저장하게 됩니다.
+
+
+        }
+
+        experienceDetailViewModel = ViewModelProvider(this).get(ExperienceDetailViewModel::class.java)
+        experienceDetailViewModel.get_experience_detail_data(experienceGiftId, completion = {
+                responseState, responseBody ->
+            when(responseState){
+                RESPONSE_STATE.OKAY -> {
+
+
+                    responseBody?.get(0)?.let { item ->
+                        binding.exgiftText02.text=item.subtitle
+                        binding.exgiftText04.text = item.title
+
+                        //val explanationsText = item.explanation?.joinToString(separator = "\n") {
+                        //    it.description.toString()
+                        //}
+                        //binding.exdetailText04.text =explanationsText
+                        Glide.with(this)
+                            .load(item.giftImageUrl)
+                            .into(binding.samplePic)
+
+
+
+                        }
+
+
+                    }
+
+
+
+                RESPONSE_STATE.FAIL -> {
+                    Log.d("retrofit", "api 호출 에러")
+                }
+            }
+        })
+
+
+
         binding.exgiftBtn01.setOnClickListener {
             count--
             binding.exgiftText06.text = count.toString()
@@ -79,6 +130,12 @@ class GiftResevationFragment : BaseFragment<FragmentGiftResevationBinding>(R.lay
         binding.exgiftBtn03.setOnClickListener {
             val giftExperienceFragment = GiftExperienceFragment() // 전환할 프래그먼트 인스턴스 생성
             val fragmentTransaction = parentFragmentManager.beginTransaction()
+            val bundle = Bundle()
+            bundle.putInt("id", experienceGiftId) // 클릭된 아이템의 이름을 "title" 키로 전달
+
+
+           // 전환할 프래그먼트 인스턴스 생성
+            giftExperienceFragment.arguments = bundle
             // 기존 프래그먼트를 숨기고 새로운 프래그먼트로 교체
             binding.exgiftBtn01.visibility=View.GONE
             binding.exgiftBtn02.visibility=View.GONE
