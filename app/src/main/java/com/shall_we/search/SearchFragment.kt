@@ -24,8 +24,10 @@ import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RetrofitManager
 import com.shall_we.utils.SharedPrefManager
 
-class SearchFragment : Fragment() , SearchView.OnQueryTextListener{
+class SearchFragment : Fragment() , SearchView.OnQueryTextListener,
+    SearchHistoryFragment.OnSearchHistoryClickListener {
     private var searchView = view?.findViewById<SearchView>(R.id.searchView)
+    private lateinit var searchHistoryFragment: SearchHistoryFragment
 
     //검색 기록 배열
     private var searchHistoryList = ArrayList<SearchData>()
@@ -55,6 +57,7 @@ class SearchFragment : Fragment() , SearchView.OnQueryTextListener{
         searchView = binding.searchView
 
 
+
         this.searchView?.apply {
             requestFocus()
             setOnQueryTextListener(this@SearchFragment)
@@ -82,6 +85,9 @@ class SearchFragment : Fragment() , SearchView.OnQueryTextListener{
             }
         }
 
+        searchHistoryFragment = childFragmentManager.findFragmentById(R.id.fragmentBox) as SearchHistoryFragment
+        searchHistoryFragment.setOnSearchHistoryClickListener(this@SearchFragment)
+
         return binding.root
     }
 
@@ -103,6 +109,7 @@ class SearchFragment : Fragment() , SearchView.OnQueryTextListener{
 
         insertSearchTermHistory(query.toString())
         searchPhotoApiCall(query.toString())
+
 
         return true
     }
@@ -178,8 +185,12 @@ class SearchFragment : Fragment() , SearchView.OnQueryTextListener{
         // 기존 데이터에 덮어쓰기
         SharedPrefManager.storeSearchHistoryList(this.searchHistoryList)
     }
-}
 
+    override fun onSearchHistoryClicked(query: String) {
+        Log.d("history","$query")
+        this.searchView?.setQuery(query, true)
+    }
+}
 class SharedViewModel : ViewModel() {
     val data: MutableLiveData<String> = MutableLiveData()
 }
