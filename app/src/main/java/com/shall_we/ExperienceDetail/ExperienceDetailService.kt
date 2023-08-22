@@ -1,5 +1,7 @@
 package com.shall_we.ExperienceDetail
 
+import com.google.gson.JsonElement
+import com.shall_we.dto.ExperienceDetailRes
 import com.shall_we.dto.ExperienceGiftDto
 import com.shall_we.dto.ExperienceMainRes
 import com.shall_we.dto.ExperienceReq
@@ -16,11 +18,11 @@ object ExperienceDetailService {
     interface ExperienceDetailInterface{
         //경험 메인
         @GET(API.EXPERIENCE_GIFT)
-        fun get_experience_gift() : Call<ExperienceMainRes>
+        fun get_experience_gift() : Call<JsonElement>
 
         //경험상세
         @GET(API.EXPERIENCE_GIFT_EXPERIENCE_ID)
-        fun  get_experience_detail_data(@Path("ExperienceGiftId") ExperienceGiftId: Int): Call<ExperienceGiftDto>
+        fun  get_experience_detail_data(@Path("ExperienceGiftId") ExperienceGiftId: Int): Call<JsonElement>
 
         //경험선물추가
         @POST(API.EXPERIENCE_GIFT)

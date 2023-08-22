@@ -37,6 +37,12 @@ object API {
 
     const val USERS="/api/v1/users"
 
+    //예약정보불러오기,예약수정
+    const val RESERVATIONS="api/v1/reservations/user"
+    //const val RESERVATIONS_USER="api/v1/reservations/user"
+    //해당 경험 선물에 생성된 예약 조회
+    const val RESERVATIONS_GIFT="api/v1/reservations/giftId"
+
 }
 
 enum class RESPONSE_STATE {
