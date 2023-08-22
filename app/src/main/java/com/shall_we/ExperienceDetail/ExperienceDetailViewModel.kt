@@ -10,6 +10,7 @@ import com.shall_we.dto.ExperienceGiftDto
 import com.shall_we.dto.ExperienceMainRes
 import com.shall_we.dto.ExperienceReq
 import com.shall_we.dto.ExplanationRes
+import com.shall_we.dto.ReservationRequest
 import com.shall_we.retrofit.RESPONSE_STATE
 import retrofit2.Call
 import retrofit2.Callback
@@ -26,9 +27,10 @@ class ExperienceDetailViewModel:ViewModel() {
     private var _experience_gift_data = MutableLiveData<ExperienceMainRes>()
     val experience_gift_data: LiveData<ExperienceMainRes> get() = _experience_gift_data
     //경험 선물 추가
-    private var _update_gift_data = MutableLiveData<ExperienceReq>()
-    val update_gift_data: LiveData<ExperienceReq> get() = _update_gift_data
 
+
+    private val _update_gift_data = MutableLiveData<JsonElement?>()
+    val updateGiftData: LiveData<JsonElement?> get() = _update_gift_data
 
     fun get_experience_gift() {
         ExperienceDetailService.experienceDetailService?.get_experience_gift()?.enqueue(object :
@@ -72,10 +74,11 @@ class ExperienceDetailViewModel:ViewModel() {
                             val title = data.get("title").asString
                             val subtitle = data.get("subtitle").asString
                             val price = data.get("price").asInt
-                            //val description = data.get("description").asString
-                            //val experienceCategory = data.get("expCategory").asString
-                            //val statementCategory = data.get("sttCategory").asString
+                            val description = if (!data.get("description").isJsonNull) data.get("description").asString else null
+                           // val experienceCategory = data.get("expCategory").asInt
+                           // val statementCategory = data.get("sttCategory").asInt
                             val experienceGiftId = data.get("experienceGiftId").asInt
+
 
                             val explanationResJsonArray = data.getAsJsonArray("explanation")
                             val explanationResList = ArrayList<ExplanationRes>()
@@ -97,14 +100,16 @@ class ExperienceDetailViewModel:ViewModel() {
                                 subtitle = subtitle,
                                 price = price,
                                 explanation = explanationResList,
-                                //description = description,
-                                // experienceCategory = experienceCategory,
+                                description = description,
+                                //experienceCategory = experienceCategory,
                                 //statementCategory = statementCategory,
                                 experienceGiftId = experienceGiftId
                             )
 
                             parsedDataArray.add(experienceDetailRes)
+
                             completion(RESPONSE_STATE.OKAY, parsedDataArray)
+
                         }
                     } else {
                         Log.d("whatisthis", "_experience_detail_data, response 못받음")
@@ -122,26 +127,28 @@ class ExperienceDetailViewModel:ViewModel() {
             })
     }
 
-    fun set_experience_gift(experienceReq: ExperienceReq) {
-        ExperienceDetailService.experienceDetailService?.set_experience_gift(experienceReq)?.enqueue(object :
-            Callback<ExperienceReq> {
-
-            override fun onResponse(call: Call<ExperienceReq>, response: Response<ExperienceReq>) {
-                if (response.isSuccessful) {
-                    Log.d("whatisthis", "_update_gift_data, response 성공")
-                    _update_gift_data.value = (response.body())
-                } else {
-                    _update_gift_data.postValue(experienceReq)
-                    Log.d("whatisthis", "_update_gift_data, response 못받음")
-                }
-            }
-
-            override fun onFailure(call: Call<ExperienceReq>, t: Throwable) {
-                _update_gift_data.value = experienceReq
-                Log.d("whatisthis", "_update_gift_data, 호출 실패: ${t.localizedMessage}")
-            }
-        })
-    }
+//    fun set_experience_gift(reservationRequest: ReservationRequest) {
+//        ExperienceDetailService.experienceDetailService
+//            ?.set_experience_gift(reservationRequest)
+//            ?.enqueue(object : Callback<JsonElement> {
+//
+//                override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
+//                    if (response.isSuccessful) {
+//                        Log.d("whatisthis", "_update_gift_data, response 성공")
+//                            // _update_gift_data.value = response.body()
+//                        Log.d("whatisthis", reservationRequest.toString())
+//                    } else {
+//                       // _update_gift_data.postValue(reservationRequest)
+//                        Log.d("whatisthis", "_update_gift_data, response 못받음")
+//                    }
+//                }
+//
+//                override fun onFailure(call: Call<JsonElement>, t: Throwable) {
+//                   // _update_gift_data.value = reservationRequest
+//                    Log.d("whatisthis", "_update_gift_data, 호출 실패: ${t.localizedMessage}")
+//                }
+//            })
+//    }
 
 }
 

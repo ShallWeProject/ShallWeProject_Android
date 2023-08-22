@@ -1,5 +1,11 @@
 package com.shall_we.dto
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+import java.time.LocalDateTime
+import java.util.Date
+
+
 data class ReservationRequest(
     val experienceGiftId: Int,
     val persons: Int,
@@ -8,12 +14,5 @@ data class ReservationRequest(
     val phoneNumber: String,
     val imageKey: String,
     val invitationComment: String,
-    val reservationStatus: ReservationStatus
+    val reservationStatus: String
 )
-{
-    enum class ReservationStatus {
-        CANCELLED,
-        BOOKED,
-        COMPLETED
-    }
-}

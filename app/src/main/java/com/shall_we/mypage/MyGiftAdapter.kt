@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +19,7 @@ import com.shall_we.changeReservation.ChangeReservationFragment
 import com.shall_we.databinding.ItemGiftboxBinding
 import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RetrofitManager
+import com.shall_we.search.SearchResultFragment
 
 
 class MyGiftAdapter(private val context: Context, private val parentFragmentManager: FragmentManager) : RecyclerView.Adapter<MyGiftAdapter.ViewHolder>(){
@@ -50,6 +52,7 @@ class MyGiftAdapter(private val context: Context, private val parentFragmentMana
         if (data.cancellable == false) {
             holder.binding.tvCancelReserv.visibility = View.GONE
             holder.binding.tvChangeReserv.visibility = View.GONE
+            holder.binding.tvTime.visibility = View.GONE
         }
 
         if (holder.binding.tvMessage.visibility == View.VISIBLE) {
@@ -104,21 +107,20 @@ class MyGiftAdapter(private val context: Context, private val parentFragmentMana
             null,     // 끝 부분 Drawable 설정 (null이면 이전 설정 유지)
             null      // 아래쪽 Drawable 설정 (null이면 이전 설정 유지)
         )
-
         holder.binding.tvDate.setBackgroundResource(R.drawable.tv_date_selected)
         holder.binding.tvDate.setTextColor(Color.parseColor("#E31B54"))
+        holder.binding.tvTime.setCompoundDrawablesRelativeWithIntrinsicBounds(
+            holder.itemView.context.getDrawable(R.drawable.time_light_resize), // 시작 부분 Drawable 설정
+            null,     // 위쪽 Drawable 설정 (null이면 이전 설정 유지)
+            null,     // 끝 부분 Drawable 설정 (null이면 이전 설정 유지)
+            null      // 아래쪽 Drawable 설정 (null이면 이전 설정 유지)
+        )
+        holder.binding.tvTime.setBackgroundResource(R.drawable.tv_date_selected)
+        holder.binding.tvTime.setTextColor(Color.parseColor("#E31B54"))
+
         if (data.cancellable == true) {
             holder.binding.tvChangeReserv.visibility = View.VISIBLE
             holder.binding.tvCancelReserv.visibility = View.VISIBLE
-            holder.binding.tvTime.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                holder.itemView.context.getDrawable(R.drawable.time_light_resize), // 시작 부분 Drawable 설정
-                null,     // 위쪽 Drawable 설정 (null이면 이전 설정 유지)
-                null,     // 끝 부분 Drawable 설정 (null이면 이전 설정 유지)
-                null      // 아래쪽 Drawable 설정 (null이면 이전 설정 유지)
-            )
-            holder.binding.tvTime.setBackgroundResource(R.drawable.tv_date_selected)
-            holder.binding.tvTime.setTextColor(Color.parseColor("#E31B54"))
-
         }
     }
 
@@ -135,13 +137,27 @@ class MyGiftAdapter(private val context: Context, private val parentFragmentMana
                 val position = adapterPosition
                 Log.d("clicked?","clicked")
                 // 해당 위치에 있는 아이템 데이터 가져오기
-                val itemData = datas[position]
-                val giftReservationFragment = ChangeReservationFragment() // 전환할 프래그먼트 인스턴스 생성
-                val fragmentTransaction = parentFragmentManager.beginTransaction()
-                // 기존 프래그먼트를 숨기고 새로운 프래그먼트로 교체
-                fragmentTransaction.replace(R.id.mypage_layout,giftReservationFragment, "mypage")
-                fragmentTransaction.addToBackStack(null)
-                fragmentTransaction.commitAllowingStateLoss()
+                val idx = datas[position].idx
+                Log.d("id","$idx")
+
+                val title = datas[position].title
+                val description = datas[position].description
+                val date = datas[position].date
+
+                val newFragment = ChangeReservationFragment() // 전환할 다른 프래그먼트 객체 생성
+                val bundle = Bundle()
+                bundle.putInt("idx", idx)
+                bundle.putString("title", title)
+                bundle.putString("description", description)
+                bundle.putString("date", date)
+
+                newFragment.arguments = bundle
+
+                // 프래그먼트 전환
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.mypage_layout, newFragment)
+                    .addToBackStack(null)
+                    .commit()
 
 //                // 클릭한 아이템 데이터 처리 (예: 다른 화면으로 이동 등)
 //                // 특정 프래그먼트로 이동하려면 findNavController()를 사용하여 목적지로 이동

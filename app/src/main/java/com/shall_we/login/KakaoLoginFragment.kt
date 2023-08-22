@@ -1,5 +1,6 @@
 package com.shall_we.login
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -12,11 +13,14 @@ import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.common.util.Utility
 import com.kakao.sdk.user.UserApiClient
 import com.shall_we.App
+import com.shall_we.R
 import com.shall_we.databinding.FragmentKakaoLoginBinding
 import com.shall_we.login.data.Auth
 import com.shall_we.login.data.AuthResponse
 import com.shall_we.login.data.AuthSignService
 import com.shall_we.login.data.IAuthSign
+import com.shall_we.signup.AgreementFragment
+import com.shall_we.signup.LoginSuccessFragment
 
 class kakaoLoginFragment : Fragment() , IAuthSign {
 
@@ -102,50 +106,79 @@ class kakaoLoginFragment : Fragment() , IAuthSign {
             else if (user != null) {
                 Log.i("login", "사용자 정보 요청 성공" +
                         "\n회원번호: ${user.id}" +
-                        "\n회원번호: ${user.kakaoAccount?.birthday}" +
                         "\n이메일: ${user.kakaoAccount?.email}" +
                         "\n닉네임: ${user.kakaoAccount?.profile?.nickname}" +
                         "\n프로필사진: ${user.kakaoAccount?.profile?.thumbnailImageUrl}")
                 auth = Auth(
-                    (user.id).toString()!!,
+                    (user.id).toString(),
                     user.kakaoAccount?.profile?.nickname!!,
                     user.kakaoAccount?.email!!,
                     user.kakaoAccount?.profile?.thumbnailImageUrl!!)
-                AuthSignService(this).tryPostAuthSignUp(auth)
+                Log.d("login","$auth")
+                AuthSignService(this).postAuthSignUp(auth)
             }
         }
     }
 
     override fun onPostAuthSignInSuccess(response: AuthResponse) {
-        Log.d("onPostAuthSignInSuccess",response.toString())
+        Log.d("login","onPostAuthSignInSuccess ${response.toString()}")
         setUserData(response)
         loginEvent?.onLoginSuccess()
-
+        fragmentChangeLogin()
     }
 
     override fun onPostAuthSignInFailed(message: String) {
-        Log.d("onPostAuthSignInFailed",message)
+        Log.d("login","onPostAuthSignInFailed $message")
     }
 
     override fun onPostAuthSignUpSuccess(response: AuthResponse) {
-        Log.d("onPostAuthSignUpSuccess",response.toString())
+        Log.d("login","onPostAuthSignUpSuccess ${response.toString()}")
         setUserData(response)
         loginEvent?.onLoginSuccess()
+        fragmentChangeSignUp()
 
     }
 
     override fun onPostAuthSignUpFailed(message: String) {
-        Log.d("onPostAuthSignUpFailed",message)
         loginEvent?.onLoginFailed(message)
-
+        if(message == "로그인"){
+            AuthSignService(this).postAuthSignIn(auth)
+        }
     }
 
     private fun setUserData(response: AuthResponse){
-    App.sharedPreferences.edit().putString("PROVIDER_ID",auth.providerId).apply()
-    App.sharedPreferences.edit().putString("USER_EMAIL",auth.email).apply()
-    App.accessToken = "${response.tokenType} ${response.accessToken}"
-    App.refreshToken = response.refreshToken
-    Log.d("login","access token ${App.accessToken}")
-    Log.d("login", "refresh token ${App.refreshToken}")
+        val sharedPref = context?.getSharedPreferences("MY_APP_PREFS", Context.MODE_PRIVATE)
+        val accessToken = response.data.accessToken
+        sharedPref?.edit()?.putString("ACCESS_TOKEN", accessToken)?.apply()
+        val refreshToken = response.data.refreshToken
+        sharedPref?.edit()?.putString("REFRESH_TOKEN", refreshToken)?.apply()
+
+        App.accessToken = sharedPref?.getString("ACCESS_TOKEN", null)
+        App.refreshToken = sharedPref?.getString("REFRESH_TOKEN", null)
+
+        Log.d("login","access token ${App.accessToken}")
+        Log.d("login", "refresh token ${App.refreshToken}")
+    }
+
+    private fun fragmentChangeLogin(){
+        val newFragment = LoginSuccessFragment() // 전환할 다른 프래그먼트 객체 생성
+        val bundle = Bundle()
+        newFragment.arguments = bundle
+        // 프래그먼트 전환
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainerView3, newFragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
+    private fun fragmentChangeSignUp(){
+        val newFragment = PhoneAuthFragment() // 전환할 다른 프래그먼트 객체 생성
+        val bundle = Bundle()
+        newFragment.arguments = bundle
+        // 프래그먼트 전환
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainerView3, newFragment)
+            .addToBackStack(null)
+            .commit()
     }
 }

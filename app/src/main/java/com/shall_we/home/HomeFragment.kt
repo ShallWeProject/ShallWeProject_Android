@@ -1,25 +1,27 @@
 package com.shall_we.home
 
-import android.content.Context
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
+import com.kakao.sdk.common.util.Utility.getKeyHash
 import com.shall_we.R
-import com.shall_we.search.SearchFragment
 import com.shall_we.databinding.FragmentHomeBinding
-import com.shall_we.retrofit.RESPONSE_STATE
-import com.shall_we.retrofit.RetrofitManager
+import com.shall_we.search.SearchFragment
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 
 
 class HomeFragment : Fragment() {
@@ -90,6 +92,7 @@ class HomeFragment : Fragment() {
                     .commit()
 
                 binding.mainSearchView.clearFocus()
+
 
 
 

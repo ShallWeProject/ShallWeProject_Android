@@ -10,7 +10,6 @@ object SharedPrefManager {
     private const val SHARED_SEARCH_HISTORY = "shared_search_history"
     private const val KEY_SEARCH_HISTORY = "key_search_history"
 
-
     // 검색 목록 저장
     fun storeSearchHistoryList(searchHistoryList: MutableList<SearchData>){
         Log.d("save","SharedPrefManager")

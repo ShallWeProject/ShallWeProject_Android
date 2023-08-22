@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.google.gson.JsonElement
 import com.shall_we.R
 import com.shall_we.databinding.FragmentMyAlbumBinding
+import com.shall_we.home.ProductData
 import com.shall_we.mypage.MyGiftData
 import com.shall_we.retrofit.API
 import com.shall_we.retrofit.BodyData
@@ -47,6 +48,7 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
     var filename: String = ""
 
     var path: Uri= Uri.EMPTY
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -201,6 +203,7 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
             })
     }
 
+
     private fun requestPermission() {
         val locationResultLauncher = registerForActivityResult(
             ActivityResultContracts.RequestPermission()
@@ -321,11 +324,21 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
                 getMemoryPhoto("2023-09-29T11:35:32")
             })
     }
+            var selectedImageUri: Uri? = data?.data
+            selectedImageUri =
+                selectedImageUri?.let { getImageAbsolutePath(it, requireContext())?.toUri() }// 선택한 이미지의 경로를 구하는 함수 호출
+
+            // Uri를 사용하여 이미지를 처리하거나 표시할 수 있습니다.
+            if (selectedImageUri != null) {
+                Toast.makeText(view?.context, "이미지의 URI는 $selectedImageUri 입 니 다", Toast.LENGTH_SHORT).show()
+                Log.d("Album Result", "$selectedImageUri")
+            }
+        }
+    }
 
 
     // Uri에서 절대 경로 추출하기
     private fun getImageAbsolutePath(uri: Uri, context: Context): String? {
-        Log.d("getImageAbsolutePath", "절대경로 추출하러 왔습니다 uri = $uri")
         val projection = arrayOf(MediaStore.Images.Media.DATA)
         var cursor: Cursor? = null
         var path: String? = null
@@ -349,11 +362,8 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
     }
 
     override fun onItemClick() {
-
-
         // 클릭된 아이템이 첫 번째 아이템(사진 추가 버튼)일 때
            openGallery()
-
 
 
     }

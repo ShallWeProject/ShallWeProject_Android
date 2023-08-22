@@ -1,6 +1,9 @@
 package com.shall_we
 
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
@@ -15,6 +18,8 @@ import com.shall_we.home.HomeFragment
 import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RetrofitManager
 import com.shall_we.mypage.MypageFragment
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
@@ -30,7 +35,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setTheme(R.style.Base_Theme_Shall_we)
-
 
 //        RetrofitManager.instace.experienceGiftExpCategory(categoryId = 1, category = "가격높은순", completion = {
 //                responseState, responseBody ->

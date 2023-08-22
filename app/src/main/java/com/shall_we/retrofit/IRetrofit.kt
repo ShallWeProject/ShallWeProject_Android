@@ -9,6 +9,8 @@ import com.shall_we.login.data.Auth
 import com.shall_we.login.data.AuthLogin
 import com.shall_we.login.data.AuthResponse
 import com.shall_we.login.data.AuthSignOutResponse
+import com.shall_we.dto.ExperienceGiftDto
+import com.shall_we.dto.UpdateReservationReq
 import com.shall_we.login.data.AuthTokenData
 import com.shall_we.signup.UserData
 import retrofit2.http.DELETE
@@ -44,6 +46,10 @@ interface IRetrofit {
 
     @DELETE(API.DELETE_RESERVATION)
     fun deleteReservation(@Header("id") id: Int): Call<JsonElement>
+
+    @PUT(API.DELETE_RESERVATION)
+    fun putUpdateReservation(@Body updateReservationReq: UpdateReservationReq): Call<JsonElement>
+
     //유저 로그인
     @POST(API.AUTH_SIGN_IN)
     fun authSignIn(@Body auth: AuthLogin): Call<AuthResponse>
@@ -76,8 +82,10 @@ interface IRetrofit {
 
     @POST("/default/presignedURL-lambda")
     fun getImgUrl(@Body data: BodyData): Call<JsonElement>
+  
     @PUT
     fun uploadImg(@Url url: String, @Body imageBytes: ByteArray): Call<JsonElement>
+
 }
 
 data class ValidVerificationArray(val verificationCode: String, val phoneNumber:String)

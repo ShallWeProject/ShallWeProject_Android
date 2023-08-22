@@ -1,60 +1,76 @@
 package com.shall_we.giftExperience
 
-import android.app.DatePickerDialog
-import android.app.Dialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.CalendarView
 import android.widget.EditText
-import android.widget.TextView
-import com.prolificinteractive.materialcalendarview.CalendarDay
-import com.prolificinteractive.materialcalendarview.MaterialCalendarView
-import com.prolificinteractive.materialcalendarview.OnDateSelectedListener
-import com.prolificinteractive.materialcalendarview.format.TitleFormatter
-import com.shall_we.ExperienceDetail.ExperienceDetailFragment
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import com.google.gson.JsonElement
+import com.shall_we.ExperienceDetail.ExperienceDetailViewModel
 import com.shall_we.R
 import com.shall_we.base.BaseFragment
-import com.shall_we.changeReservation.CustomAlertDialog
 import com.shall_we.databinding.FragmentGiftExperienceBinding
+import com.shall_we.dto.ReservationRequest
+import com.shall_we.dto.ReservationStatus
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
+import java.util.Date
 
 
 class GiftExperienceFragment : BaseFragment<FragmentGiftExperienceBinding>(R.layout.fragment_gift_experience) {
 
-
+    lateinit var experienceDetailViewModel: ExperienceDetailViewModel
+    lateinit var reservationRequest: ReservationRequest
+    private var experienceGiftId:Int=1
+    private var persons:Int=2
+    var selectedDate: String? = null
+    private var receiverName:String="땡땡땡"
+    private var phoneNumber:String="01000000000"
+    private var imageKey:String="?"
+    private var invitationComment: String="환영해!"
+    private var reservationStatus: ReservationStatus=ReservationStatus.BOOKED
 
     override fun init() {
+        arguments?.let { // 아규먼트로부터 데이터를 불러옴
+
+            experienceGiftId = it.getInt("id") // id 키로 giftid 값을 불러와 저장하게 됩니다.
+            persons=it.getInt("persons")
+            selectedDate=it.getString("Date")
+
+        }
+
 
                 binding.giftreserveEdittext01.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
                 setEditTextBackground(binding.giftreserveEdittext01, s)
+                // 수정된 부분
             }
         })
 
         binding.giftreserveEdittext02.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+            }
             override fun afterTextChanged(s: Editable?) {
                 setEditTextBackground(binding.giftreserveEdittext02, s)
+                Log.d("receivername",receiverName)
+                receiverName = s.toString()
             }
         })
         binding.giftreserveEdittext03.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
+                setEditTextBackground(binding.giftreserveEdittext03, s)
+                invitationComment = s.toString()
 
             }
         })
@@ -138,6 +154,9 @@ class GiftExperienceFragment : BaseFragment<FragmentGiftExperienceBinding>(R.lay
 
 
 
+
+
+
         binding.giftreserveBtn02.setOnClickListener(){
            Log.d("clicked","clicked")
             binding.giftreserveBtn02.visibility = View.GONE
@@ -149,13 +168,24 @@ class GiftExperienceFragment : BaseFragment<FragmentGiftExperienceBinding>(R.lay
             binding.giftreserveBtn02.visibility=View.GONE
             binding.giftreserveBtn01.visibility=View.GONE
 
+
             val giftFragment = GiftFragment() // 전환할 프래그먼트 인스턴스 생성
+            val bundle = Bundle()
+            bundle.putInt("id", experienceGiftId) // 클릭된 아이템의 이름을 "title" 키로 전달
+            bundle.putString("date",selectedDate)
+            bundle.putInt("persons",persons)
+            bundle.putString("receivername", receiverName) // 클릭된 아이템의 이름을 "title" 키로 전달
+            bundle.putString("invitationComment",invitationComment)
+            giftFragment.arguments = bundle
+
+
             val fragmentTransaction = parentFragmentManager.beginTransaction()
             fragmentTransaction.replace(R.id.gift_reservation_layout,giftFragment, "gift")
 
             fragmentTransaction.addToBackStack(null)
             fragmentTransaction.commitAllowingStateLoss()
         }
+
     }
 
     private fun setEditTextBackground(editText: EditText, s: Editable?) {

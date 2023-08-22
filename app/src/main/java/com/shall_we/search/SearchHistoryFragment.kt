@@ -26,6 +26,16 @@ class SearchHistoryFragment : BaseFragment<FragmentSearchHistoryBinding>(R.layou
     lateinit var box_recent : ConstraintLayout
     lateinit var no_history : TextView
 
+    private lateinit var listener: OnSearchHistoryClickListener
+
+    interface OnSearchHistoryClickListener {
+        fun onSearchHistoryClicked(query: String)
+    }
+
+    fun setOnSearchHistoryClickListener(listener: OnSearchHistoryClickListener) {
+        this.listener = listener
+    }
+
     // 검색 기록 배열
     private var searchHistoryList = ArrayList<SearchData>()
 
@@ -97,6 +107,7 @@ class SearchHistoryFragment : BaseFragment<FragmentSearchHistoryBinding>(R.layou
 
         handleSearchViewUi()
 
+
     }
 
     // 검색 아이템 버튼 이벤트
@@ -105,18 +116,9 @@ class SearchHistoryFragment : BaseFragment<FragmentSearchHistoryBinding>(R.layou
 
         // 해당 검색어 api 호출
         val queryString = this.searchHistoryList[position].search_word
-
-        this.insertSearchTermHistory(searchTerm = queryString)
-
-        searchResultCall(queryString)
+        Log.d("history","아이템 클릭 $queryString")
+        listener.onSearchHistoryClicked(queryString)
     }
-
-    @SuppressLint("SetTextI18n")
-    fun searchResultCall(queryString : String) {
-        // 검색 API 불러오기
-        this.searchPhotoApiCall(queryString)
-    }
-
     private fun searchPhotoApiCall(query: String){
         //레트로핏 연결
         RetrofitManager.instance.experienceGiftSearch(title = query, completion = { responseState, responseBody ->

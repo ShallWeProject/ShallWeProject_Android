@@ -3,8 +3,12 @@ package com.shall_we.retrofit
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.JsonElement
+import com.shall_we.dto.UpdateReservationReq
 import com.shall_we.home.ProductData
 import com.shall_we.signup.UserData
+import com.shall_we.login.data.Auth
+import com.shall_we.login.data.AuthLogin
+import com.shall_we.login.data.AuthResponse
 import com.shall_we.login.data.AuthTokenData
 import retrofit2.Call
 import retrofit2.Callback
@@ -24,6 +28,7 @@ class RetrofitManager {
         RetrofitClient.getClient(API.BASE_URL)?.create(IRetrofit::class.java)
     private val Retrofit: IRetrofit? =
         RetrofitClient.getClient2("https://668h6987ib.execute-api.ap-northeast-2.amazonaws.com")?.create(IRetrofit::class.java)
+
 
     // 상황별 추천경험 조회 api
     fun experienceGiftSttCategory(
@@ -544,6 +549,32 @@ class RetrofitManager {
          })
      }
 
+
+    fun putUpdateReservation(updateReservationReq: UpdateReservationReq, completion:(RESPONSE_STATE) -> Unit){
+        val call = iRetrofit?.putUpdateReservation(updateReservationReq = updateReservationReq) ?:return
+
+        call.enqueue(object : retrofit2.Callback<JsonElement>{
+            // 응답 성공
+            override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
+                Log.d("retrofit","RetrofitManager - onResponse() called / response : ${response.code()}")
+
+                when(response.code()){
+                    200 -> {
+                        response.body()?.let{
+                            val body = it.asJsonObject
+                        }
+                        completion(RESPONSE_STATE.OKAY)
+                    }
+                }
+            }
+            // 응답 실패
+            override fun onFailure(call: Call<JsonElement>, t: Throwable) {
+                Log.d("retrofit","RetrofitManager - onFailure() called / t: $t")
+                completion(RESPONSE_STATE.FAIL)
+            }
+        })
+    }
+
     fun getImgUrl(data: BodyData, completion:(RESPONSE_STATE, imageKey: String, presignedUrl: String) -> Unit){
 //        val getRetrofit = RetrofitClient.getClient("https://668h6987ib.execute-api.ap-northeast-2.amazonaws.com")?.create(IRetrofit::class.java)
         val call = Retrofit?.getImgUrl(data) ?:return
@@ -559,7 +590,6 @@ class RetrofitManager {
                             val body = it.asJsonObject
                             val imageKey = body.get("imageKey").toString()
                             val presignedUrl = body.get("presignedUrl").toString()
-
                             completion(RESPONSE_STATE.OKAY, imageKey, presignedUrl)
                             Log.d("retrofit","RetrofitManager - getImgUrl onResponse() called / response : ${response.code()}")
                         }
@@ -580,6 +610,7 @@ class RetrofitManager {
     fun uploadImg(imageBytes: ByteArray, url: String,endPoint:String, completion:(RESPONSE_STATE) -> Unit){
         val getRetrofit = RetrofitClient.getClient2(url)?.create(IRetrofit::class.java)
         val call = getRetrofit?.uploadImg(url=endPoint, imageBytes = imageBytes) ?:return
+
 
         call.enqueue(object : retrofit2.Callback<JsonElement>{
             // 응답 성공

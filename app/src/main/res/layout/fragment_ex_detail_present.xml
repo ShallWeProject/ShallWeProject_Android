@@ -1,14 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ExperienceDetail.ExDetailPresentFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
+    <!-- TODO: Update blank fragment layout -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <TextView
+        android:layout_marginTop="20dp"
+        android:layout_margin="10dp"
+       android:id="@id/textView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="신청시 유의사항"
+        android:textColor="#333333"
+        android:textSize="13dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints" />
 
-</FrameLayout>
+    <TextView
+        android:id="@id/textView2"
+        android:layout_marginTop="10dp"
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="선물 시 호스트 연락처를 카카오톡으로 보내드립니다.\n
+예약 확정 시 환불이 불가합니다.\n
+예약 시간에 맞추어 늦지 않게 도착해 주시기 바랍니다.\n
+주차는 가능하나, 기계식이라 SUV는 주차가 불가합니다 \n(소울, 레이 동급 차량 불가).\n
+홈클래스로 진행되는 점 참고 부탁드립니다."
+        android:textSize="13dp"
+        android:textStyle="normal"
+        app:layout_constraintTop_toBottomOf="@+id/textView1" />
+
+
+    <TextView
+        android:layout_marginTop="20dp"
+        android:layout_margin="10dp"
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="예약변경"
+        android:textColor="#5F5F5F"
+        android:textSize="13dp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <TextView   android:layout_marginTop="10dp"
+        android:layout_margin="10dp"
+        android:id="@+id/textView4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="예약 변경은 이용일로부터 3일 전까지만 가능합니다.\n 마이페이지 > 보낸선물함에서 ‘예약 변경’을 클릭하여 원하는 일시로 예약을 변경해주세요."
+        android:textColor="#5F5F5F"
+        android:textSize="13dp"
+        android:textStyle="normal"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+    <TextView
+
+        android:layout_marginTop="20dp"
+        android:layout_margin="10dp"
+        android:id="@+id/textView6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="예약취소"
+        android:textColor="#5F5F5F"
+        android:textSize="13dp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+    <TextView   android:layout_marginTop="10dp"
+        android:layout_margin="10dp"
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="예약 취소는 이용일로부터 7일 전까지만 가능합니다. \n이후 예약을 취소하실 경우, 작가님께 개인적으로 연락해주세요.\n 취소 일시에 따라 별도의 수수료가 부과될 수 있는 점 참고 부탁드립니다"
+        android:textColor="#5F5F5F"
+        android:textSize="13dp"
+        android:textStyle="normal"
+        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
