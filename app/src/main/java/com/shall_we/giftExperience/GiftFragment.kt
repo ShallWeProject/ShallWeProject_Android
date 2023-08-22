@@ -110,20 +110,20 @@ class GiftFragment : BaseFragment<FragmentGiftBinding>(R.layout.fragment_gift) {
                 fragmentTransaction.commitAllowingStateLoss()
 
             }
-//        binding.giftBtn02.setOnClickListener()
-//        {
-//            Log.d("btn","clicked")
-//            binding.giftBtn02.visibility=View.GONE
-//            binding.giftBtn01.visibility=View.GONE
-//            val myPageFragment = MypageFragment() // 전환할 프래그먼트 인스턴스 생성
-//            val fragmentTransaction = parentFragmentManager.beginTransaction()
-//            // 기존 프래그먼트를 숨기고 새로운 프래그먼트로 교체
-//            fragmentTransaction.replace(R.id.giftLayout, myPageFragment, "mypage")
-//
-//            fragmentTransaction.addToBackStack(null)
-//            fragmentTransaction.commitAllowingStateLoss()
-//
-//        }
+        binding.giftBtn02.setOnClickListener()
+        {
+            Log.d("btn","clicked")
+            binding.giftBtn02.visibility=View.GONE
+            binding.giftBtn01.visibility=View.GONE
+            val myGiftSentFragment = MyGiftSentFragment() // 전환할 프래그먼트 인스턴스 생성
+            val fragmentTransaction = parentFragmentManager.beginTransaction()
+            // 기존 프래그먼트를 숨기고 새로운 프래그먼트로 교체
+            fragmentTransaction.replace(R.id.giftLayout, myGiftSentFragment, "mypage")
+
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commitAllowingStateLoss()
+
+        }
 
         }
 

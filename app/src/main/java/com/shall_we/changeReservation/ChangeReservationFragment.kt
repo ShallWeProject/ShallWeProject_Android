@@ -1,5 +1,7 @@
 package com.shall_we.changeReservation
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -62,6 +64,7 @@ class ChangeReservationFragment : BaseFragment<FragmentChangeReservationBinding>
             customDialog.setMessage("9일 11시")
 
             val alertDialog = customDialog.create()
+            alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             alertDialog.show()
 
             customDialog.setPositiveButton("변경하기", View.OnClickListener {
@@ -73,6 +76,11 @@ class ChangeReservationFragment : BaseFragment<FragmentChangeReservationBinding>
                 transaction.addToBackStack(null)
                 transaction.commit()
 
+                alertDialog.dismiss()
+            })
+
+            customDialog.setNegativeButton("취소",View.OnClickListener {
+                // 취소버튼 누르면 대화상자 종료
                 alertDialog.dismiss()
             })
 

@@ -38,10 +38,10 @@ class ChangedReservationFragment : BaseFragment<FragmentChangedReservationBindin
             binding.gifted.visibility=View.GONE
             binding.giftText01.visibility=View.GONE
             binding.giftText02.visibility=View.GONE
-            val myPageFragment = MyGiftReceivedFragment() // 전환할 프래그먼트 인스턴스 생성
+            val myPageFragment = MypageFragment() // 전환할 프래그먼트 인스턴스 생성
             val fragmentTransaction = parentFragmentManager.beginTransaction()
             // 기존 프래그먼트를 숨기고 새로운 프래그먼트로 교체
-            fragmentTransaction.replace(R.id.changed_reservation_layout,myPageFragment , "mypage")
+            fragmentTransaction.replace(R.id.nav_host_fragment,myPageFragment , "mypage")
 
             fragmentTransaction.addToBackStack(null)
             fragmentTransaction.commitAllowingStateLoss()
