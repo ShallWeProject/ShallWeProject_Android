@@ -115,19 +115,20 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tab_main" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-           app:backgroundTint="#00ff0000"
-            android:background="@drawable/fab"
-            android:layout_gravity="bottom|end"
-            android:src="@drawable/fab"
-            app:fabSize="normal"
-            app:layout_anchorGravity="bottom|end"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+                <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                    android:theme="@style/Theme.MaterialComponents"
+                    android:id="@+id/fab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="46dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginBottom="27dp"
+                    android:layout_marginEnd="16dp"
+                    android:textColor="@color/white"
+                    android:text="선물하기"
+                    app:icon="@drawable/gift_fill"
+                    app:iconTint="@color/white"
+                    android:backgroundTint="#F15F79"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
