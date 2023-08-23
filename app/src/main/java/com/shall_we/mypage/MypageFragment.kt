@@ -30,6 +30,8 @@ class MypageFragment : Fragment() {
                 adapter = myVPAdapter
             }
 
+
+
         val tabTitleArray = arrayOf(
             "보낸 선물함",
             "받은 선물함",
@@ -39,7 +41,11 @@ class MypageFragment : Fragment() {
             tab.text = tabTitleArray[position]
         }.attach()
 
+        val position = arguments?.getInt("position",0)
+        if(position != null){
+            setSelectedTab(binding.tabs, position!!-1)
 
+        }
     }
 
     override fun onCreateView(
@@ -127,6 +133,14 @@ class MypageFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
 //        binding.fabAlbum.hide()
+    }
+
+    private fun setSelectedTab(tabLayout: TabLayout, selectedTabIndex: Int) {
+        val tabCount = tabLayout.tabCount
+        if (selectedTabIndex >= 0 && selectedTabIndex < tabCount) {
+            val tab = tabLayout.getTabAt(selectedTabIndex)
+            tab?.select()
+        }
     }
 
 }

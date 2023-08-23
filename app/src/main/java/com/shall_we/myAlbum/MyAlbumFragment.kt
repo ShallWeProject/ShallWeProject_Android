@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.tabs.TabLayout
 import com.google.gson.JsonElement
 import com.shall_we.R
 import com.shall_we.databinding.FragmentMyAlbumBinding
@@ -44,6 +45,8 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
 
     lateinit var imageKey: String
     lateinit var presignedUrl: String
+
+    lateinit var dates : List<String>
     var selectedImageUri: Uri= Uri.EMPTY
     var filename: String = ""
 
@@ -153,12 +156,16 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
         adapter.notifyDataSetChanged()
     }
 
-    private fun getGiftDate(resultData: ArrayList<MyGiftData>) {  //: ArrayList<MyGiftData> {
+    private fun getGiftDate(resultData: ArrayList<MyGiftData>) : List<String> {
         giftData = ArrayList(resultData)
         giftData.sortWith(compareByDescending<MyGiftData> { it.date.replace(".","").toInt() }.thenByDescending { it.time.replace("시","").toInt() })
         // 클래스 데이터 2개 (cancellable이랑 message) 필요 없는데 없는 데이터클래스 생성 혹은 그냥 쓰기.?
         Log.d("retrofit", "여기까지오션나요..?여기는 getGiftDate입니닷.^^ 원래 data는 $resultData 이고 수정된 data는 $giftData")
-        // return giftData
+        dates = giftData.map { it.date }
+        viewBinding.tvAlbumDate.text = dates[0]
+
+        return dates
+
     }
 
 
@@ -321,7 +328,7 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
                 val uploadPhotoArray = UploadPhotoArray(imageKey, 60)
                 Log.d("post Memory Photo", "$uploadPhotoArray")
                 postMemoryPhoto(uploadPhotoArray)
-                getMemoryPhoto("2023-09-29T11:35:32")
+                getMemoryPhoto(dates[0])
             })
 
 //            var selectedImageUri: Uri? = data?.data

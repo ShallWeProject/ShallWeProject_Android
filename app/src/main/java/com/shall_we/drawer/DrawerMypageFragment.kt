@@ -15,6 +15,7 @@ import com.shall_we.mypage.MypageFragment
 import com.shall_we.R
 import com.shall_we.databinding.FragmentDrawerMypageBinding
 import com.shall_we.home.HomeRecomFragment
+import com.shall_we.myAlbum.MyAlbumFragment
 import com.shall_we.utils.HorizontalSpaceItemDecoration
 import com.shall_we.utils.dpToPx
 
@@ -30,19 +31,34 @@ class DrawerMypageFragment : Fragment(), DrawerAdapter.OnItemClickListener {
         val navigationView = requireActivity().findViewById<NavigationView>(R.id.main_navigation_view)
         val drawerLayout = navigationView.parent as DrawerLayout
         drawerLayout.closeDrawer(GravityCompat.START)
+        if(position == 0){
+            // 클릭된 아이템의 정보를 사용하여 다른 프래그먼트로 전환하는 로직을 작성
+            val newFragment = MyAlbumFragment() // 전환할 다른 프래그먼트 객체 생성
+            val bundle = Bundle()
+            newFragment.arguments = bundle
 
-        // 클릭된 아이템의 정보를 사용하여 다른 프래그먼트로 전환하는 로직을 작성
-        val newFragment = MypageFragment() // 전환할 다른 프래그먼트 객체 생성
-        val bundle = Bundle()
-        bundle.putString("tab", "경험카테고리")
-        bundle.putInt("position", position) // 클릭된 아이템의 이름을 "name" 키로 전달
-        newFragment.arguments = bundle
+            // 프래그먼트 전환
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.nav_host_fragment, newFragment)
+                .addToBackStack(null)
+                .commit()
 
-        // 프래그먼트 전환
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.nav_host_fragment, newFragment)
-            .addToBackStack(null)
-            .commit()
+        }
+        else{
+            // 클릭된 아이템의 정보를 사용하여 다른 프래그먼트로 전환하는 로직을 작성
+            val newFragment = MypageFragment() // 전환할 다른 프래그먼트 객체 생성
+            val bundle = Bundle()
+            bundle.putInt("position", position) // 클릭된 아이템의 이름을 "name" 키로 전달
+            newFragment.arguments = bundle
+
+            // 프래그먼트 전환
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.nav_host_fragment, newFragment)
+                .addToBackStack(null)
+                .commit()
+        }
+
+
 
         val bottomNavigation = requireActivity().findViewById<BottomNavigationView>(R.id.nav_bottom)
         bottomNavigation.menu.findItem(R.id.menu_mypage).setChecked(true)
