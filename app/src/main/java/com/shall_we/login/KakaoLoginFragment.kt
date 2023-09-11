@@ -161,7 +161,7 @@ class kakaoLoginFragment : Fragment() , IAuthSign {
     }
 
     private fun fragmentChangeLogin(){
-        val newFragment = LoginSuccessFragment() // 전환할 다른 프래그먼트 객체 생성
+        val newFragment = PhoneAuthFragment() // 전환할 다른 프래그먼트 객체 생성
         val bundle = Bundle()
         newFragment.arguments = bundle
         // 프래그먼트 전환
