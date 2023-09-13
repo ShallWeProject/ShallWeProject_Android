@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.LayoutRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.databinding.DataBindingUtil
@@ -145,6 +146,12 @@ abstract class BaseFragment<T : ViewDataBinding>(
         if (::callback.isInitialized) {
             callback.remove()
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val supportActionBar = (requireActivity() as AppCompatActivity).supportActionBar
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     // Activity에서 fragment들을 바꿀때마다 각각의 fragment들에서 초기화된 toolbarmenusearch도 같이 바껴야한다.

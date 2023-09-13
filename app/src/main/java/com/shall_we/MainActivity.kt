@@ -7,6 +7,7 @@ import android.util.Base64
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
@@ -36,19 +37,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setTheme(R.style.Base_Theme_Shall_we)
 
-//        RetrofitManager.instace.experienceGiftExpCategory(categoryId = 1, category = "가격높은순", completion = {
-//                responseState, responseBody ->
-//            when(responseState){
-//                RESPONSE_STATE.OKAY -> {
-//                    Log.d("retrofit", "api 호출 성공2 : ${responseBody?.size}")
-//
-//                }
-//                RESPONSE_STATE.FAIL -> {
-//                    Log.d("retrofit", "api 호출 에러")
-//                }
-//            }
-//        })
-
         supportFragmentManager.beginTransaction().replace(binding.navHostFragment.id, HomeFragment()).commit() // 첫 페이지는 home
         binding.navBottom.selectedItemId = R.id.menu_home
         // navigationBottomView 등록: 하단바 fragment id(bottom_navigation) 등록
@@ -56,8 +44,10 @@ class MainActivity : AppCompatActivity() {
 
         val toolbar : Toolbar = binding.tbMain
         setSupportActionBar(toolbar)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.back_btn) // 뒤로가기 버튼 이미지 설정
-        supportActionBar?.setDisplayHomeAsUpEnabled(false) // 뒤로가기 버튼 true이면 나옴
+
+        getSupportActionBar()?.setDisplayShowTitleEnabled(false); // 기본 타이틀 사용 안함
+
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_btn) // 뒤로가기 버튼 이미지 설정
         supportActionBar?.setTitle("")
 
         var listener: DrawerListener = object : DrawerListener { // 드로어레이이웃 닫힐 때 전에 열려 있던 탭으로 이동하도록
@@ -114,7 +104,13 @@ class MainActivity : AppCompatActivity() {
                 //toolbar의 back키 눌렀을 때 동작
                 // 액티비티 이동
 //                Log.d("toolbar","툴바 뒤로가기 버튼 클릭")
-//                finish()
+                if (supportFragmentManager.backStackEntryCount > 1) {
+                    supportFragmentManager.popBackStackImmediate(null, 0)
+                }else{
+                    supportFragmentManager.popBackStackImmediate(null, 0)
+                    supportActionBar?.setDisplayHomeAsUpEnabled(false)
+
+                }
                 return true
             }
 

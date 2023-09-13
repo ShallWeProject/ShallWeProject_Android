@@ -32,7 +32,7 @@ class SearchResultFragment : BaseFragment<FragmentSearchResultBinding>(R.layout.
 
         // 프래그먼트 전환
         parentFragmentManager.beginTransaction()
-            .replace(R.id.home_layout, newFragment)
+            .add(R.id.home_layout, newFragment)
             .addToBackStack(null)
             .commit()
     }
