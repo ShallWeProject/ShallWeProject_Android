@@ -140,7 +140,7 @@ class SearchHistoryFragment : BaseFragment<FragmentSearchHistoryBinding>(R.layou
 
                     // 프래그먼트 전환
                     parentFragmentManager.beginTransaction()
-                        .replace(R.id.fragmentBox, newFragment)
+                        .add(R.id.fragmentBox, newFragment)
                         .addToBackStack(null)
                         .commit()
 

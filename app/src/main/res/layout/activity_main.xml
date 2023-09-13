@@ -23,37 +23,27 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="fill_horizontal"
-                tools:layout_editor_absoluteX="16dp">
-
-                <ImageView
-                    android:layout_width="91dp"
-                    android:layout_height="14dp"
-                    android:layout_gravity="center"
-
-                    android:src="@drawable/logo_text"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <View
-                    android:id="@+id/view5"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_gravity="bottom"
-                    android:background="#FEF3F2"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="14dp"
+                android:layout_gravity="center"
+                android:src="@drawable/logo_text"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.appcompat.widget.Toolbar>
 
-
+        <View
+            android:id="@+id/view5"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_gravity="bottom"
+            android:background="#FEF3F2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tb_main" />
 
 
         <androidx.fragment.app.FragmentContainerView
@@ -67,7 +57,7 @@
             app:layout_constraintBottom_toTopOf="@+id/nav_bottom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tb_main"
+            app:layout_constraintTop_toBottomOf="@+id/view5"
             app:navGraph="@navigation/nav_graph" />
 
         <!-- 하단 메뉴바 -->
@@ -98,5 +88,5 @@
         android:layout_height="765dp"
         android:layout_gravity="start"
         android:background="@drawable/drawer_round"
-        app:headerLayout="@layout/item_drawer"/>
+        app:headerLayout="@layout/item_drawer" />
 </androidx.drawerlayout.widget.DrawerLayout>
