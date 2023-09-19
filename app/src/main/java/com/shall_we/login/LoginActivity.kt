@@ -5,27 +5,11 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import com.kakao.sdk.auth.model.OAuthToken
-import com.kakao.sdk.common.model.AuthErrorCause
-import com.kakao.sdk.common.model.ClientError
-import com.kakao.sdk.common.model.ClientErrorCause
-import com.kakao.sdk.common.util.Utility
-import com.kakao.sdk.user.UserApiClient
 import com.shall_we.App
 import com.shall_we.MainActivity
 import com.shall_we.R
 import com.shall_we.databinding.ActivityLoginBinding
-import com.shall_we.login.data.Auth
-import com.shall_we.login.data.AuthResponse
-import com.shall_we.login.data.AuthSignService
-import com.shall_we.login.data.IAuthSign
-import com.shall_we.retrofit.RetrofitManager
-import com.shall_we.search.SearchFragment
-import com.shall_we.signup.LoginSuccessFragment
+import com.shall_we.login.signup.PhoneAuthFragment
 
 class LoginActivity : AppCompatActivity(),ILoginEvent{
     lateinit var binding: ActivityLoginBinding

@@ -1,14 +1,11 @@
 package com.shall_we.retrofit
 
 import android.util.Log
-import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.shall_we.dto.UpdateReservationReq
 import com.shall_we.home.ProductData
-import com.shall_we.signup.UserData
-import com.shall_we.login.data.Auth
-import com.shall_we.login.data.AuthLogin
-import com.shall_we.login.data.AuthResponse
+import com.shall_we.login.data.AuthSignOutResponse
+import com.shall_we.login.signup.UserData
 import com.shall_we.login.data.AuthTokenData
 import retrofit2.Call
 import retrofit2.Callback
@@ -658,4 +655,37 @@ class RetrofitManager {
 
         })
     }
+
+    fun postSignOut(refreshToken: RefreshTokenArray, completion: (RESPONSE_STATE, AuthSignOutResponse?) -> Unit) {
+        val call = iRetrofit?.authSignOut(refreshToken) ?: return
+        call.enqueue(object : Callback<AuthSignOutResponse> {
+            // 응답 성공인 경우
+            override fun onResponse(call: Call<AuthSignOutResponse>, response: Response<AuthSignOutResponse>) {
+                if(response.code() == 200){
+                    val authResponse = response.body()
+                    if (authResponse != null) {
+                        Log.e("login", "Success: ${authResponse}")
+                        completion(RESPONSE_STATE.OKAY, authResponse)
+                    } else {
+                        completion(RESPONSE_STATE.OKAY, null)
+
+                    }
+                }else{
+                    try{
+                        Log.e("login", "Request failed with response code: ${response.code()}")
+
+                        completion(RESPONSE_STATE.OKAY, null)
+
+                    }catch(e:Exception){
+                        completion(RESPONSE_STATE.OKAY, null)
+
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<AuthSignOutResponse>, t: Throwable) {
+            }
+        })
+    }
+
 }
