@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ExperienceDetail.ExDetailFragment">
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    tools:context=".ExperienceDetail.ExDetailFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <!-- TODO: Update blank fragment layout -->
             <TextView
-                app:layout_constraintTop_toTopOf="parent"
                 android:id="@+id/exdetail_text05"
-                android:padding="33dp"
-                android:textSize="14dp"
-                android:textAlignment="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"
+                android:padding="33dp"
                 android:text="기념일에 없으면 섭섭한 레터링 케이크\n\n
-                그냥 주고받을 때도 물론 기쁘지만,\n직접 만들 때는 두 배로 즐거워요!" />
+                그냥 주고받을 때도 물론 기쁘지만,\n직접 만들 때는 두 배로 즐거워요!"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="14dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <LinearLayout
                 android:id="@+id/imageContainer"
@@ -34,5 +36,5 @@
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
-</layout>
+
+</androidx.core.widget.NestedScrollView>
