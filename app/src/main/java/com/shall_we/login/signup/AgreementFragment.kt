@@ -1,4 +1,4 @@
-package com.shall_we.signup
+package com.shall_we.login.signup
 
 import android.app.AlertDialog
 import android.graphics.Color

@@ -19,8 +19,7 @@ import com.shall_we.login.data.Auth
 import com.shall_we.login.data.AuthResponse
 import com.shall_we.login.data.AuthSignService
 import com.shall_we.login.data.IAuthSign
-import com.shall_we.signup.AgreementFragment
-import com.shall_we.signup.LoginSuccessFragment
+import com.shall_we.login.signup.PhoneAuthFragment
 
 class kakaoLoginFragment : Fragment() , IAuthSign {
 

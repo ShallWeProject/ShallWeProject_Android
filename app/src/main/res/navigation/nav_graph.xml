@@ -60,7 +60,7 @@
     </fragment>
     <fragment
         android:id="@+id/loginSuccessFragment"
-        android:name="com.shall_we.signup.LoginSuccessFragment"
+        android:name="com.shall_we.login.signin.LoginSuccessFragment"
         android:label="fragment_login_success"
         tools:layout="@layout/fragment_login_success" >
         <action

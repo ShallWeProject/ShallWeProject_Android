@@ -5,6 +5,7 @@ import com.google.gson.Gson
 import com.shall_we.retrofit.API
 import com.shall_we.retrofit.IRetrofit
 import com.shall_we.retrofit.RESPONSE_STATE
+import com.shall_we.retrofit.RefreshTokenArray
 import com.shall_we.retrofit.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback
@@ -86,5 +87,4 @@ class AuthSignService(val authSignInterface: IAuthSign) {
 
         })
     }
-
 }
