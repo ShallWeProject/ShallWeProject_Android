@@ -7,7 +7,7 @@
         android:id="@+id/changed_reservation_layout"
         android:backgroundTint="@color/white"
         android:background="@color/white"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent">
     <ImageView
         android:id="@+id/gifted"
