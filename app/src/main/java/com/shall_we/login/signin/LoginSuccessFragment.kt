@@ -1,4 +1,4 @@
-package com.shall_we.signup
+package com.shall_we.login.signin
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,9 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.shall_we.MainActivity
-import com.shall_we.R
 import com.shall_we.databinding.FragmentLoginSuccessBinding
-import com.shall_we.home.HomeFragment
 
 class LoginSuccessFragment : Fragment() {
     lateinit var binding: FragmentLoginSuccessBinding

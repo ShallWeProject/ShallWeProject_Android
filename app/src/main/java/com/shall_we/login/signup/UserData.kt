@@ -1,4 +1,4 @@
-package com.shall_we.signup
+package com.shall_we.login.signup
 
 data class UserData(
     val phoneNumber: String,

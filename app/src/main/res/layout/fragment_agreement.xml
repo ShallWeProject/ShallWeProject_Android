@@ -6,7 +6,7 @@
     android:id="@+id/agreement_layout"
     android:background="@color/white"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".signup.AgreementFragment">
+    tools:context=".login.signup.AgreementFragment">
 
     <TextView
         android:id="@+id/tv_description"

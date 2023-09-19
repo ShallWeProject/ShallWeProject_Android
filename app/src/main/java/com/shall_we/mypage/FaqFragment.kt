@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,7 +18,11 @@ class FaqFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
-
+    override fun onResume() {
+        super.onResume()
+        val supportActionBar = (requireActivity() as AppCompatActivity).supportActionBar
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -78,6 +83,12 @@ class FaqFragment : Fragment() {
                 FaqDto(
                     "추억 사진첩은 무엇인가요?",
                     "추억 사진첩은 소중한 사람들과 함께한 추억을 업로드할 수 있는 사진첩입니다. 경험별로 추억을 업로드해보세요."
+                )
+            )
+            add(
+                FaqDto(
+                    "계정을 로그아웃/탈퇴하고 싶어요.",
+                    "셸위를 떠나신다니 아쉽군요. 계정 로그아웃과 탈퇴는 계정 설정에서 진행할 수 있습니다. 다시 만날 수 있길 바라요."
                 )
             )
             add(

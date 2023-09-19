@@ -1,4 +1,4 @@
-package com.shall_we.signup
+package com.shall_we.login.signup
 
 import android.os.Bundle
 import android.text.Editable

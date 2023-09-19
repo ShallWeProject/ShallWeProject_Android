@@ -42,7 +42,7 @@ class DrawerHelpFragment : Fragment(), DrawerAdapter.OnItemClickListener  {
 
         // 프래그먼트 전환
         parentFragmentManager.beginTransaction()
-            .replace(R.id.nav_host_fragment, newFragment)
+            .add(R.id.nav_host_fragment, newFragment)
             .addToBackStack(null)
             .commit()
 
