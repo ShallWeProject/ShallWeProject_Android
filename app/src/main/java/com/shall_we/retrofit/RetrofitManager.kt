@@ -12,6 +12,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import com.shall_we.myAlbum.MyAlbumData
 import com.shall_we.mypage.MyGiftData
+import okhttp3.MultipartBody
 import java.text.SimpleDateFormat
 
 class RetrofitManager {
@@ -394,14 +395,13 @@ class RetrofitManager {
                         response.body()?.let {
                             var parsedProductDataArray = ArrayList<MyGiftData>()
                             val body = it.asJsonObject
-                            val data = body.getAsJsonObject("data")
-                            val gifts = data.getAsJsonArray("gifts")
-                            gifts.forEach { resultItem ->
+                            val data = body.getAsJsonArray("data")
+                            //Todo: 수신자 표시 할거면 receiver에서 name도 가져와야함. usersGiftReceive도 마찬가지
+                            data.forEach { resultItem ->
                                 val resultItemObject = resultItem.asJsonObject
                                 val reservationId : Int = resultItemObject.get("reservationId").asInt
-                                val experienceGift = resultItemObject.getAsJsonObject("experienceGift")
-                                val title: String = experienceGift.get("title").asString
-                                val subtitle: String = experienceGift.get("subtitle").asString
+                                val title: String = resultItemObject.get("experienceTitle").asString
+                                val subtitle: String = resultItemObject.get("experienceSubTitle").asString
 
                                 val dateTime : String = resultItemObject.get("dateTime").asString
                                 val invitationComment : String = resultItemObject.get("invitationComment").asString
@@ -445,17 +445,16 @@ class RetrofitManager {
                 )
                 when (response.code()) {
                     200 -> {
-                        response.body()?.let {
-                            var parsedProductDataArray = ArrayList<MyGiftData>()
-                            val body = it.asJsonObject
-                            val data = body.getAsJsonObject("data")
-                            val gifts = data.getAsJsonArray("gifts")
-                            gifts.forEach { resultItem ->
+                            //Todo: 수신자 표시 할거면 receiver에서 name도 가져와야함. usersGiftReceive도 마찬가지
+                            response.body()?.let {
+                                var parsedProductDataArray = ArrayList<MyGiftData>()
+                                val body = it.asJsonObject
+                                val data = body.getAsJsonArray("data")
+                                data.forEach { resultItem ->
                                 val resultItemObject = resultItem.asJsonObject
                                 val reservationId : Int = resultItemObject.get("reservationId").asInt
-                                val experienceGift = resultItemObject.getAsJsonObject("experienceGift")
-                                val title: String = experienceGift.get("title").asString
-                                val subtitle: String = experienceGift.get("subtitle").asString
+                                val title: String = resultItemObject.get("experienceTitle").asString
+                                val subtitle: String = resultItemObject.get("experienceSubTitle").asString
 
                                 val dateTime : String = resultItemObject.get("dateTime").asString
                                 val invitationComment : String = resultItemObject.get("invitationComment").asString
@@ -604,9 +603,9 @@ class RetrofitManager {
         })
     }
 
-    fun uploadImg(imageBytes: ByteArray, url: String,endPoint:String, completion:(RESPONSE_STATE) -> Unit){
+    fun uploadImg(image: MultipartBody.Part, url: String, endPoint:String, completion:(RESPONSE_STATE) -> Unit){
         val getRetrofit = RetrofitClient.getClient2(url)?.create(IRetrofit::class.java)
-        val call = getRetrofit?.uploadImg(url=endPoint, imageBytes = imageBytes) ?:return
+        val call = getRetrofit?.uploadImg(url=endPoint, image = image) ?:return
 
 
         call.enqueue(object : retrofit2.Callback<JsonElement>{
