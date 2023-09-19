@@ -1,6 +1,7 @@
 package com.shall_we.login.logout
 
 import android.app.AlertDialog
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -71,8 +72,12 @@ class LogoutFragment : Fragment() {
                 RESPONSE_STATE.OKAY -> {
                     Log.d("retrofit", "category api : ${responseBody}")
                     // 토큰 리셋
-                    App.refreshToken = ""
+                    val sharedPref = context?.getSharedPreferences("MY_APP_PREFS", Context.MODE_PRIVATE)
+                    sharedPref?.edit()?.putString("ACCESS_TOKEN", null)?.apply()
+                    sharedPref?.edit()?.putString("REFRESH_TOKEN", null)?.apply()
 
+                    App.accessToken = sharedPref?.getString("ACCESS_TOKEN", null)
+                    App.refreshToken = sharedPref?.getString("REFRESH_TOKEN", null)
                     //로그인 화면으로 돌아가기
                     requireActivity().finish()
                 }
