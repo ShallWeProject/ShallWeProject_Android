@@ -52,7 +52,6 @@ class FaqAdapter(private val context: Context) : RecyclerView.Adapter<FaqAdapter
             // 클릭 가능한 텍스트로 만들기
             spannableText.setSpan(object : ClickableSpan() {
                 override fun onClick(widget: View) {
-                    Log.d("click","계정설정")
                     val newFragment = LogoutFragment() // faq페이지로 이동
                     val bundle = Bundle()
                     newFragment.arguments = bundle
