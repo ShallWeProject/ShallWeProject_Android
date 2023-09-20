@@ -7,5 +7,6 @@ data class MyGiftData(
     val date: String,
     val time: String,
     val cancellable: Boolean,
-    val message: String
+    val message: String,
+    val person: String
     )

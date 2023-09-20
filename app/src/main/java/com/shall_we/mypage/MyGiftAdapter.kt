@@ -32,6 +32,7 @@ class MyGiftAdapter(private val context: Context, private val parentFragmentMana
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val data = datas[position]
+        holder.binding.tvPerson.text = data.person
         holder.binding.tvDate.text = data.date
         holder.binding.tvTime.text = data.time
         holder.binding.tvTitle.text = data.title
@@ -74,6 +75,7 @@ class MyGiftAdapter(private val context: Context, private val parentFragmentMana
     // 카드뷰 축소시 색상, visibility 변경
     private fun changeColorContacted(holder: ViewHolder, position: Int) {
         val data = datas[position]
+        holder.binding.tvPerson.visibility = View.GONE
         holder.binding.tvMessage.visibility = View.GONE
         holder.binding.tvChangeReserv.visibility = View.GONE
         holder.binding.tvCancelReserv.visibility = View.GONE
@@ -99,6 +101,7 @@ class MyGiftAdapter(private val context: Context, private val parentFragmentMana
     // 카드뷰 확장시 색상, visibility 변경
     private fun changeColorExpanded(holder: ViewHolder, position: Int) {
         val data = datas[position]
+        holder.binding.tvPerson.visibility = View.VISIBLE
         holder.binding.tvMessage.visibility = View.VISIBLE
         holder.binding.constView.setBackgroundColor(Color.parseColor("#FFF5F6"))
         holder.binding.tvDate.setCompoundDrawablesRelativeWithIntrinsicBounds(
@@ -215,4 +218,3 @@ class MyGiftAdapter(private val context: Context, private val parentFragmentMana
             })
     }
 }
-
