@@ -395,9 +395,9 @@ class RetrofitManager {
                         response.body()?.let {
                             var parsedProductDataArray = ArrayList<MyGiftData>()
                             val body = it.asJsonObject
-                            val data = body.getAsJsonArray("data")
-                            //Todo: 수신자 표시 할거면 receiver에서 name도 가져와야함. usersGiftReceive도 마찬가지
-                            data.forEach { resultItem ->
+
+                            val gifts = body.getAsJsonArray("data")
+                            gifts.forEach { resultItem ->
                                 val resultItemObject = resultItem.asJsonObject
                                 val reservationId : Int = resultItemObject.get("reservationId").asInt
                                 val title: String = resultItemObject.get("experienceTitle").asString
@@ -415,7 +415,9 @@ class RetrofitManager {
                                 val date = dateFormatter.format(dateTimeStr)
                                 val time = timeFormatter.format(dateTimeStr)
 
-                                val giftItem = MyGiftData(idx = reservationId, title = title, description = subtitle, date = date, time = time, cancellable = false, message = invitationComment)
+                                val receiver = resultItemObject.getAsJsonObject("receiver")
+                                val name = receiver.get("name").asString
+                                val giftItem = MyGiftData(idx = reservationId, title = title, description = subtitle, date = date, time = time, cancellable = false, message = invitationComment, person = name)
                                 Log.d("gift - send result: ", "$giftItem")
                                 parsedProductDataArray.add(giftItem)
                             }
@@ -445,12 +447,11 @@ class RetrofitManager {
                 )
                 when (response.code()) {
                     200 -> {
-                            //Todo: 수신자 표시 할거면 receiver에서 name도 가져와야함. usersGiftReceive도 마찬가지
-                            response.body()?.let {
-                                var parsedProductDataArray = ArrayList<MyGiftData>()
-                                val body = it.asJsonObject
-                                val data = body.getAsJsonArray("data")
-                                data.forEach { resultItem ->
+                        response.body()?.let {
+                            var parsedProductDataArray = ArrayList<MyGiftData>()
+                            val body = it.asJsonObject
+                            val gifts = body.getAsJsonArray("data")
+                            gifts.forEach { resultItem ->
                                 val resultItemObject = resultItem.asJsonObject
                                 val reservationId : Int = resultItemObject.get("reservationId").asInt
                                 val title: String = resultItemObject.get("experienceTitle").asString
@@ -469,7 +470,10 @@ class RetrofitManager {
                                 val date = dateFormatter.format(dateTimeStr)
                                 val time = timeFormatter.format(dateTimeStr)
 
-                                val giftItem = MyGiftData(idx = reservationId, title = title, description = subtitle, date = date, time = time, cancellable = true, message = invitationComment)
+                                val sender = resultItemObject.getAsJsonObject("sender")
+                                val name = sender.get("name").asString
+
+                                val giftItem = MyGiftData(idx = reservationId, title = title, description = subtitle, date = date, time = time, cancellable = true, message = invitationComment, person = name)
                                 Log.d("gift - send result: ", "$giftItem")
                                 parsedProductDataArray.add(giftItem)
                             }
