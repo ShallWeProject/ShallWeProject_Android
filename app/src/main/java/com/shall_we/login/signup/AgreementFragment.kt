@@ -1,5 +1,6 @@
-package com.shall_we.login.signup
+package com.shall_we.signup
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -9,10 +10,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ScrollView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.shall_we.R
 import com.shall_we.databinding.FragmentAgreementBinding
+import com.shall_we.login.signup.ProfileFragment
 
 
 class AgreementFragment : Fragment() {
@@ -82,11 +85,11 @@ class AgreementFragment : Fragment() {
             // Todo: 마케팅동의 정보 전달.
         }
         binding.tvAgree2More.setOnClickListener {
-            agreementDialog(it, resources.getString(R.string.agreement_service))
+            agreementDialog(it, 1)
         }
 
         binding.tvAgree3More.setOnClickListener {
-            agreementDialog(it, resources.getString(R.string.agreement_personal))
+            agreementDialog(it, 2)
         }
         binding.btnNext.setOnClickListener {
             val bundle = Bundle()
@@ -105,21 +108,44 @@ class AgreementFragment : Fragment() {
 
     }
 
-    private fun agreementDialog(view: View, string: String) {
-        val myLayout = LayoutInflater.from(context).inflate(R.layout.dialog_agreement_more, null)
-        val build = AlertDialog.Builder(view.context).apply {
-            setView(myLayout)
+    @SuppressLint("MissingInflatedId")
+    private fun agreementDialog(view: View, num: Int) {
+        if (num == 1) {
+            val myLayout =
+                LayoutInflater.from(context).inflate(R.layout.dialog_agreement_more, null)
+            val build = AlertDialog.Builder(view.context).apply {
+                setView(myLayout)
+            }
+            val dialog = build.create()
+            val textView =
+                myLayout.findViewById<TextView>(R.id.tv_agreement_description) // 여기서 textViewId는 실제 TextView의 ID여야 합니다
+//            textView.text = resources.getString(R.string.agreement_service)
+            textView.movementMethod = ScrollingMovementMethod.getInstance()
+
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.show()
+
+            myLayout.findViewById<Button>(R.id.btn_close).setOnClickListener {
+                dialog.dismiss()
+            }
         }
-        val dialog = build.create()
-        val textView = myLayout.findViewById<TextView>(R.id.tv_agreement_description) // 여기서 textViewId는 실제 TextView의 ID여야 합니다
-        textView.text = string
-        textView.movementMethod = ScrollingMovementMethod.getInstance()
+        else if (num == 2) {
+            val myLayout =
+                LayoutInflater.from(context).inflate(R.layout.dialog_agreement_more2, null)
+            val build = AlertDialog.Builder(view.context).apply {
+                setView(myLayout)
+            }
+            val dialog = build.create()
+            val myView =
+                myLayout.findViewById<ScrollView>(R.id.my_view) // 여기서 textViewId는 실제 TextView의 ID여야 합니다
+//            myView.movementMethod = ScrollingMovementMethod.getInstance()
 
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog.show()
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.show()
 
-        myLayout.findViewById<Button>(R.id.btn_close).setOnClickListener {
-            dialog.dismiss()
+            myLayout.findViewById<Button>(R.id.btn_close).setOnClickListener {
+                dialog.dismiss()
+            }
         }
     }
 

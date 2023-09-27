@@ -218,4 +218,3 @@ class MyGiftAdapter(private val context: Context, private val parentFragmentMana
             })
     }
 }
-

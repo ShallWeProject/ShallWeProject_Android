@@ -346,7 +346,7 @@ class RetrofitManager {
         call.enqueue(object : Callback<JsonElement> {
             // 응답 성공
             override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
-             Log.d("retrofit","RetrofitManager - memoryPhoto onResponse() called / response : ${response.code()}")
+                Log.d("retrofit","RetrofitManager - memoryPhoto onResponse() called / response : ${response.code()}")
                 when (response.code()) {
                     200 -> {
                         response.body()?.let {
@@ -523,31 +523,31 @@ class RetrofitManager {
             }
         })
     }
-     fun deleteReservation(id : Int, completion:(RESPONSE_STATE) -> Unit){
-         val call = iRetrofit?.deleteReservation(id = id) ?:return
+    fun deleteReservation(id : Int, completion:(RESPONSE_STATE) -> Unit){
+        val call = iRetrofit?.deleteReservation(id = id) ?:return
 
-         call.enqueue(object : retrofit2.Callback<JsonElement>{
-             // 응답 성공
-             override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
-                 Log.d("retrofit","RetrofitManager - onResponse() called / response : ${response.code()}")
+        call.enqueue(object : retrofit2.Callback<JsonElement>{
+            // 응답 성공
+            override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
+                Log.d("retrofit","RetrofitManager - onResponse() called / response : ${response.code()}")
 
-                 when(response.code()){
-                     200 -> {
-                         response.body()?.let{
-                             val body = it.asJsonObject
+                when(response.code()){
+                    200 -> {
+                        response.body()?.let{
+                            val body = it.asJsonObject
 
-                             }
-                             completion(RESPONSE_STATE.OKAY)
-                         }
-                     }
-                 }
-             // 응답 실패
-             override fun onFailure(call: Call<JsonElement>, t: Throwable) {
-                 Log.d("retrofit","RetrofitManager - onFailure() called / t: $t")
-                 completion(RESPONSE_STATE.FAIL)
-             }
-         })
-     }
+                        }
+                        completion(RESPONSE_STATE.OKAY)
+                    }
+                }
+            }
+            // 응답 실패
+            override fun onFailure(call: Call<JsonElement>, t: Throwable) {
+                Log.d("retrofit","RetrofitManager - onFailure() called / t: $t")
+                completion(RESPONSE_STATE.FAIL)
+            }
+        })
+    }
 
 
     fun putUpdateReservation(updateReservationReq: UpdateReservationReq, completion:(RESPONSE_STATE) -> Unit){
