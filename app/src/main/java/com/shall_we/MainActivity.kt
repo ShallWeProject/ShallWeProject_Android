@@ -109,7 +109,6 @@ class MainActivity : AppCompatActivity() {
                 }else{
                     supportFragmentManager.popBackStackImmediate(null, 0)
                     supportActionBar?.setDisplayHomeAsUpEnabled(false)
-
                 }
                 return true
             }
