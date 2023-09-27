@@ -29,9 +29,16 @@ import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RetrofitManager
 import kotlinx.coroutines.launch
 import com.shall_we.retrofit.UploadPhotoArray
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import org.json.JSONObject
 import retrofit2.http.Url
 import java.io.ByteArrayOutputStream
+import java.io.File
+import java.net.URL
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
@@ -49,6 +56,8 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
     lateinit var dates : List<String>
     var selectedImageUri: Uri= Uri.EMPTY
     var filename: String = ""
+    var ext: String=""
+    lateinit var file:File
 
     var path: Uri= Uri.EMPTY
 
@@ -239,16 +248,17 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
             // 선택한 이미지의 Uri 가져오기
             selectedImageUri = data?.data!!
+            System.out.println("selectedImageUri = "+selectedImageUri)
             path = selectedImageUri
             selectedImageUri =
                 selectedImageUri?.let { getImageAbsolutePath(it, requireContext())?.toUri() }!!// 선택한 이미지의 경로를 구하는 함수 호출
-
+            // newfile = File(selectedImageUri)
             // Uri를 사용하여 이미지를 처리하거나 표시할 수 있습니다.
             if (selectedImageUri != null) {
                 this.selectedImageUri = selectedImageUri
                 doit(selectedImageUri)
-
-                getImgUrl("jpg", "uploads", filename)
+                file = File(selectedImageUri.toString())
+                getImgUrl(ext, "uploads", filename, file)
 
             }
 
@@ -258,15 +268,17 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
     fun doit(selectedImageUri: Uri) {
 //        Toast.makeText(view?.context, "이미지의 URI는 $selectedImageUri 입 니 다", Toast.LENGTH_SHORT).show()
         Log.d("Album Result", "$selectedImageUri")
-        filename = selectedImageUri.toString().replace("/storage/emulated/0/Pictures/","").replace(".jpg","")
-        Log.d("filename", "$filename")
+        val fileForName = File(selectedImageUri.toString())
+        filename = fileForName.nameWithoutExtension
+        ext = fileForName.extension
+        Log.d("filename, ext", "$filename $ext")
 
 
 
 
     }
-    private fun getImgUrl(ext: String, dir: String, filename: String) {
-        val data: BodyData = BodyData(ext = ext, dir = dir, filename = filename)
+    private fun getImgUrl(ext: String, dir: String, filename: String, file:File) {
+        val data = BodyData(ext = ext, dir = dir, filename = filename)
 
         Log.d("data","$data")
         RetrofitManager.instance.getImgUrl(data,
@@ -278,21 +290,31 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
                         getImgUrlResult(imageKey, presignedUrl)
 
                         //doit(selectedImageUri)
+                        //이전에 해서 필요 없을 듯
 
                         // uploadimg의 엔드포인트 인터셉터로 변경해야할듯..
-                        val contentResolver = context?.contentResolver
-                        val inputStream = contentResolver?.openInputStream(path)
-                        val byteArrayOutputStream = ByteArrayOutputStream()
-                        val bufferSize = 1024
-                        val buffer = ByteArray(bufferSize)
-                        var len: Int
-                        if (inputStream != null) {
-                            while (inputStream.read(buffer).also { len = it } != -1) {
-                                byteArrayOutputStream.write(buffer, 0, len)
-                            }
-                        }
-                        val byteArray = byteArrayOutputStream.toByteArray()
-                        uploadImg(byteArray)
+//                        val contentResolver = context?.contentResolver
+//                        val inputStream = contentResolver?.openInputStream(path)
+//                        val byteArrayOutputStream = ByteArrayOutputStream()
+//                        val bufferSize = 1024
+//                        val buffer = ByteArray(bufferSize)
+//                        var len: Int
+//                        if (inputStream != null) {
+//                            while (inputStream.read(buffer).also { len = it } != -1) {
+//                                byteArrayOutputStream.write(buffer, 0, len)
+//                            }
+//                        }
+//                        val byteArray = byteArrayOutputStream.toByteArray()
+                        // 파일의 MIME 유형 가져오기 (예: text/plain, image/jpeg 등)
+                        val mediaType = "image/*".toMediaTypeOrNull() // 파일의 MIME 유형에 따라 변경
+
+                        // RequestBody로 파일을 래핑
+                        val requestBody = file.asRequestBody(mediaType)
+
+                        // 파일을 MultipartBody.Part 형식으로 변환
+                        val filePart = MultipartBody.Part.createFormData("file", file.name, requestBody)
+
+                        uploadImg(filePart)
 
 
                     }
@@ -306,15 +328,15 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
 
     private fun getImgUrlResult(imageKey: String, presignedUrl: String) {
         this.imageKey = imageKey
-        this.presignedUrl = presignedUrl.toString().replace("\"https://shallwebucket.s3.ap-northeast-2.amazonaws.com/","").replace("\"","")
-        this.presignedUrl=this.presignedUrl
-        Log.d("presignedUrl","$this.presignedUrl")
+        Log.d("First presignedUrl","$presignedUrl")
+        this.presignedUrl = presignedUrl.substringAfter("https://shallwebucket.s3.ap-northeast-2.amazonaws.com/")
+        Log.d("presignedUrl","${this.presignedUrl}")
 
     }
 
-    private fun uploadImg(imageBytes: ByteArray) {
+    private fun uploadImg(image: MultipartBody.Part) {
         RetrofitManager.instance.uploadImg(
-            imageBytes = imageBytes,url="https://shallwebucket.s3.ap-northeast-2.amazonaws.com/", endPoint = this.presignedUrl,
+            image = image,url="https://shallwebucket.s3.ap-northeast-2.amazonaws.com/", endPoint = this.presignedUrl,
             completion = { responseState ->
                 when (responseState) {
                     RESPONSE_STATE.OKAY -> {
@@ -361,7 +383,9 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
                 if (it.moveToFirst()) {
                     val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
                     path = it.getString(columnIndex)
-                    Log.d("getImageAbsolutePath", "절대경로 추출하러 왔습니다 uri = $path")
+                    val imageFile18 = File(path)
+                    //Todo: 여기가 imageFile
+                    Log.d("getImageAbsolutePath", "절대경로 추출하러 왔습니로다 uri = $path")
                 }
             }
         } catch (e: Exception) {
