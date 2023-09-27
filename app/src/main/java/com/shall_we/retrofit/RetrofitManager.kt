@@ -12,6 +12,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import com.shall_we.myAlbum.MyAlbumData
 import com.shall_we.mypage.MyGiftData
+import okhttp3.MultipartBody
 import java.text.SimpleDateFormat
 
 class RetrofitManager {
@@ -394,6 +395,7 @@ class RetrofitManager {
                         response.body()?.let {
                             var parsedProductDataArray = ArrayList<MyGiftData>()
                             val body = it.asJsonObject
+
                             val gifts = body.getAsJsonArray("data")
                             gifts.forEach { resultItem ->
                                 val resultItemObject = resultItem.asJsonObject
@@ -454,7 +456,6 @@ class RetrofitManager {
                                 val reservationId : Int = resultItemObject.get("reservationId").asInt
                                 val title: String = resultItemObject.get("experienceTitle").asString
                                 val subtitle: String = resultItemObject.get("experienceSubTitle").asString
-
 
                                 val dateTime : String = resultItemObject.get("dateTime").asString
                                 val invitationComment : String = resultItemObject.get("invitationComment").asString
@@ -606,9 +607,9 @@ class RetrofitManager {
         })
     }
 
-    fun uploadImg(imageBytes: ByteArray, url: String,endPoint:String, completion:(RESPONSE_STATE) -> Unit){
+    fun uploadImg(image: MultipartBody.Part, url: String, endPoint:String, completion:(RESPONSE_STATE) -> Unit){
         val getRetrofit = RetrofitClient.getClient2(url)?.create(IRetrofit::class.java)
-        val call = getRetrofit?.uploadImg(url=endPoint, imageBytes = imageBytes) ?:return
+        val call = getRetrofit?.uploadImg(url=endPoint, image = image) ?:return
 
 
         call.enqueue(object : retrofit2.Callback<JsonElement>{

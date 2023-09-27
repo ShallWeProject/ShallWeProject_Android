@@ -14,8 +14,11 @@ import com.shall_we.login.data.AuthTokenData
 import com.shall_we.login.signup.UserData
 import retrofit2.http.DELETE
 import retrofit2.http.Header
+import okhttp3.MultipartBody
+import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 import retrofit2.http.Url
@@ -82,8 +85,9 @@ interface IRetrofit {
     @POST("/default/presignedURL-lambda")
     fun getImgUrl(@Body data: BodyData): Call<JsonElement>
   
+    @Multipart
     @PUT
-    fun uploadImg(@Url url: String, @Body imageBytes: ByteArray): Call<JsonElement>
+    fun uploadImg(@Url url: String, @Part image: MultipartBody.Part): Call<JsonElement>
 
 }
 
