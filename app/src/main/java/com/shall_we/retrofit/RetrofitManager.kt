@@ -1,12 +1,18 @@
 package com.shall_we.retrofit
 
 import android.util.Log
+import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.shall_we.dto.UpdateReservationReq
+import com.shall_we.dto.UserDetail
+import com.shall_we.dto.UserDetailRes
 import com.shall_we.home.ProductData
+import com.shall_we.login.data.AuthLogin
+import com.shall_we.login.data.AuthResponse
 import com.shall_we.login.data.AuthSignOutResponse
 import com.shall_we.login.signup.UserData
 import com.shall_we.login.data.AuthTokenData
+import com.shall_we.login.data.ErrorResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -313,6 +319,7 @@ class RetrofitManager {
             }
         })
     }
+
 
 
     fun validVerification(
@@ -690,5 +697,21 @@ class RetrofitManager {
             }
         })
     }
+    fun getUserInfo(completion: (RESPONSE_STATE, String?) -> Unit){
+        val call = iRetrofit?.getUserInfo()?.enqueue(object : Callback<UserDetail>{
+            override fun onResponse(call: Call<UserDetail>, response: Response<UserDetail>) {
+                val response1 = response.body()
+                Log.d("retrofit",response1.toString())
+                completion(RESPONSE_STATE.OKAY, response.body()?.data?.phoneNumber.toString())
+
+            }
+
+            override fun onFailure(call: Call<UserDetail>, t: Throwable) {
+                completion(RESPONSE_STATE.OKAY, null)
+            }
+
+        })
+    }
+
 
 }

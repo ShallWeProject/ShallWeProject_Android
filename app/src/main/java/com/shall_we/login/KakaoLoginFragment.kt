@@ -20,7 +20,10 @@ import com.shall_we.login.data.Auth
 import com.shall_we.login.data.AuthResponse
 import com.shall_we.login.data.AuthSignService
 import com.shall_we.login.data.IAuthSign
+import com.shall_we.login.signin.LoginSuccessFragment
 import com.shall_we.login.signup.PhoneAuthFragment
+import com.shall_we.retrofit.RESPONSE_STATE
+import com.shall_we.retrofit.RetrofitManager
 
 class kakaoLoginFragment : Fragment() , IAuthSign {
 
@@ -53,18 +56,6 @@ class kakaoLoginFragment : Fragment() , IAuthSign {
             }
         }
 
-        //        // 로그인 조합 예제
-//// 로그인 정보 확인
-//        UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
-//            if (error != null) {
-//                Log.e("login", "카카오계정으로 로그인 실패", error)
-//
-//            }
-//            else if (tokenInfo != null) {
-//                Log.i("login", "카카오계정으로 로그인 성공 ${tokenInfo}")
-//            }
-//        }
-//
         binding.loginBtn.setOnClickListener {
             Log.d("test", "key hash: ${Utility.getKeyHash(requireContext())}")
 
@@ -165,14 +156,41 @@ class kakaoLoginFragment : Fragment() , IAuthSign {
     }
 
     private fun fragmentChangeLogin(){
-        val newFragment = PhoneAuthFragment() // 전환할 다른 프래그먼트 객체 생성
-        val bundle = Bundle()
-        newFragment.arguments = bundle
-        // 프래그먼트 전환
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainerView3, newFragment)
-            .addToBackStack(null)
-            .commit()
+        Log.d("login","fragmentChangeLogin")
+        RetrofitManager.instance.getUserInfo(completion = { responseState, responseBody ->
+            when (responseState) {
+                RESPONSE_STATE.OKAY -> {
+                    Log.d("retrofit", "${responseBody}")
+                    if(responseBody == null){
+                        val newFragment = PhoneAuthFragment() // 전환할 다른 프래그먼트 객체 생성
+                        val bundle = Bundle()
+                        newFragment.arguments = bundle
+                        // 프래그먼트 전환
+                        parentFragmentManager.beginTransaction()
+                            .replace(R.id.fragmentContainerView3, newFragment)
+                            .addToBackStack(null)
+                            .commit()
+                    }
+                    else{
+                        val newFragment = LoginSuccessFragment() // 전환할 다른 프래그먼트 객체 생성
+                        val bundle = Bundle()
+                        newFragment.arguments = bundle
+                        // 프래그먼트 전환
+                        parentFragmentManager.beginTransaction()
+                            .replace(R.id.fragmentContainerView3, newFragment)
+                            .addToBackStack(null)
+                            .commit()
+                    }
+                }
+
+                RESPONSE_STATE.FAIL -> {
+                    Log.d("retrofit", "api 호출 에러")
+
+                }
+            }
+        })
+
+
     }
 
     private fun fragmentChangeSignUp(){
@@ -185,4 +203,6 @@ class kakaoLoginFragment : Fragment() , IAuthSign {
             .addToBackStack(null)
             .commit()
     }
+
+
 }

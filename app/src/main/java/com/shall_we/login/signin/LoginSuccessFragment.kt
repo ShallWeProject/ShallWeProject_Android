@@ -22,6 +22,7 @@ class LoginSuccessFragment : Fragment() {
         binding.btnHome.setOnClickListener {
             val intent = Intent(activity, MainActivity::class.java)
             startActivity(intent)
+            activity?.finish()
         }
     }
 

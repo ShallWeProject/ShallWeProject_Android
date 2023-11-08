@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import com.shall_we.R
 import com.shall_we.databinding.FragmentProfileBinding
 import com.shall_we.retrofit.RESPONSE_STATE
@@ -120,7 +121,11 @@ class ProfileFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
     }
-
+    override fun onResume() {
+        super.onResume()
+        val supportActionBar = (requireActivity() as AppCompatActivity).supportActionBar
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
