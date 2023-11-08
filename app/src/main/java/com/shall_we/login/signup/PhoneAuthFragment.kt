@@ -18,6 +18,7 @@ import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RetrofitManager
 import com.shall_we.retrofit.SendOneArray
 import com.shall_we.retrofit.ValidVerificationArray
+import com.shall_we.signup.AgreementFragment
 
 class PhoneAuthFragment : Fragment() {
     private lateinit var timerTv: TextView

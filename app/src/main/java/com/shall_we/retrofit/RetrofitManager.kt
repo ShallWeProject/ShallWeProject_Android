@@ -12,6 +12,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import com.shall_we.myAlbum.MyAlbumData
 import com.shall_we.mypage.MyGiftData
+import okhttp3.MultipartBody
 import java.text.SimpleDateFormat
 
 class RetrofitManager {
@@ -345,7 +346,7 @@ class RetrofitManager {
         call.enqueue(object : Callback<JsonElement> {
             // 응답 성공
             override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
-             Log.d("retrofit","RetrofitManager - memoryPhoto onResponse() called / response : ${response.code()}")
+                Log.d("retrofit","RetrofitManager - memoryPhoto onResponse() called / response : ${response.code()}")
                 when (response.code()) {
                     200 -> {
                         response.body()?.let {
@@ -394,14 +395,13 @@ class RetrofitManager {
                         response.body()?.let {
                             var parsedProductDataArray = ArrayList<MyGiftData>()
                             val body = it.asJsonObject
-                            val data = body.getAsJsonObject("data")
-                            val gifts = data.getAsJsonArray("gifts")
+
+                            val gifts = body.getAsJsonArray("data")
                             gifts.forEach { resultItem ->
                                 val resultItemObject = resultItem.asJsonObject
                                 val reservationId : Int = resultItemObject.get("reservationId").asInt
-                                val experienceGift = resultItemObject.getAsJsonObject("experienceGift")
-                                val title: String = experienceGift.get("title").asString
-                                val subtitle: String = experienceGift.get("subtitle").asString
+                                val title: String = resultItemObject.get("experienceTitle").asString
+                                val subtitle: String = resultItemObject.get("experienceSubTitle").asString
 
                                 val dateTime : String = resultItemObject.get("dateTime").asString
                                 val invitationComment : String = resultItemObject.get("invitationComment").asString
@@ -415,7 +415,9 @@ class RetrofitManager {
                                 val date = dateFormatter.format(dateTimeStr)
                                 val time = timeFormatter.format(dateTimeStr)
 
-                                val giftItem = MyGiftData(idx = reservationId, title = title, description = subtitle, date = date, time = time, cancellable = false, message = invitationComment)
+                                val receiver = resultItemObject.getAsJsonObject("receiver")
+                                val name = receiver.get("name").asString
+                                val giftItem = MyGiftData(idx = reservationId, title = title, description = subtitle, date = date, time = time, cancellable = false, message = invitationComment, person = name)
                                 Log.d("gift - send result: ", "$giftItem")
                                 parsedProductDataArray.add(giftItem)
                             }
@@ -448,14 +450,12 @@ class RetrofitManager {
                         response.body()?.let {
                             var parsedProductDataArray = ArrayList<MyGiftData>()
                             val body = it.asJsonObject
-                            val data = body.getAsJsonObject("data")
-                            val gifts = data.getAsJsonArray("gifts")
+                            val gifts = body.getAsJsonArray("data")
                             gifts.forEach { resultItem ->
                                 val resultItemObject = resultItem.asJsonObject
                                 val reservationId : Int = resultItemObject.get("reservationId").asInt
-                                val experienceGift = resultItemObject.getAsJsonObject("experienceGift")
-                                val title: String = experienceGift.get("title").asString
-                                val subtitle: String = experienceGift.get("subtitle").asString
+                                val title: String = resultItemObject.get("experienceTitle").asString
+                                val subtitle: String = resultItemObject.get("experienceSubTitle").asString
 
                                 val dateTime : String = resultItemObject.get("dateTime").asString
                                 val invitationComment : String = resultItemObject.get("invitationComment").asString
@@ -470,7 +470,10 @@ class RetrofitManager {
                                 val date = dateFormatter.format(dateTimeStr)
                                 val time = timeFormatter.format(dateTimeStr)
 
-                                val giftItem = MyGiftData(idx = reservationId, title = title, description = subtitle, date = date, time = time, cancellable = true, message = invitationComment)
+                                val sender = resultItemObject.getAsJsonObject("sender")
+                                val name = sender.get("name").asString
+
+                                val giftItem = MyGiftData(idx = reservationId, title = title, description = subtitle, date = date, time = time, cancellable = true, message = invitationComment, person = name)
                                 Log.d("gift - send result: ", "$giftItem")
                                 parsedProductDataArray.add(giftItem)
                             }
@@ -520,31 +523,31 @@ class RetrofitManager {
             }
         })
     }
-     fun deleteReservation(id : Int, completion:(RESPONSE_STATE) -> Unit){
-         val call = iRetrofit?.deleteReservation(id = id) ?:return
+    fun deleteReservation(id : Int, completion:(RESPONSE_STATE) -> Unit){
+        val call = iRetrofit?.deleteReservation(id = id) ?:return
 
-         call.enqueue(object : retrofit2.Callback<JsonElement>{
-             // 응답 성공
-             override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
-                 Log.d("retrofit","RetrofitManager - onResponse() called / response : ${response.code()}")
+        call.enqueue(object : retrofit2.Callback<JsonElement>{
+            // 응답 성공
+            override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
+                Log.d("retrofit","RetrofitManager - onResponse() called / response : ${response.code()}")
 
-                 when(response.code()){
-                     200 -> {
-                         response.body()?.let{
-                             val body = it.asJsonObject
+                when(response.code()){
+                    200 -> {
+                        response.body()?.let{
+                            val body = it.asJsonObject
 
-                             }
-                             completion(RESPONSE_STATE.OKAY)
-                         }
-                     }
-                 }
-             // 응답 실패
-             override fun onFailure(call: Call<JsonElement>, t: Throwable) {
-                 Log.d("retrofit","RetrofitManager - onFailure() called / t: $t")
-                 completion(RESPONSE_STATE.FAIL)
-             }
-         })
-     }
+                        }
+                        completion(RESPONSE_STATE.OKAY)
+                    }
+                }
+            }
+            // 응답 실패
+            override fun onFailure(call: Call<JsonElement>, t: Throwable) {
+                Log.d("retrofit","RetrofitManager - onFailure() called / t: $t")
+                completion(RESPONSE_STATE.FAIL)
+            }
+        })
+    }
 
 
     fun putUpdateReservation(updateReservationReq: UpdateReservationReq, completion:(RESPONSE_STATE) -> Unit){
@@ -604,9 +607,9 @@ class RetrofitManager {
         })
     }
 
-    fun uploadImg(imageBytes: ByteArray, url: String,endPoint:String, completion:(RESPONSE_STATE) -> Unit){
+    fun uploadImg(image: MultipartBody.Part, url: String, endPoint:String, completion:(RESPONSE_STATE) -> Unit){
         val getRetrofit = RetrofitClient.getClient2(url)?.create(IRetrofit::class.java)
-        val call = getRetrofit?.uploadImg(url=endPoint, imageBytes = imageBytes) ?:return
+        val call = getRetrofit?.uploadImg(url=endPoint, image = image) ?:return
 
 
         call.enqueue(object : retrofit2.Callback<JsonElement>{
