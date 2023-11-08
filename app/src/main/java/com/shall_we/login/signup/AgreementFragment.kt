@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ScrollView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.shall_we.R
 import com.shall_we.databinding.FragmentAgreementBinding
@@ -172,7 +173,11 @@ class AgreementFragment : Fragment() {
         initAgreement()
     }
 
-
+    override fun onResume() {
+        super.onResume()
+        val supportActionBar = (requireActivity() as AppCompatActivity).supportActionBar
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
 
 
     companion object {

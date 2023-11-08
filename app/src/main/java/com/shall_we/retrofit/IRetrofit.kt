@@ -10,6 +10,8 @@ import com.shall_we.login.data.AuthLogin
 import com.shall_we.login.data.AuthResponse
 import com.shall_we.login.data.AuthSignOutResponse
 import com.shall_we.dto.UpdateReservationReq
+import com.shall_we.dto.UserDetail
+import com.shall_we.dto.UserDetailRes
 import com.shall_we.login.data.AuthTokenData
 import com.shall_we.login.signup.UserData
 import retrofit2.http.DELETE
@@ -81,6 +83,9 @@ interface IRetrofit {
 
     @PATCH(API.USERS)
     fun usersPatch(@Body userData: UserData) : Call<JsonElement>
+
+    @GET(API.USERS)
+    fun getUserInfo() : Call<UserDetail>
 
     @POST("/default/presignedURL-lambda")
     fun getImgUrl(@Body data: BodyData): Call<JsonElement>

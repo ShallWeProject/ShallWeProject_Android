@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig host="15.164.121.167" id="04efe675-9fd4-4b75-a1ff-91ad16bd8523" keyPath="$USER_HOME$/.ssh/umc-5th-nari.pem" port="22" nameFormat="DESCRIPTIVE" username="ubuntu" useOpenSSHConfig="true" />
+    </configs>
+  </component>
+</project>

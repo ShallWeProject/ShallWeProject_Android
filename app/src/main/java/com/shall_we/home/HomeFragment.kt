@@ -204,18 +204,18 @@ class HomeFragment : Fragment() , ProductAdapter.OnItemClickListener, CategoryAd
 
     fun RetrofitCall(rv : RecyclerView, categoryId : Int){
         if(categoryId == 0){
-            RetrofitManager.instance.experienceGiftPopular( completion = {
-                    responseState, responseBody ->
-                when(responseState){
-                    RESPONSE_STATE.OKAY -> {
-                        Log.d("retrofit", "category api : ${responseBody?.size}")
-                        initProductRecycler(rv, responseBody!!,this)
-                    }
-                    RESPONSE_STATE.FAIL -> {
-                        Log.d("retrofit", "api 호출 에러")
-                    }
-                }
-            })
+//            RetrofitManager.instance.experienceGiftPopular( completion = {
+//                    responseState, responseBody ->
+//                when(responseState){
+//                    RESPONSE_STATE.OKAY -> {
+//                        Log.d("retrofit", "category api : ${responseBody?.size}")
+//                        initProductRecycler(rv, responseBody!!,this)
+//                    }
+//                    RESPONSE_STATE.FAIL -> {
+//                        Log.d("retrofit", "api 호출 에러")
+//                    }
+//                }
+//            })
         }
         else{
             RetrofitManager.instance.experienceGiftExpCategory(categoryId = categoryId, category = "인기순", completion = {
