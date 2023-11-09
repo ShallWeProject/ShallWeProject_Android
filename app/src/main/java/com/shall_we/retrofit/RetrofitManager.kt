@@ -501,14 +501,14 @@ class RetrofitManager {
 
     fun tokenRefresh(refreshToken: RefreshTokenArray, completion: (RESPONSE_STATE, AuthTokenData?) -> Unit) {
         val call = iRetrofit?.tokenRefresh(refreshToken) ?: return
-        call.enqueue(object : Callback<AuthTokenData> {
+        call.enqueue(object : Callback<AuthResponse> {
             // 응답 성공인 경우
-            override fun onResponse(call: Call<AuthTokenData>, response: Response<AuthTokenData>) {
+            override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
                 if(response.code() == 200){
                     val authResponse = response.body()
                     if (authResponse != null) {
                         Log.e("login", "Success: ${authResponse}")
-                        completion(RESPONSE_STATE.OKAY, authResponse)
+                        completion(RESPONSE_STATE.OKAY, authResponse.data)
                     } else {
                         completion(RESPONSE_STATE.OKAY, null)
 
@@ -526,7 +526,7 @@ class RetrofitManager {
                 }
             }
 
-            override fun onFailure(call: Call<AuthTokenData>, t: Throwable) {
+            override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
             }
         })
     }

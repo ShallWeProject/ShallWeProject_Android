@@ -15,7 +15,7 @@ import com.kakao.sdk.common.util.Utility
 import com.kakao.sdk.user.UserApiClient
 import com.shall_we.App
 import com.shall_we.R
-import com.shall_we.databinding.FragmentKakaoLoginBinding
+import com.shall_we.databinding.FragmentLoginBinding
 import com.shall_we.login.data.Auth
 import com.shall_we.login.data.AuthResponse
 import com.shall_we.login.data.AuthSignService
@@ -44,7 +44,7 @@ class kakaoLoginFragment : Fragment() , IAuthSign {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val binding = FragmentKakaoLoginBinding.inflate(inflater, container, false)
+        val binding = FragmentLoginBinding.inflate(inflater, container, false)
         val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
             if (error != null) {
                 Log.e("login", "로그인 실패 $error")
@@ -56,7 +56,7 @@ class kakaoLoginFragment : Fragment() , IAuthSign {
             }
         }
 
-        binding.loginBtn.setOnClickListener {
+        binding.btnKakaoLogin.setOnClickListener {
             Log.d("test", "key hash: ${Utility.getKeyHash(requireContext())}")
 
 //            여러 명이 하나의 프로젝트를 개발하는 경우 모든 사람들이 각자의 디버그 키 해시 값을 구해서 다 등록해야 함.

@@ -68,7 +68,7 @@ interface IRetrofit {
 
     // 토큰갱신
     @POST(API.AUTH_REFRESH)
-    fun tokenRefresh(@Body refreshTokenArray :RefreshTokenArray): Call<AuthTokenData>
+    fun tokenRefresh(@Body refreshTokenArray :RefreshTokenArray): Call<AuthResponse>
 
     // 인증 문자 전송
     @POST(API.SEND_ONE)
