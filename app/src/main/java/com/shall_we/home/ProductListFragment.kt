@@ -3,19 +3,15 @@ package com.shall_we.home
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.LinearLayout
 import android.widget.Spinner
-import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
-import com.shall_we.ExperienceDetail.ExDetailFragment
 import com.shall_we.ExperienceDetail.ExperienceDetailFragment
 import com.shall_we.R
 import com.shall_we.databinding.FragmentProductListBinding
@@ -211,7 +207,20 @@ class ProductListFragment : Fragment() , ProductAdapter.OnItemClickListener{
                 when(responseState){
                     RESPONSE_STATE.OKAY -> {
                         Log.d("retrofit", "api 호출 성공1 : ${responseBody!!}")
-                        initProductRecycler(rvProduct, responseBody,this)
+                        val productDataList = ArrayList<ProductData>()
+                        if (responseBody != null) {
+                            for (experienceResNode in responseBody) {
+                                val title: String = experienceResNode.title?: ""
+                                val subtitle: String = experienceResNode.subtitle?: ""
+                                val price: Int = experienceResNode.price?: 0
+                                val formattedPrice = String.format("%,d", price.toInt())
+                                val giftImgUrl: String = experienceResNode.giftImgUrl ?: ""
+                                val giftid: Int = experienceResNode.experienceGiftId?: 0
+                                // ProductData 객체를 ArrayList에 추가
+                                productDataList.add(ProductData(title=title, subtitle = subtitle, price = formattedPrice, img = giftImgUrl, giftid = giftid))
+                            }
+                        }
+                        initProductRecycler(rvProduct, productDataList,this)
                     }
                     RESPONSE_STATE.FAIL -> {
                         Log.d("retrofit", "api 호출 에러")

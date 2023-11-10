@@ -16,31 +16,16 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.GridLayoutManager
-import com.google.android.material.tabs.TabLayout
-import com.google.gson.JsonElement
-import com.shall_we.R
 import com.shall_we.databinding.FragmentMyAlbumBinding
-import com.shall_we.home.ProductData
 import com.shall_we.mypage.MyGiftData
-import com.shall_we.retrofit.API
 import com.shall_we.retrofit.BodyData
-import com.shall_we.retrofit.IRetrofit
 import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RetrofitManager
-import kotlinx.coroutines.launch
 import com.shall_we.retrofit.UploadPhotoArray
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import org.json.JSONObject
-import retrofit2.http.Url
-import java.io.ByteArrayOutputStream
 import java.io.File
-import java.net.URL
-import java.time.OffsetDateTime
-import java.time.format.DateTimeFormatter
 
 class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
     private lateinit var viewBinding: FragmentMyAlbumBinding
