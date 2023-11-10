@@ -1,12 +1,8 @@
 package com.shall_we.search
 
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.shall_we.ExperienceDetail.ExperienceDetailFragment
 import com.shall_we.R
@@ -14,10 +10,7 @@ import com.shall_we.base.BaseFragment
 import com.shall_we.databinding.FragmentSearchResultBinding
 import com.shall_we.home.ProductAdapter
 import com.shall_we.home.ProductData
-import com.shall_we.retrofit.RESPONSE_STATE
-import com.shall_we.retrofit.RetrofitManager
 import com.shall_we.utils.initProductRecycler
-import retrofit2.Retrofit
 
 class SearchResultFragment : BaseFragment<FragmentSearchResultBinding>(R.layout.fragment_search_result) , ProductAdapter.OnItemClickListener{
     lateinit var rv_search_result : RecyclerView

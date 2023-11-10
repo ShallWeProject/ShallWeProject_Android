@@ -1,7 +1,5 @@
 package com.shall_we.home
 
-import android.content.pm.PackageInfo
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
@@ -9,7 +7,6 @@ import android.os.Looper
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
-import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -21,18 +18,16 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
-import com.kakao.sdk.common.util.Utility.getKeyHash
 import com.shall_we.ExperienceDetail.ExperienceDetailFragment
 import com.shall_we.R
 import com.shall_we.databinding.FragmentHomeBinding
+import com.shall_we.dto.ExperienceRes
 import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RetrofitManager
 import com.shall_we.search.SearchFragment
 import com.shall_we.utils.HorizontalSpaceItemDecoration
 import com.shall_we.utils.dpToPx
 import com.shall_we.utils.initProductRecycler
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
 
 
 class HomeFragment : Fragment() , ProductAdapter.OnItemClickListener, CategoryAdapter.OnItemClickListener{
@@ -204,18 +199,32 @@ class HomeFragment : Fragment() , ProductAdapter.OnItemClickListener, CategoryAd
 
     fun RetrofitCall(rv : RecyclerView, categoryId : Int){
         if(categoryId == 0){
-//            RetrofitManager.instance.experienceGiftPopular( completion = {
-//                    responseState, responseBody ->
-//                when(responseState){
-//                    RESPONSE_STATE.OKAY -> {
-//                        Log.d("retrofit", "category api : ${responseBody?.size}")
-//                        initProductRecycler(rv, responseBody!!,this)
-//                    }
-//                    RESPONSE_STATE.FAIL -> {
-//                        Log.d("retrofit", "api 호출 에러")
-//                    }
-//                }
-//            })
+
+            RetrofitManager.instance.experienceGiftPopular( completion = {
+                    responseState, responseBody ->
+                when(responseState){
+                    RESPONSE_STATE.OKAY -> {
+                        Log.d("retrofit", "popular api : ${responseBody?.size}")
+                        val productDataList = ArrayList<ProductData>()
+                        if (responseBody != null) {
+                            for (experienceResNode in responseBody) {
+                                val title: String = experienceResNode.title?: ""
+                                val subtitle: String = experienceResNode.subtitle?: ""
+                                val price: Int = experienceResNode.price?: 0
+                                val formattedPrice = String.format("%,d", price.toInt())
+                                val giftImgUrl: String = experienceResNode.giftImgUrl ?: ""
+                                val giftid: Int = experienceResNode.experienceGiftId?: 0
+                                // ProductData 객체를 ArrayList에 추가
+                                productDataList.add(ProductData(title=title, subtitle = subtitle, price = formattedPrice, img = giftImgUrl, giftid = giftid))
+                            }
+                        }
+                        initProductRecycler(rv, productDataList,this)
+                    }
+                    RESPONSE_STATE.FAIL -> {
+                        Log.d("retrofit", "api 호출 에러")
+                    }
+                }
+            })
         }
         else{
             RetrofitManager.instance.experienceGiftExpCategory(categoryId = categoryId, category = "인기순", completion = {
@@ -223,7 +232,20 @@ class HomeFragment : Fragment() , ProductAdapter.OnItemClickListener, CategoryAd
                 when(responseState){
                     RESPONSE_STATE.OKAY -> {
                         Log.d("retrofit", "category api : ${responseBody?.size}")
-                        initProductRecycler(rv, responseBody!!,this)
+                        val productDataList = ArrayList<ProductData>()
+                        if (responseBody != null) {
+                            for (experienceResNode in responseBody) {
+                                val title: String = experienceResNode.title ?: ""
+                                val subtitle: String = experienceResNode.subtitle?: ""
+                                val price: Int = experienceResNode.price?: 0
+                                val formattedPrice = String.format("%,d", price.toInt())
+                                val giftImgUrl: String = experienceResNode.giftImgUrl ?: ""
+                                val giftid: Int = experienceResNode.experienceGiftId ?: 0
+                                // ProductData 객체를 ArrayList에 추가
+                                productDataList.add(ProductData(title=title, subtitle = subtitle, price = formattedPrice, img = giftImgUrl, giftid = giftid))
+                            }
+                        }
+                        initProductRecycler(rv, productDataList,this)
                     }
                     RESPONSE_STATE.FAIL -> {
                         Log.d("retrofit", "api 호출 에러")
