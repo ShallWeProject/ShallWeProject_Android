@@ -31,7 +31,6 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 
-
 class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
     private lateinit var binding: FragmentMyAlbumBinding
     private lateinit var adapter: MyAlbumAdapter

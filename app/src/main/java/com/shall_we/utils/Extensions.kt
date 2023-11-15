@@ -6,6 +6,7 @@ import android.util.TypedValue
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.shall_we.dto.ExperienceRes
 import com.shall_we.home.ProductAdapter
 import com.shall_we.home.ProductData
 import com.shall_we.search.SearchResultFragment

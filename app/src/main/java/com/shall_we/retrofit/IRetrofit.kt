@@ -1,6 +1,7 @@
 package com.shall_we.retrofit
 
 import com.google.gson.JsonElement
+import com.shall_we.dto.PopularRes
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -10,6 +11,9 @@ import com.shall_we.login.data.AuthLogin
 import com.shall_we.login.data.AuthResponse
 import com.shall_we.login.data.AuthSignOutResponse
 import com.shall_we.dto.UpdateReservationReq
+import com.shall_we.dto.UserDetail
+import com.shall_we.dto.UserDetailRes
+import com.shall_we.dto.catergoryResponse
 import com.shall_we.login.data.AuthTokenData
 import com.shall_we.login.signup.UserData
 import retrofit2.http.DELETE
@@ -29,7 +33,7 @@ interface IRetrofit {
     fun experienceGiftSttCategory(@Path("SttCategoryId") categoryId : Int, @Query("category") category : String) : Call<JsonElement>
 
     @GET(API.EXPERIENCE_GIFT_EXPCATEGORY)
-    fun experienceGiftExpCategory(@Path("ExpCategoryId") categoryId : Int, @Query("category") category : String) : Call<JsonElement>
+    fun experienceGiftExpCategory(@Path("ExpCategoryId") categoryId : Int, @Query("category") category : String) : Call<catergoryResponse>
 
     @GET(API.EXPERIENCE_GIFT_SEARCH)
     fun experienceGiftSearch(@Query("title") title : String) : Call<JsonElement>
@@ -66,7 +70,7 @@ interface IRetrofit {
 
     // 토큰갱신
     @POST(API.AUTH_REFRESH)
-    fun tokenRefresh(@Body refreshTokenArray :RefreshTokenArray): Call<AuthTokenData>
+    fun tokenRefresh(@Body refreshTokenArray :RefreshTokenArray): Call<AuthResponse>
 
     // 인증 문자 전송
     @POST(API.SEND_ONE)
@@ -77,10 +81,13 @@ interface IRetrofit {
     fun validVerification(@Body validVerificationArray : ValidVerificationArray): Call<JsonElement>
 
     @GET(API.EXPERIENCE_GIFT_POPULAR)
-    fun experienceGiftPopular() : Call<JsonElement>
+    fun experienceGiftPopular() : Call<PopularRes>
 
     @PATCH(API.USERS)
     fun usersPatch(@Body userData: UserData) : Call<JsonElement>
+
+    @GET(API.USERS)
+    fun getUserInfo() : Call<UserDetail>
 
     @POST("/default/presignedURL-lambda")
     fun getImgUrl(@Body data: BodyData): Call<JsonElement>
