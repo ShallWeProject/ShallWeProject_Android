@@ -9,6 +9,7 @@ import com.shall_we.dto.UpdateReservationReq
 import com.shall_we.dto.UserDetail
 import com.shall_we.dto.catergoryResponse
 import com.shall_we.home.ProductData
+import com.shall_we.login.data.AuthResponse
 import com.shall_we.login.data.AuthSignOutResponse
 import com.shall_we.login.signup.UserData
 import com.shall_we.login.data.AuthTokenData
