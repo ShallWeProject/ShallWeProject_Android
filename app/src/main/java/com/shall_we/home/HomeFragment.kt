@@ -198,6 +198,7 @@ class HomeFragment : Fragment() , ProductAdapter.OnItemClickListener, CategoryAd
 
 
     fun RetrofitCall(rv : RecyclerView, categoryId : Int){
+
         if(categoryId == 0){
 
             RetrofitManager.instance.experienceGiftPopular( completion = {
@@ -252,7 +253,7 @@ class HomeFragment : Fragment() , ProductAdapter.OnItemClickListener, CategoryAd
                     }
                 }
             })
-        }
+        //}
 
     }
 }
