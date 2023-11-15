@@ -85,7 +85,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp">
             <TextView
-                android:id="@+id/tv_album_title"
+                android:id="@+id/tv_album_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="@id/cv_album_description"
@@ -99,11 +99,11 @@
                 />
 
             <TextView
-                android:id="@+id/tv_album_description"
+                android:id="@+id/tv_album_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="@id/cv_album_description"
-                app:layout_constraintTop_toBottomOf="@id/tv_album_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_album_description"
                 android:layout_marginStart="27dp"
                 android:text="Y2K 감성 제대로 느끼고 싶을 땐, 추억의 캔모아"
                 android:textSize="13sp"

@@ -1,65 +1,56 @@
 package com.shall_we.myAlbum
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
+import android.provider.Settings
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toUri
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import com.google.android.material.tabs.TabLayout
-import com.google.gson.JsonElement
-import com.shall_we.R
 import com.shall_we.databinding.FragmentMyAlbumBinding
-import com.shall_we.home.ProductData
 import com.shall_we.mypage.MyGiftData
-import com.shall_we.retrofit.API
 import com.shall_we.retrofit.BodyData
-import com.shall_we.retrofit.IRetrofit
 import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RetrofitManager
-import kotlinx.coroutines.launch
 import com.shall_we.retrofit.UploadPhotoArray
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import org.json.JSONObject
-import retrofit2.http.Url
-import java.io.ByteArrayOutputStream
 import java.io.File
-import java.net.URL
-import java.time.OffsetDateTime
-import java.time.format.DateTimeFormatter
+
 
 class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
-    private lateinit var viewBinding: FragmentMyAlbumBinding
+    private lateinit var binding: FragmentMyAlbumBinding
     private lateinit var adapter: MyAlbumAdapter
 
-    val albumData = ArrayList<MyAlbumPhotoData>()
-    val allPhotoData: ArrayList<MyAlbumPhotoData> = ArrayList()
-    lateinit var giftData: ArrayList<MyGiftData>
+    private val albumData = ArrayList<MyAlbumPhotoData>()
+    private val allPhotoData: ArrayList<MyAlbumPhotoData> = ArrayList()
+    private lateinit var giftData: ArrayList<MyGiftData>
+    private var giftIdx = 0
 
-    lateinit var imageKey: String
-    lateinit var presignedUrl: String
+    private lateinit var imageKey: String
+    private lateinit var presignedUrl: String
 
-    lateinit var dates : List<String>
-    var selectedImageUri: Uri= Uri.EMPTY
-    var filename: String = ""
-    var ext: String=""
-    lateinit var file:File
+    private lateinit var dates : List<String>
+    private var selectedImageUri: Uri= Uri.EMPTY
+    private var filename: String = ""
+    private var ext: String=""
+    private lateinit var file:File
 
-    var path: Uri= Uri.EMPTY
+    private var path: Uri= Uri.EMPTY
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,33 +64,38 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewBinding = FragmentMyAlbumBinding.inflate(inflater, container, false)
+        binding = FragmentMyAlbumBinding.inflate(inflater, container, false)
 //        (activity as AppCompatActivity).findViewById<ExtendedFloatingActionButton>(R.id.fab_album).show()
 
-        viewBinding.ivLeft.setOnClickListener {
-//            val body: UploadPhotoArray = UploadPhotoArray("uploads/add_photops0poq.png", 82)
-//            postMemoryPhoto(body)
-//            val newFragment = MyAlbumFragment()
-//            val fragmentTransaction = parentFragmentManager.beginTransaction()
-//            fragmentTransaction.replace(R.id.myalbum, newFragment, "myAlbumFragment")
-//            fragmentTransaction.addToBackStack(null)
-//            fragmentTransaction.commitAllowingStateLoss()
+        binding.ivLeft.setOnClickListener {
+            if (giftData.size>giftIdx+1){
+                giftIdx+=1
+                binding.tvAlbumDate.text = dates[giftIdx]
+                binding.tvAlbumDescription.text = giftData[giftIdx].description
+                binding.tvAlbumTitle.text = giftData[giftIdx].title
+                Log.d("album date", "album date ++ is not null")
+            }
+            else {
+                Log.d("album date", "album date ++ is null, ${binding.tvAlbumDate.text}")
+            }
         }
 
 
-        viewBinding.ivRight.setOnClickListener {
-//            val body: UploadPhotoArray = UploadPhotoArray("uploads/add_photops0poq.png", 82)
-//            postMemoryPhoto(body)
-//
-
-//            val newFragment = MyAlbumFragment()
-//            val fragmentTransaction = parentFragmentManager.beginTransaction()
-//            fragmentTransaction.replace(R.id.myalbum, newFragment, "myAlbumFragment")
-//            fragmentTransaction.addToBackStack(null)
-//            fragmentTransaction.commitAllowingStateLoss()
+        binding.ivRight.setOnClickListener {
+            if (giftIdx>=1){
+                giftIdx-=1
+                binding.tvAlbumDate.text = dates[giftIdx]
+                binding.tvAlbumDescription.text = giftData[giftIdx].description
+                binding.tvAlbumTitle.text = giftData[giftIdx].title
+                Log.d("album date", "album date -- is not null")
+            }
+            else {
+                Log.d("album date", "album date -- is null, ${binding.tvAlbumDate.text}")
+            }
         }
 
-        return viewBinding.root
+
+        return binding.root
     }
 
     private fun postMemoryPhoto(uploadPhotoArray: UploadPhotoArray) {
@@ -126,7 +122,7 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
 
         // RecyclerView에 GridLayoutManager 적용
         val gridLayoutManager = GridLayoutManager(requireContext(), 2)
-        viewBinding.recyclerAlbumView.layoutManager = gridLayoutManager
+        binding.recyclerAlbumView.layoutManager = gridLayoutManager
 
 //        // Adapter 설정
 //        albumadapter = MyAlbumAdapter(requireContext())
@@ -134,7 +130,7 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
         // adapter.datas = // 데이터 리스트 설정
 //        adapter = MyAlbumAdapter(requireContext())
 //        viewBinding.recyclerAlbumView.adapter = adapter
-        // adapter.datas = // 데이터 리스트 설정
+//         adapter.datas = giftData[]// 데이터 리스트 설정
 
 //        albumData.apply {
 //            add(
@@ -152,26 +148,30 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
 
     private fun initAlbum(resultData: ArrayList<MyAlbumPhotoData>) {
         adapter = MyAlbumAdapter(requireContext())
-        viewBinding.recyclerAlbumView.adapter = adapter
+        binding.recyclerAlbumView.adapter = adapter
         adapter.setOnItemClickListener(this)
 
+        val defaultImageUrl = listOf("add_photo.png")
+
         albumData.apply {
-            add(MyAlbumPhotoData("add_photo.png"))
+            add(MyAlbumPhotoData(defaultImageUrl))
             addAll(resultData)
         }
-        Log.d("retrofit","$albumData")
+
+        Log.d("retrofit","initAlbum, $albumData")
 
         adapter.datas = albumData
         adapter.notifyDataSetChanged()
     }
 
+    // get memory-photo 결과 리스트 재정렬해서 giftData, dates에 저장
     private fun getGiftDate(resultData: ArrayList<MyGiftData>) : List<String> {
         giftData = ArrayList(resultData)
         giftData.sortWith(compareByDescending<MyGiftData> { it.date.replace(".","").toInt() }.thenByDescending { it.time.replace("시","").toInt() })
         // 클래스 데이터 2개 (cancellable이랑 message) 필요 없는데 없는 데이터클래스 생성 혹은 그냥 쓰기.?
         Log.d("retrofit", "여기까지오션나요..?여기는 getGiftDate입니닷.^^ 원래 data는 $resultData 이고 수정된 data는 $giftData")
-        dates = giftData.map { it.date }
-        viewBinding.tvAlbumDate.text = dates[0]
+        dates = giftData.map { it.date } // 이게 굳이 있어야 하나 싶긴 함. giftData로 받아와서 title이랑 date 다 출력할 수 있지 않나 싶음...
+        binding.tvAlbumDate.text = dates[giftIdx]
 
         return dates
 
@@ -194,6 +194,7 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
             })
     }
 
+    @SuppressLint("SuspiciousIndentation")
     private fun getMemoryPhoto(date: String) {
         RetrofitManager.instance.getMemoryPhoto(
             date = date,
@@ -204,9 +205,7 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
                         Log.d("retrofit", "myalbum api : ${responseBody?.size}")
                         responseBody?.forEach { myAlbumData ->
                             val photoUrls: List<String> = myAlbumData.memoryImgs.toList()
-                            photoUrls.forEach { url ->
-                                allPhotoData.add(MyAlbumPhotoData(url))
-                            }
+                                allPhotoData.add(MyAlbumPhotoData(photoUrls))
                         }
 
                         initAlbum(allPhotoData)
@@ -231,11 +230,17 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
         locationResultLauncher.launch(
             android.Manifest.permission.READ_EXTERNAL_STORAGE
         )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (!Environment.isExternalStorageManager()) {
+                val intent = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
+                requireActivity().startActivity(intent)
+            }
+        }
     }
     private val PICK_IMAGE_REQUEST = 1 // 요청 코드
 
     // 갤러리 열기
-    fun openGallery() {
+    private fun openGallery() {
         Log.d("gallery","갤러리")
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(intent, PICK_IMAGE_REQUEST)
@@ -256,7 +261,7 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
             // Uri를 사용하여 이미지를 처리하거나 표시할 수 있습니다.
             if (selectedImageUri != null) {
                 this.selectedImageUri = selectedImageUri
-                doit(selectedImageUri)
+                parseUri(selectedImageUri)
                 file = File(selectedImageUri.toString())
                 getImgUrl(ext, "uploads", filename, file)
 
@@ -265,7 +270,7 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
         }
     }
 
-    fun doit(selectedImageUri: Uri) {
+    private fun parseUri(selectedImageUri: Uri) {
 //        Toast.makeText(view?.context, "이미지의 URI는 $selectedImageUri 입 니 다", Toast.LENGTH_SHORT).show()
         Log.d("Album Result", "$selectedImageUri")
         val fileForName = File(selectedImageUri.toString())
@@ -289,22 +294,6 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
                         //API.UPLOAD_IMG=presignedUrl
                         getImgUrlResult(imageKey, presignedUrl)
 
-                        //doit(selectedImageUri)
-                        //이전에 해서 필요 없을 듯
-
-                        // uploadimg의 엔드포인트 인터셉터로 변경해야할듯..
-//                        val contentResolver = context?.contentResolver
-//                        val inputStream = contentResolver?.openInputStream(path)
-//                        val byteArrayOutputStream = ByteArrayOutputStream()
-//                        val bufferSize = 1024
-//                        val buffer = ByteArray(bufferSize)
-//                        var len: Int
-//                        if (inputStream != null) {
-//                            while (inputStream.read(buffer).also { len = it } != -1) {
-//                                byteArrayOutputStream.write(buffer, 0, len)
-//                            }
-//                        }
-//                        val byteArray = byteArrayOutputStream.toByteArray()
                         // 파일의 MIME 유형 가져오기 (예: text/plain, image/jpeg 등)
                         val mediaType = "image/*".toMediaTypeOrNull() // 파일의 MIME 유형에 따라 변경
 
@@ -316,7 +305,6 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
 
                         uploadImg(filePart)
 
-
                     }
 
                     RESPONSE_STATE.FAIL -> {
@@ -325,7 +313,6 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
                 }
             })
     }
-
     private fun getImgUrlResult(imageKey: String, presignedUrl: String) {
         this.imageKey = imageKey
         Log.d("First presignedUrl","$presignedUrl")
@@ -347,10 +334,11 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
                         Log.d("retrofit", "uploadImg api 호출 에러")
                     }
                 }
-                val uploadPhotoArray = UploadPhotoArray(imageKey, 60)
+                val uploadPhotoArray = UploadPhotoArray(imageKey, giftData[giftIdx].idx)
                 Log.d("post Memory Photo", "$uploadPhotoArray")
                 postMemoryPhoto(uploadPhotoArray)
-                getMemoryPhoto(dates[0])
+                val modDate = giftData[giftIdx].date.replace(".","-")
+                getMemoryPhoto(modDate)
             })
 
 //            var selectedImageUri: Uri? = data?.data
@@ -371,7 +359,6 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
     }
 }
 
-
     // Uri에서 절대 경로 추출하기
     private fun getImageAbsolutePath(uri: Uri, context: Context): String? {
         val projection = arrayOf(MediaStore.Images.Media.DATA)
@@ -385,7 +372,7 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
                     path = it.getString(columnIndex)
                     val imageFile18 = File(path)
                     //Todo: 여기가 imageFile
-                    Log.d("getImageAbsolutePath", "절대경로 추출하러 왔습니로다 uri = $path")
+                    Log.d("getImageAbsolutePath", "절대경로 추출 uri = $path")
                 }
             }
         } catch (e: Exception) {
@@ -397,128 +384,3 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
 
         return path
     }
-
-
-//    private fun getCursor(): Cursor? {
-//        //커서란?
-//        //ContentResolver.query() 클라이언트 메서드는 언제나 쿼리 선택 기준과 일치하는 행에 대해 쿼리 프로젝션이 지정한 열을 포함하는 Cursor를 반환합니다.
-//        //데이터베이스 쿼리에서 반환된 결과 테이블의 행들을 가르키는 것
-//        //이 인터페이스는 데이터베이스 쿼리에서 반환된 결과 집합에 대한 임의의 읽기-쓰기 액세스를 제공합니다.
-//
-//        val projection = arrayOf(
-//            MediaStore.Images.ImageColumns._ID,
-//            MediaStore.Images.ImageColumns.TITLE,
-//            MediaStore.Images.ImageColumns.DATE_TAKEN
-//        ) //mediaStore provider의 사진의 id, title, date_taken을 가져오겠다.
-//
-//        //가져오고 싶은 행 Filter 하는 법
-//        //val selection = "${MediaStore.Images.ImageColumns.DATE_TAKEN} >= ?"
-//        //? 이후에 찍힌 것만
-//        //val selectionArgs = arrayOf(
-//        //dateToTimestamp(day = 1, month = 1, year = 1970).toString()) //?는 1970년 1월 1일
-//
-//        //모두 가져오고 싶으면 selection과 selectionArgs에 null을 넣어주면 된다.
-//        val selection = null
-//        val selectionArgs = null
-//        val sortOrder = "${MediaStore.Images.ImageColumns.DATE_TAKEN} DESC" //내림차순
-//        //"${MediaStore.Images.ImageColumns.DATE_TAKEN} ASC" //오름차순
-//
-//        val cursor = contentResolver.query(
-//            //Uri: 찾고자하는 데이터의 Uri입니다. 접근할 앱에서 정의됨. 내 앱에서 만들고 싶다면 manifest에서 만들 수 있음.
-//            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-//            //Projection: 일반적인 DB의 column과 같습니다. 결과로 받고 싶은 데이터의 종류를 알려줍니다. (표1.에서는 각 행에 포함 되어야 하는 열의 배열이다.)
-//            projection,
-//            //Selection: DB의 where 키워드와 같습니다. 어떤 조건으로 필터링된 결과를 받을 때 사용합니다. (표1. 에서는 행을 선택하는 기준)
-//            selection,
-//            //Selection args: Selection과 함께 사용됩니다. SELECT 절에 있는 ? 자리표시자를 대체합니다.
-//            selectionArgs,
-//            //SortOrder: 쿼리 결과 데이터를 sorting할 때 사용합니다.(반환된 Cursor 내에 행이 나타나는 순서를 지정합니다.)
-//            sortOrder
-//        )
-//
-//        //1건만 가져오려면?
-//        //Uri 및 Uri.Builder 클래스에는 문자열에서 올바른 형식의 URI 객체를 구성하기 위한 편의 메서드가 포함되어 있습니다.
-//        //Uri.Builder는 URI 참조를 빌드하거나 조작하기 위한 도우미 클래스입니다.
-//        //appendQueryParameter : Encodes the key and value and then appends the parameter to the query string.
-//        //val queryUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-//        //queryUri.buildUpon().appendQueryParameter("limit", "1").build()
-//
-//        return cursor
-//
-//    }
-//    private fun getImage() {
-//        //내부 오류가 발생하는 경우, 쿼리 결과는 특정 제공자에 따라 달라집니다. null을 반환하기로 선택할 수도 있고, Exception을 발생시킬 수도 있습니다.
-//        //따라서 try catch & try 내에서도 cursor이 null로 반환되는 경우를 모두 처리해줌.
-//        lifecycleScope.launch { //비동기 처리
-//            try {
-//                val cursor = getCursor()
-//                when (cursor?.count) {
-//                    null -> {
-//                        /*
-//                         * 에러 대응 코드 작성. cursor 사용하지 말것!!
-//                         * You may want to call android.util.Log.e() to log this error.
-//                         *
-//                         */
-//                    }
-//                    0 -> {
-//                        /*
-//                         *사용자에게 검색이 실패했음을 알리려면 여기에 코드를 삽입하십시오.
-//                         * 무조건 에러는 아니다. 테이블을 못찾은게 아니라 말 그대로 테이블에 행이 0개 일 수도.
-//                         * 사용자에게 새 항목을 삽입할 수 있는 옵션을 제공할 수 있습니다.
-//                         * 행 또는 검색어를 다시 입력하십시오.
-//                         */
-//                    }
-//                    else -> {
-//                        //결과가 1개이상 검색 됨
-//                        //커서를 맨 앞으로 이동.
-//                        //true를 반환해야 데이터가 있는 것임.
-//                        while (cursor.moveToNext()) {
-//                            //1. 각 컬럼의 열 인덱스를 취득한다.
-//                            val idColNum =
-//                                cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns._ID)
-//                            val titleColNum =
-//                                cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.TITLE)
-//                            val dateTakenColNum =
-//                                cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.DATE_TAKEN)
-//
-//                            //2. 인덱스를 바탕으로 각 행의 열 값(마지막 행에 도달할 때 까지 1행의 id,title,dateTaken, 2행의 id,title,dateTaken...)을 Cursor로부터 취득하기
-//                            val id = cursor.getLong(idColNum)
-//                            val title = cursor.getString(titleColNum)
-//                            val dateTaken = cursor.getLong(dateTakenColNum)
-//                            /*Cursor를 통해 얻은 ID로 Uri 정보를 얻을 수 있습니다.
-//                            쿼리를 요청한 Uri와 파일의 ID가 다음과 같이 주어졌다면,
-//
-//                            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI : content://media/external/audio/media
-//                            File ID : 13492
-//                            이 파일의 Uri는 다음처럼 두개의 스트링을 합친 값이 됩니다.
-//                            content://media/external/audio/media/13492
-//                            String이 아닌 Uri 객체로 얻으려면 다음처럼 Uri.withAppendedPath()를 이용하시면 됩니다.*/
-//                            val imageUri =
-//                                ContentUris.withAppendedId(
-//                                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-//                                    id
-//                                )
-//
-//                            albumData.add(imageUri.toString())//recylcerview에 넣기 위한 uri list
-//
-//                            Log.d(
-//                                "LOGGING",
-//                                "id: ${id}, title:$title, dateTaken : $dateTaken, imageUri : $imageUri"
-//                            )
-//
-//                        }
-////                        Uri.parse(albumData)
-//                        cursor.close() //사용한 cursor는 꼭 close 해줘야함
-////                        adapter.setImageList(albumData)
-//                    }
-//                }
-//
-//
-//        } catch (e: Exception) {
-//            //에러 대응 코드 작성
-//            Toast.makeText(view?.context, "스토리지에 접근 권한을 허가해주세요", Toast.LENGTH_SHORT).show()
-//        }
-//    }
-//    //cursor의 값을 가공하지 않고 바로 ui에 띄우고 싶다면 simpleCursorAdapter를 이용해서 listView에 띄우면 된다.
-//    //simpleCursorAdpater : 커서의 열을 XML 파일에 정의된 TextView 또는 ImageView로 매핑하는 간편한 어댑터입니다.
-//}
