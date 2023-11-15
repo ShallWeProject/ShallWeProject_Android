@@ -1,13 +1,22 @@
 package com.shall_we.login
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.Scope
+import com.google.android.gms.tasks.Task
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
@@ -15,7 +24,7 @@ import com.kakao.sdk.common.util.Utility
 import com.kakao.sdk.user.UserApiClient
 import com.shall_we.App
 import com.shall_we.R
-import com.shall_we.databinding.FragmentKakaoLoginBinding
+import com.shall_we.databinding.FragmentLoginBinding
 import com.shall_we.login.data.Auth
 import com.shall_we.login.data.AuthResponse
 import com.shall_we.login.data.AuthSignService
@@ -25,10 +34,13 @@ import com.shall_we.login.signup.PhoneAuthFragment
 import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RetrofitManager
 
-class kakaoLoginFragment : Fragment() , IAuthSign {
+class LoginFragment : Fragment() , IAuthSign {
 
     private lateinit var auth : Auth
     private var loginEvent: ILoginEvent? = null
+
+    private lateinit var mGoogleSignInClient: GoogleSignInClient
+    private val RC_SIGN_IN = 9001
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +56,7 @@ class kakaoLoginFragment : Fragment() , IAuthSign {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val binding = FragmentKakaoLoginBinding.inflate(inflater, container, false)
+        val binding = FragmentLoginBinding.inflate(inflater, container, false)
         val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
             if (error != null) {
                 Log.e("login", "로그인 실패 $error")
@@ -56,7 +68,7 @@ class kakaoLoginFragment : Fragment() , IAuthSign {
             }
         }
 
-        binding.loginBtn.setOnClickListener {
+        binding.btnKakaoLogin.setOnClickListener {
             Log.d("test", "key hash: ${Utility.getKeyHash(requireContext())}")
 
 //            여러 명이 하나의 프로젝트를 개발하는 경우 모든 사람들이 각자의 디버그 키 해시 값을 구해서 다 등록해야 함.
@@ -85,8 +97,66 @@ class kakaoLoginFragment : Fragment() , IAuthSign {
                 UserApiClient.instance.loginWithKakaoAccount(requireContext(), callback = callback)
             }
         }
+        binding.btnGoogleLogin.setOnClickListener {
+            onGoogleLoginClick()
+        }
+
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .build()
+
+        mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
+
         return binding.root
     }
+
+    fun onGoogleLoginClick() {
+        val signInIntent = mGoogleSignInClient.signInIntent
+        startActivityForResult(signInIntent, RC_SIGN_IN)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            handleSignInResult(task)
+        }
+    }
+
+    private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
+        try {
+            val account = completedTask.getResult(ApiException::class.java)
+            val providerId = account?.id
+            val nickname = account?.displayName
+            val email = account?.email
+            val profileImgUrl = account?.photoUrl
+
+            // 이메일 또는 필요한 정보를 사용합니다.
+            Log.w("login", providerId.toString())
+            Log.w("login", nickname.toString())
+            Log.w("login", email.toString())
+            Log.w("login", profileImgUrl.toString())
+
+
+            auth = Auth(
+                providerId.toString(),
+                nickname.toString(),
+                email.toString(),
+                profileImgUrl.toString())
+
+            Log.d("login","$auth")
+            AuthSignService(this).postAuthSignUp(auth)
+
+            // 로그인 성공 시 작업 수행
+            // 예: 사용자 정보를 가져와서 처리
+
+        } catch (e: ApiException) {
+            Log.w("login", "signInResult:failed code=" + e.statusCode)
+            // 로그인 실패 시 예외 처리
+        }
+    }
+
 
     fun setLoginEventListener(listener: ILoginEvent) {
         loginEvent = listener

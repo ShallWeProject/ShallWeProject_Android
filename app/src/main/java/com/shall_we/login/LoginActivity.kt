@@ -16,7 +16,7 @@ import com.shall_we.login.signup.PhoneAuthFragment
 
 class LoginActivity : AppCompatActivity(),ILoginEvent{
     lateinit var binding: ActivityLoginBinding
-    private lateinit var kakaoLoginFragment: kakaoLoginFragment
+    private lateinit var kakaoLoginFragment: LoginFragment
     private lateinit var phoneAuthFragment: PhoneAuthFragment
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +32,7 @@ class LoginActivity : AppCompatActivity(),ILoginEvent{
 
 
         // kakaoLoginFragment 인스턴스화
-        kakaoLoginFragment = kakaoLoginFragment()
+        kakaoLoginFragment = LoginFragment()
         kakaoLoginFragment.setLoginEventListener(this)
         phoneAuthFragment = PhoneAuthFragment()
 
@@ -68,7 +68,7 @@ class LoginActivity : AppCompatActivity(),ILoginEvent{
         startActivity(intent)
     }
     fun showLoginFragment(){
-        val newFragment = kakaoLoginFragment() // 전환할 다른 프래그먼트 객체 생성
+        val newFragment = LoginFragment() // 전환할 다른 프래그먼트 객체 생성
         val bundle = Bundle()
         newFragment.arguments = bundle
 
@@ -81,7 +81,7 @@ class LoginActivity : AppCompatActivity(),ILoginEvent{
 
 
     override fun onLoginSuccess() {
-        val newFragment = kakaoLoginFragment() // 전환할 다른 프래그먼트 객체 생성
+        val newFragment = LoginFragment() // 전환할 다른 프래그먼트 객체 생성
         val bundle = Bundle()
         newFragment.arguments = bundle
 

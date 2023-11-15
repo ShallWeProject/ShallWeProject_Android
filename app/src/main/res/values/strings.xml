@@ -5,13 +5,14 @@
     <string name="mypage">마이페이지</string>
     <string name="category">카테고리</string>
     <string name="home">홈</string>
+    <string name="kakao_app_key">532b0f3956990c31ad796b479b6f344b</string>
+
     <string-array name="spinner_array">
         <item>인기순</item>
         <item>추천순</item>
         <item>가격높은순</item>
         <item>가격낮은순</item>
     </string-array>
-    <string name="kakao_app_key">532b0f3956990c31ad796b479b6f344b</string>
 
     <string name="agreement_service">
         제1조 목적\n
