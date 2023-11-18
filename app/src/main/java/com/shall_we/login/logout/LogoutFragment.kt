@@ -11,17 +11,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.Toast
-import androidx.recyclerview.widget.RecyclerView
 import com.shall_we.App
 import com.shall_we.R
 import com.shall_we.databinding.FragmentLogoutBinding
-import com.shall_we.login.data.AuthSignService
-import com.shall_we.login.data.IAuthSign
 import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RefreshTokenArray
 import com.shall_we.retrofit.RetrofitManager
-import com.shall_we.utils.initProductRecycler
 
 class LogoutFragment : Fragment() {
 
@@ -41,6 +36,19 @@ class LogoutFragment : Fragment() {
         binding.logoutBtn.setOnClickListener {
             cuDialog(it)
         }
+
+        binding.deleteBtn.setOnClickListener {
+            val newFragment = DeleteAccountFragment() // 전환할 다른 프래그먼트 객체 생성
+            val bundle = Bundle()
+            newFragment.arguments = bundle
+
+            // 프래그먼트 전환
+            parentFragmentManager.beginTransaction()
+                .add(R.id.nav_host_fragment, newFragment)
+                .addToBackStack(null)
+                .commit()
+        }
+
         return binding.root
     }
 
