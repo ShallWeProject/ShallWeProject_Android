@@ -1,11 +1,18 @@
 package com.shall_we.login.logout
 
+import android.app.AlertDialog
+import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.Button
 import android.widget.Spinner
 import com.shall_we.R
 import com.shall_we.databinding.FragmentDeleteAccountBinding
@@ -22,9 +29,12 @@ class DeleteAccountFragment : Fragment() {
         // Inflate the layout for this fragment
         val binding = FragmentDeleteAccountBinding.inflate(inflater,container,false)
 
-        binding.spinner2.dropDownVerticalOffset = dpToPx(6) // spinner와 dropdown 간격
+        binding.spinner2.dropDownVerticalOffset = dpToPx(6) // spinner와 dropdown 간
         initSpinner(binding.spinner2)
 
+        binding.btnDelete.setOnClickListener {
+            cuDialog(it)
+        }
         return binding.root
     }
 
@@ -56,6 +66,21 @@ class DeleteAccountFragment : Fragment() {
             override fun onNothingSelected(parent: AdapterView<*>) {
             }
         }
+    }
+
+    private fun cuDialog(view: View) {
+        val dialog = Dialog(view.context)
+        dialog.setContentView(R.layout.dialog_delete_account)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        dialog.window?.setLayout(dpToPx(226), dpToPx(123))
+
+        dialog.show()
+        // 5초 후에 다이얼로그를 닫습니다.
+        val handler = Handler(Looper.getMainLooper())
+        handler.postDelayed({
+            dialog.dismiss()
+        }, 5000) // 5초 (5000밀리초) 후에 다이얼로그를 닫음
     }
 }
 
