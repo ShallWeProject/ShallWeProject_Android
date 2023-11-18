@@ -30,20 +30,19 @@ import com.shall_we.utils.dpToPx
 import com.shall_we.utils.initProductRecycler
 
 
-class HomeFragment : Fragment() , ProductAdapter.OnItemClickListener, CategoryAdapter.OnItemClickListener{
+class HomeFragment : Fragment() , ProductAdapter.OnItemClickListener, CategoryAdapter.OnItemClickListener {
     private lateinit var bannerViewPagerAdapter: BannerViewPagerAdapter
-    private lateinit var viewModel : HomeFragmentViewModel
-    private lateinit var pager : ViewPager2
+    private lateinit var viewModel: HomeFragmentViewModel
+    private lateinit var pager: ViewPager2
     var currentPosition = 0
 
-    lateinit var textView : TextView
+    lateinit var textView: TextView
     lateinit var categoryAdapter: CategoryAdapter
 
-    lateinit var rvRealtime : RecyclerView
+    lateinit var rvRealtime: RecyclerView
     lateinit var rvCategory: RecyclerView
 
     val categoryData = mutableListOf<CategoryData>()
-
 
 
     override fun onItemClick(item: ProductData) {
@@ -62,7 +61,8 @@ class HomeFragment : Fragment() , ProductAdapter.OnItemClickListener, CategoryAd
     override fun onItemClick(position: Int) {
         RetrofitCall(rvRealtime, position)
     }
-    val handler= Handler(Looper.getMainLooper()){
+
+    val handler = Handler(Looper.getMainLooper()) {
         setPage()
         true
     }
@@ -77,7 +77,7 @@ class HomeFragment : Fragment() , ProductAdapter.OnItemClickListener, CategoryAd
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val binding = FragmentHomeBinding.inflate(inflater,container,false)
+        val binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         pager = binding.viewPager2
 
@@ -86,22 +86,22 @@ class HomeFragment : Fragment() , ProductAdapter.OnItemClickListener, CategoryAd
             listOf(
                 BannerItem(R.drawable.banner_1),
                 BannerItem(R.drawable.banner_2)
-                )
+            )
         )
         pager.apply {
             bannerViewPagerAdapter = BannerViewPagerAdapter()
             adapter = bannerViewPagerAdapter
-            registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback(){
+            registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
-                    binding.tvPageNumber.text = "${position+1} | 2"
+                    binding.tvPageNumber.text = "${position + 1} | 2"
                 }
             })
         }
         subscribeObservers()
 
         //뷰페이저 넘기는 쓰레드
-        val thread=Thread(PagerRunnable())
+        val thread = Thread(PagerRunnable())
         thread.start()
         binding.mainSearchView.clearFocus()
         val hintColor = Color.parseColor("#FEA3B4") // 원하는 힌트 색상으로 변경
@@ -150,15 +150,16 @@ class HomeFragment : Fragment() , ProductAdapter.OnItemClickListener, CategoryAd
 
         return binding.root
     }
+
     //페이지 변경하기
-    fun setPage(){
-        if(currentPosition==2) currentPosition=0
-        pager.setCurrentItem(currentPosition,true)
-        currentPosition+=1
+    fun setPage() {
+        if (currentPosition == 2) currentPosition = 0
+        pager.setCurrentItem(currentPosition, true)
+        currentPosition += 1
     }
 
     //2초 마다 페이지 넘기기
-    inner class PagerRunnable:Runnable {
+    inner class PagerRunnable : Runnable {
         override fun run() {
             while (true) {
                 Thread.sleep(5000)
@@ -172,6 +173,7 @@ class HomeFragment : Fragment() , ProductAdapter.OnItemClickListener, CategoryAd
             bannerViewPagerAdapter.submitList(bannerItemList)
         })
     }
+
     private fun initCategoryRecycler(rvCategory: RecyclerView) {
         categoryAdapter = CategoryAdapter(requireContext())
         categoryAdapter.setOnItemClickListener(this)
@@ -200,59 +202,77 @@ class HomeFragment : Fragment() , ProductAdapter.OnItemClickListener, CategoryAd
     fun RetrofitCall(rv : RecyclerView, categoryId : Int){
         if(categoryId == 0){
 
-            RetrofitManager.instance.experienceGiftPopular( completion = {
-                    responseState, responseBody ->
-                when(responseState){
+            RetrofitManager.instance.experienceGiftPopular(completion = { responseState, responseBody ->
+                when (responseState) {
                     RESPONSE_STATE.OKAY -> {
                         Log.d("retrofit", "popular api : ${responseBody?.size}")
                         val productDataList = ArrayList<ProductData>()
                         if (responseBody != null) {
                             for (experienceResNode in responseBody) {
-                                val title: String = experienceResNode.title?: ""
-                                val subtitle: String = experienceResNode.subtitle?: ""
-                                val price: Int = experienceResNode.price?: 0
-                                val formattedPrice = String.format("%,d", price.toInt())
-                                val giftImgUrl: String = experienceResNode.giftImgUrl ?: ""
-                                val giftid: Int = experienceResNode.experienceGiftId?: 0
-                                // ProductData 객체를 ArrayList에 추가
-                                productDataList.add(ProductData(title=title, subtitle = subtitle, price = formattedPrice, img = giftImgUrl, giftid = giftid))
-                            }
-                        }
-                        initProductRecycler(rv, productDataList,this)
-                    }
-                    RESPONSE_STATE.FAIL -> {
-                        Log.d("retrofit", "api 호출 에러")
-                    }
-                }
-            })
-        }
-        else{
-            RetrofitManager.instance.experienceGiftExpCategory(categoryId = categoryId, category = "인기순", completion = {
-                    responseState, responseBody ->
-                when(responseState){
-                    RESPONSE_STATE.OKAY -> {
-                        Log.d("retrofit", "category api : ${responseBody?.size}")
-                        val productDataList = ArrayList<ProductData>()
-                        if (responseBody != null) {
-                            for (experienceResNode in responseBody) {
                                 val title: String = experienceResNode.title ?: ""
-                                val subtitle: String = experienceResNode.subtitle?: ""
-                                val price: Int = experienceResNode.price?: 0
+                                val subtitle: String = experienceResNode.subtitle ?: ""
+                                val price: Int = experienceResNode.price ?: 0
                                 val formattedPrice = String.format("%,d", price.toInt())
                                 val giftImgUrl: String = experienceResNode.giftImgUrl ?: ""
                                 val giftid: Int = experienceResNode.experienceGiftId ?: 0
                                 // ProductData 객체를 ArrayList에 추가
-                                productDataList.add(ProductData(title=title, subtitle = subtitle, price = formattedPrice, img = giftImgUrl, giftid = giftid))
+                                productDataList.add(
+                                    ProductData(
+                                        title = title,
+                                        subtitle = subtitle,
+                                        price = formattedPrice,
+                                        img = giftImgUrl,
+                                        giftid = giftid
+                                    )
+                                )
                             }
                         }
-                        initProductRecycler(rv, productDataList,this)
+                        initProductRecycler(rv, productDataList, this)
                     }
+
                     RESPONSE_STATE.FAIL -> {
                         Log.d("retrofit", "api 호출 에러")
                     }
                 }
             })
-        }
+        } else {
+            RetrofitManager.instance.experienceGiftExpCategory(
+                categoryId = categoryId,
+                category = "인기순",
+                completion = { responseState, responseBody ->
+                    when (responseState) {
+                        RESPONSE_STATE.OKAY -> {
+                            Log.d("retrofit", "category api : ${responseBody?.size}")
+                            val productDataList = ArrayList<ProductData>()
+                            if (responseBody != null) {
+                                for (experienceResNode in responseBody) {
+                                    val title: String = experienceResNode.title ?: ""
+                                    val subtitle: String = experienceResNode.subtitle ?: ""
+                                    val price: Int = experienceResNode.price ?: 0
+                                    val formattedPrice = String.format("%,d", price.toInt())
+                                    val giftImgUrl: String = experienceResNode.giftImgUrl ?: ""
+                                    val giftid: Int = experienceResNode.experienceGiftId ?: 0
+                                    // ProductData 객체를 ArrayList에 추가
+                                    productDataList.add(
+                                        ProductData(
+                                            title = title,
+                                            subtitle = subtitle,
+                                            price = formattedPrice,
+                                            img = giftImgUrl,
+                                            giftid = giftid
+                                        )
+                                    )
+                                }
+                            }
+                            initProductRecycler(rv, productDataList, this)
+                        }
+                        RESPONSE_STATE.FAIL -> {
+                            Log.d("retrofit", "api 호출 에러")
+                        }
+                    }
+                })
+            //}
 
+        }
     }
 }

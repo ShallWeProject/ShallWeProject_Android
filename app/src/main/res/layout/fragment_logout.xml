@@ -34,13 +34,13 @@
         app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/delete_btn"
         android:layout_width="328dp"
         android:layout_height="39dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/btn_design"
         android:backgroundTint="#FFF5F6"
-        android:text="회원탈퇴"
+        android:text="회원 탈퇴"
         android:textColor="#E31B54"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
