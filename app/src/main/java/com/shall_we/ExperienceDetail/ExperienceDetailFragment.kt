@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
@@ -180,7 +181,9 @@ class ExperienceDetailFragment: Fragment()  {
 
 
     }
-
-
-
+    override fun onResume() {
+        super.onResume()
+        val supportActionBar = (requireActivity() as AppCompatActivity).supportActionBar
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
 }

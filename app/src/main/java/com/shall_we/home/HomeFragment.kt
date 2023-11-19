@@ -53,7 +53,7 @@ class HomeFragment : Fragment() , ProductAdapter.OnItemClickListener, CategoryAd
         newFragment.arguments = bundle
         // 프래그먼트 전환
         parentFragmentManager.beginTransaction()
-            .add(R.id.nav_host_fragment, newFragment)
+            .add(R.id.home_layout, newFragment)
             .addToBackStack(null)
             .commit()
     }
