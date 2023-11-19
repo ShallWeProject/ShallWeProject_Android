@@ -2,6 +2,7 @@ package com.shall_we.retrofit
 
 import android.util.Log
 import com.google.gson.JsonElement
+import com.google.gson.JsonParser
 import com.shall_we.dto.ExperienceExpCategoryRes
 import com.shall_we.dto.ExperienceRes
 import com.shall_we.dto.PopularRes
@@ -355,6 +356,8 @@ class RetrofitManager {
                             var parsedProductDataArray = ArrayList<MyGiftData>()
                             val body = it.asJsonObject
 
+                            Log.d("JSON Object", "${body}")
+
                             val gifts = body.getAsJsonArray("data")
                             gifts.forEach { resultItem ->
                                 val resultItemObject = resultItem.asJsonObject
@@ -362,17 +365,24 @@ class RetrofitManager {
                                 val title: String = resultItemObject.get("experienceTitle").asString
                                 val subtitle: String = resultItemObject.get("experienceSubTitle").asString
 
-                                val dateTime : String = resultItemObject.get("dateTime").asString
+                                val dateTime : String = resultItemObject.get("date").asString
                                 val invitationComment : String = resultItemObject.get("invitationComment").asString
 
-                                val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+                                val sdf = SimpleDateFormat("yyyy-MM-dd")
                                 val dateTimeStr = sdf.parse(dateTime)
 
                                 // Date 객체에서 날짜와 시간 추출
                                 val dateFormatter = SimpleDateFormat("yyyy.MM.dd")
-                                val timeFormatter = SimpleDateFormat("HH시")
                                 val date = dateFormatter.format(dateTimeStr)
-                                val time = timeFormatter.format(dateTimeStr)
+
+//                                var time: String = ""
+                                val timeElement = resultItemObject?.get("time")
+                                val timeObj = if (timeElement != null && !timeElement.isJsonNull) {
+                                    JsonParser.parseString(timeElement.toString()).asJsonObject
+                                } else {
+                                    null
+                                }
+                                val time: String = timeObj?.get("hour")?.asString ?: ""
 
                                 val receiver = resultItemObject.getAsJsonObject("receiver")
                                 val name = receiver.get("name").asString
@@ -416,18 +426,24 @@ class RetrofitManager {
                                 val title: String = resultItemObject.get("experienceTitle").asString
                                 val subtitle: String = resultItemObject.get("experienceSubTitle").asString
 
-                                val dateTime : String = resultItemObject.get("dateTime").asString
+                                val dateTime : String = resultItemObject.get("date").asString
                                 val invitationComment : String = resultItemObject.get("invitationComment").asString
 
-                                val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+                                val sdf = SimpleDateFormat("yyyy-MM-dd")
                                 val dateTimeStr = sdf.parse(dateTime)
 
                                 // Date 객체에서 날짜와 시간 추출
                                 val dateFormatter = SimpleDateFormat("yyyy.MM.dd")
-                                val timeFormatter = SimpleDateFormat("HH시")
-
                                 val date = dateFormatter.format(dateTimeStr)
-                                val time = timeFormatter.format(dateTimeStr)
+
+//                                val time: String = ""
+                                val timeElement = resultItemObject?.get("time")
+                                val timeObj = if (timeElement != null && !timeElement.isJsonNull) {
+                                    JsonParser.parseString(timeElement.toString()).asJsonObject
+                                } else {
+                                    null
+                                }
+                                val time: String = timeObj?.get("hour")?.asString ?: ""
 
                                 val sender = resultItemObject.getAsJsonObject("sender")
                                 val name = sender.get("name").asString
