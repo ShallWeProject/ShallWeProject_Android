@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ExperienceDetail.ExperienceDetailFragment"
     android:layout_width="match_parent"
-    android:layout_height="0dp">
+    android:layout_height="match_parent" >
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -14,10 +14,8 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         android:backgroundTint="@color/white"
-    >
+    ><androidx.viewpager2.widget.ViewPager2
 
-        <ImageView
-            android:background="@color/white"
             android:id="@+id/exdetail_image"
             android:layout_width="match_parent"
             android:layout_height="252dp"
@@ -25,13 +23,12 @@
             android:src="@drawable/detail_ex"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent" />
 
 
-        </ImageView>
 
 
-        <TextView
+                <TextView
             android:textColor="@color/black"
             android:id="@+id/exdetail_text01"
             android:layout_width="wrap_content"
@@ -134,4 +131,4 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.core.widget.NestedScrollView>
+</ScrollView>
