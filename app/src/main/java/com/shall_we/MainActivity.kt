@@ -5,8 +5,10 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Base64
 import android.util.Log
+import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -19,6 +21,7 @@ import com.shall_we.home.HomeFragment
 import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RetrofitManager
 import com.shall_we.mypage.MypageFragment
+import com.shall_we.utils.dpToPx
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 
@@ -45,7 +48,17 @@ class MainActivity : AppCompatActivity() {
         val toolbar : Toolbar = binding.tbMain
         setSupportActionBar(toolbar)
 
-        getSupportActionBar()?.setDisplayShowTitleEnabled(false); // 기본 타이틀 사용 안함
+        val imageView = ImageView(this)
+        imageView.setImageResource(R.drawable.logo_text)
+
+        val layoutParams = Toolbar.LayoutParams(dpToPx(93), dpToPx(16))
+
+        layoutParams.gravity = Gravity.CENTER
+
+        imageView.layoutParams = layoutParams
+
+        toolbar.addView(imageView) // 툴바에 이미지뷰 추가
+
 
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_btn) // 뒤로가기 버튼 이미지 설정
         supportActionBar?.setTitle("")

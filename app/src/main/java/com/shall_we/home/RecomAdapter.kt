@@ -46,7 +46,7 @@ class RecomAdapter(private val context: Context) : RecyclerView.Adapter<RecomAda
                     fragment.arguments = bundle
                     val fragmentManager = (itemView.context as FragmentActivity).supportFragmentManager
                     fragmentManager.beginTransaction()
-                        .add(R.id.nav_host_fragment, fragment)
+                        .add(R.id.home_layout, fragment)
                         .addToBackStack(null)
                         .commit()
                 }
