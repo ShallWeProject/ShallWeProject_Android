@@ -94,4 +94,14 @@ dependencies {
     //구글 로그인
     implementation 'com.google.android.gms:play-services-auth:20.7.0'
     implementation 'com.google.android.gms:play-services-base:18.2.0'
+
+    // dependency for slider view
+
+
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+
+
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+
+
 }

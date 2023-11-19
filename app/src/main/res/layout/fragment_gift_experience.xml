@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".giftExperience.GiftExperienceFragment">
+    tools:context=".giftExperience.GiftExperienceFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
 
 <androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/gift_experience_layout"
     android:background="@color/white"
     android:backgroundTint="@color/white"
     android:layout_width="match_parent"
-    android:layout_height="750dp"
+    android:layout_height="match_parent"
     >
     <TextView
 
@@ -171,4 +175,4 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-</layout>
+</ScrollView>

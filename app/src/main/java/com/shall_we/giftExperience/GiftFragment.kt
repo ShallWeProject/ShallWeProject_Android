@@ -32,7 +32,7 @@ import java.util.Date
 import java.util.Locale
 
 
-class GiftFragment : BaseFragment<FragmentGiftBinding>(R.layout.fragment_gift) {
+class GiftFragment : Fragment() {
 
     lateinit var experienceDetailViewModel: ExperienceDetailViewModel
     lateinit var reservationViewModel:ReservationViewModel
@@ -47,9 +47,15 @@ class GiftFragment : BaseFragment<FragmentGiftBinding>(R.layout.fragment_gift) {
     lateinit var localDateTime:String
     private var invitationComment: String="환영해!"
     private var reservationStatus: ReservationStatus = ReservationStatus.BOOKED
+    private lateinit var binding: FragmentGiftBinding
 
 
-    override fun init() {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentGiftBinding.inflate(inflater, container, false)  // Binding 객체 초기화
 
         arguments?.let { // 아규먼트로부터 데이터를 가져옴
             experienceGiftId = it.getInt("id")
@@ -118,14 +124,14 @@ class GiftFragment : BaseFragment<FragmentGiftBinding>(R.layout.fragment_gift) {
             val myGiftSentFragment = MyGiftSentFragment() // 전환할 프래그먼트 인스턴스 생성
             val fragmentTransaction = parentFragmentManager.beginTransaction()
             // 기존 프래그먼트를 숨기고 새로운 프래그먼트로 교체
-            fragmentTransaction.replace(R.id.giftLayout, myGiftSentFragment, "mypage")
+            fragmentTransaction.replace(R.id.nav_host_fragment, myGiftSentFragment, "mypage")
 
             fragmentTransaction.addToBackStack(null)
             fragmentTransaction.commitAllowingStateLoss()
 
         }
-
-        }
+        return binding.root
+    }
 
 
     }

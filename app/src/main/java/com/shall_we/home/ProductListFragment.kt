@@ -27,6 +27,7 @@ class ProductListFragment : Fragment() , ProductAdapter.OnItemClickListener{
     lateinit var rvProduct : RecyclerView
 
     override fun onItemClick(item: ProductData) {
+
         // 클릭된 아이템의 정보를 사용하여 다른 프래그먼트로 전환하는 로직을 작성
         val newFragment = ExperienceDetailFragment() // 전환할 다른 프래그먼트 객체 생성
         val bundle = Bundle()
