@@ -231,7 +231,7 @@ class LoginFragment : Fragment() , IAuthSign {
             when (responseState) {
                 RESPONSE_STATE.OKAY -> {
                     Log.d("retrofit", "${responseBody}")
-                    if(responseBody == null){
+                    if(responseBody == "null"){
                         val newFragment = PhoneAuthFragment() // 전환할 다른 프래그먼트 객체 생성
                         val bundle = Bundle()
                         newFragment.arguments = bundle

@@ -69,6 +69,8 @@
             app:itemTextColor="@drawable/nav_menu_text_color"
             app:labelVisibilityMode="labeled"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/nav_host_fragment"
             app:menu="@menu/bottom_navigation_menu" />
 
