@@ -686,5 +686,23 @@ class RetrofitManager {
         })
     }
 
+    fun userInactive(completion: (RESPONSE_STATE) -> Unit){
+        val call = iRetrofit?.userInactive()?.enqueue(object : Callback<JsonElement>{
+            override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
+                val response = response.code()
+                if(response == 200){
+                    completion(RESPONSE_STATE.OKAY)
+                }
+                else{
+                    completion(RESPONSE_STATE.FAIL)
+                }
+            }
+
+            override fun onFailure(call: Call<JsonElement>, t: Throwable) {
+                completion(RESPONSE_STATE.FAIL)
+            }
+        })
+    }
+
 
 }

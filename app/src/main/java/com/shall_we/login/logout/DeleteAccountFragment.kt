@@ -2,11 +2,13 @@ package com.shall_we.login.logout
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,9 +16,13 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.Button
 import android.widget.Spinner
+import com.shall_we.App
 import com.shall_we.R
 import com.shall_we.databinding.FragmentDeleteAccountBinding
 import com.shall_we.home.CustomSpinnerAdapter
+import com.shall_we.retrofit.RESPONSE_STATE
+import com.shall_we.retrofit.RefreshTokenArray
+import com.shall_we.retrofit.RetrofitManager
 import com.shall_we.utils.dpToPx
 
 class DeleteAccountFragment : Fragment() {
@@ -34,6 +40,7 @@ class DeleteAccountFragment : Fragment() {
 
         binding.btnDelete.setOnClickListener {
             cuDialog(it)
+
         }
         return binding.root
     }
@@ -80,7 +87,31 @@ class DeleteAccountFragment : Fragment() {
         val handler = Handler(Looper.getMainLooper())
         handler.postDelayed({
             dialog.dismiss()
+            deleteRetrofitCall()
         }, 5000) // 5초 (5000밀리초) 후에 다이얼로그를 닫음
+    }
+
+    fun deleteRetrofitCall() {
+        RetrofitManager.instance.userInactive(completion = { responseState ->
+            when (responseState) {
+                RESPONSE_STATE.OKAY -> {
+                    // 토큰 리셋
+                    val sharedPref = context?.getSharedPreferences("MY_APP_PREFS", Context.MODE_PRIVATE)
+                    sharedPref?.edit()?.putString("ACCESS_TOKEN", null)?.apply()
+                    sharedPref?.edit()?.putString("REFRESH_TOKEN", null)?.apply()
+
+                    App.accessToken = sharedPref?.getString("ACCESS_TOKEN", null)
+                    App.refreshToken = sharedPref?.getString("REFRESH_TOKEN", null)
+                    //로그인 화면으로 돌아가기
+                    requireActivity().finish()
+                }
+
+                RESPONSE_STATE.FAIL -> {
+                    Log.d("retrofit", "api 호출 에러")
+                }
+            }
+        })
+
     }
 }
 

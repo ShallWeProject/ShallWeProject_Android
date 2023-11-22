@@ -95,6 +95,10 @@ interface IRetrofit {
     @PUT
     fun uploadImg(@Url url: String, @Part image: MultipartBody.Part): Call<JsonElement>
 
+    // 유저 회원탈퇴
+    @PATCH(API.USER_INACTIVE)
+    fun userInactive() : Call<JsonElement>
+
 }
 
 data class ValidVerificationArray(val verificationCode: String, val phoneNumber:String)

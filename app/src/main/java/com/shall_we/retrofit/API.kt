@@ -15,6 +15,8 @@ object API {
 
     const val AUTH_SIGN_OUT = "auth/sign-out"
 
+    const val USER_INACTIVE = "api/v1/users/inactive"
+
     const val AUTH_REFRESH = "auth/refresh"
 
     const val SEND_ONE = "auth/send-one"

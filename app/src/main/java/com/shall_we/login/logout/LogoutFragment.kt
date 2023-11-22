@@ -62,13 +62,13 @@ class LogoutFragment : Fragment() {
 
         dialog.show()
 
-        myLayout.findViewById<Button>(R.id.btn_cancel_logout).setOnClickListener {
+        myLayout.findViewById<Button>(R.id.btn_logout_confirm).setOnClickListener {
             // 로그아웃 api 연결
             logoutRetrofitCall()
             dialog.dismiss()
 
         }
-        myLayout.findViewById<Button>(R.id.btn_logout).setOnClickListener {
+        myLayout.findViewById<Button>(R.id.btn_cancel_logout).setOnClickListener {
             dialog.dismiss()
         }
     }
