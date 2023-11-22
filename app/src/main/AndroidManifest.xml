@@ -48,6 +48,7 @@
                     android:scheme="kakao532b0f3956990c31ad796b479b6f344b" />
             </intent-filter>
         </activity>
+        <service android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService" android:enabled="true"/>
     </application>
 
 </manifest>

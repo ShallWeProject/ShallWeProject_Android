@@ -1,6 +1,8 @@
 package com.shall_we.retrofit
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.google.gson.JsonElement
 import com.google.gson.JsonParser
 import com.shall_we.dto.ExperienceExpCategoryRes
@@ -301,7 +303,7 @@ class RetrofitManager {
 
 
     fun getMemoryPhoto(date: String, completion:(RESPONSE_STATE, ArrayList<MyAlbumData>?) -> Unit){
-        val call = iRetrofit?.getMemoryPhoto(date=date) ?:return
+        val call = iRetrofit?.getMemoryPhoto(date = date) ?:return
 
         call.enqueue(object : Callback<JsonElement> {
             // 응답 성공
@@ -315,7 +317,7 @@ class RetrofitManager {
                             val data = body.getAsJsonArray("data")
                             data.forEach { resultItem ->
                                 val resultItemObject = resultItem.asJsonObject
-                                val reservationId : Int = resultItemObject.get("reservationId").asInt
+                                //val reservationId : Int = resultItemObject.get("reservationId").asInt
                                 val mutableList = resultItemObject.getAsJsonArray("memoryPhotoImages")
                                 val memoryPhotoImages = mutableListOf<String>()
                                 for (i in 0 until mutableList.size()) {
@@ -323,7 +325,7 @@ class RetrofitManager {
                                     memoryPhotoImages.add(item)
                                 }
 
-                                val myAlbumItem = MyAlbumData(idx = reservationId, date = date, memoryImgs = memoryPhotoImages.toTypedArray())
+                                val myAlbumItem = MyAlbumData(idx = 0, date = date, memoryImgs = memoryPhotoImages.toTypedArray())
 
                                 parsedMyAlbumDataArray.add(myAlbumItem)
                             }
@@ -419,6 +421,9 @@ class RetrofitManager {
                         response.body()?.let {
                             var parsedProductDataArray = ArrayList<MyGiftData>()
                             val body = it.asJsonObject
+
+                            Log.d("JSON Object", "${body}")
+
                             val gifts = body.getAsJsonArray("data")
                             gifts.forEach { resultItem ->
                                 val resultItemObject = resultItem.asJsonObject
@@ -443,7 +448,7 @@ class RetrofitManager {
                                 } else {
                                     null
                                 }
-                                val time: String = timeObj?.get("hour")?.asString ?: ""
+                                val time: String = timeObj?.get("hour")?.asString ?: "99시"
 
                                 val sender = resultItemObject.getAsJsonObject("sender")
                                 val name = sender.get("name").asString
@@ -584,7 +589,7 @@ class RetrofitManager {
 
     fun uploadImg(image: MultipartBody.Part, url: String, endPoint:String, completion:(RESPONSE_STATE) -> Unit){
         val getRetrofit = RetrofitClient.getClient2(url)?.create(IRetrofit::class.java)
-        val call = getRetrofit?.uploadImg(url=endPoint, image = image) ?:return
+        val call = getRetrofit?.uploadImg(url =endPoint, image = image) ?:return
 
 
         call.enqueue(object : retrofit2.Callback<JsonElement>{

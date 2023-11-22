@@ -8,27 +8,28 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.provider.MediaStore
-import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState
+import com.amazonaws.regions.Regions
+import com.shall_we.BuildConfig.access_key
+import com.shall_we.BuildConfig.secret_key
 import com.shall_we.databinding.FragmentMyAlbumBinding
 import com.shall_we.mypage.MyGiftData
-import com.shall_we.retrofit.BodyData
 import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RetrofitManager
 import com.shall_we.retrofit.UploadPhotoArray
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
+import com.shall_we.utils.S3Util
 import java.io.File
 
 class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
@@ -39,82 +40,59 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
     private val allPhotoData: ArrayList<MyAlbumPhotoData> = ArrayList()
     private lateinit var giftData: ArrayList<MyGiftData>
     private var giftIdx = 0
+    private lateinit var dates: List<String>
 
-    private lateinit var imageKey: String
-    private lateinit var presignedUrl: String
-
-    private lateinit var dates : List<String>
-    private var selectedImageUri: Uri= Uri.EMPTY
+    private var selectedImageUri: Uri = Uri.EMPTY
     private var filename: String = ""
-    private var ext: String=""
-    private lateinit var file:File
-
-    private var path: Uri= Uri.EMPTY
+    private var ext: String = ""
+    private lateinit var file: File
+    private var path: Uri = Uri.EMPTY
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestPermission()
-        RetrofitCallDate()
-
+        retrofitCallDate()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentMyAlbumBinding.inflate(inflater, container, false)
-//        (activity as AppCompatActivity).findViewById<ExtendedFloatingActionButton>(R.id.fab_album).show()
 
+        // 왼쪽 화살표 클릭시 다음 인덱스로 이동 (더 오래된 날짜)
         binding.ivLeft.setOnClickListener {
-            if (giftData.size>giftIdx+1){
-                giftIdx+=1
+            if (giftData.size > giftIdx + 1) {
+                giftIdx += 1
                 binding.tvAlbumDate.text = dates[giftIdx]
                 binding.tvAlbumDescription.text = giftData[giftIdx].description
                 binding.tvAlbumTitle.text = giftData[giftIdx].title
+                val modDate: String = giftData[giftIdx].date.replace(".", "-")
+                getMemoryPhoto(modDate)
                 Log.d("album date", "album date ++ is not null")
-            }
-            else {
+            } else {
                 Log.d("album date", "album date ++ is null, ${binding.tvAlbumDate.text}")
             }
         }
 
-
+        // 오른쪽 화살표 클릭시 이전 인덱스로 이동 (더 최신의 날짜)
         binding.ivRight.setOnClickListener {
-            if (giftIdx>=1){
-                giftIdx-=1
+            if (giftIdx >= 1) {
+                giftIdx -= 1
                 binding.tvAlbumDate.text = dates[giftIdx]
                 binding.tvAlbumDescription.text = giftData[giftIdx].description
                 binding.tvAlbumTitle.text = giftData[giftIdx].title
+                val modDate: String = giftData[giftIdx].date.replace(".", "-")
+                getMemoryPhoto(modDate)
                 Log.d("album date", "album date -- is not null")
-            }
-            else {
+            } else {
                 Log.d("album date", "album date -- is null, ${binding.tvAlbumDate.text}")
             }
         }
-
-
         return binding.root
     }
-
-    private fun postMemoryPhoto(uploadPhotoArray: UploadPhotoArray) {
-        RetrofitManager.instance.postMemoryPhoto(
-            uploadPhotoArray = uploadPhotoArray,
-            completion = { responseState ->
-
-                when (responseState) {
-                    RESPONSE_STATE.OKAY -> {
-                        Log.d("retrofit", "postmemoryphoto api : ${responseState}")
-
-                    }
-
-                    RESPONSE_STATE.FAIL -> {
-                        Log.d("retrofit", "api 호출 에러")
-                    }
-                }
-            })
-    }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -138,12 +116,55 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
 //                )
 //            )
 //        }
-
-
         initAlbum(allPhotoData)
-
-//        RetrofitCall(formattedDateTime)
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+
+    private fun upload() {
+        S3Util.instance
+            .setKeys(access_key, secret_key)
+            .setRegion(Regions.AP_NORTHEAST_2)
+            .uploadWithTransferUtility(
+                this.context,
+                "shallwebucket",
+                "uploads",
+                file,
+                object : TransferListener {
+                    override fun onStateChanged(id: Int, state: TransferState?) {
+                    }
+                    override fun onProgressChanged(id: Int, bytesCurrent: Long, bytesTotal: Long) {
+                    }
+                    override fun onError(id: Int, ex: java.lang.Exception?) {
+                    }
+                }
+            );
+        Log.d("S3Util", "hi")
+        val uploadPhotoArray = UploadPhotoArray("uploads/$filename.$ext", giftData[giftIdx].idx)
+        Log.d("upload memory photo array", "$uploadPhotoArray")
+        postMemoryPhoto(uploadPhotoArray)
+        Log.d("postMemoryPhoto", "${giftData[giftIdx].date} 날짜에 업로드 완료")
+        val modDate: String = giftData[giftIdx].date.replace(".", "-")
+        getMemoryPhoto(modDate)
+    }
+
+    // 버킷 내의 이미지를 해당 추억에 post
+    private fun postMemoryPhoto(uploadPhotoArray: UploadPhotoArray) {
+        RetrofitManager.instance.postMemoryPhoto(
+            uploadPhotoArray = uploadPhotoArray,
+            completion = { responseState ->
+                when (responseState) {
+                    RESPONSE_STATE.OKAY -> {
+                        Log.d("retrofit", "postmemoryphoto api : ${responseState}")
+                    }
+
+                    RESPONSE_STATE.FAIL -> {
+                        Log.d("retrofit", "api 호출 에러")
+                    }
+                }
+            })
+    }
+
 
     private fun initAlbum(resultData: ArrayList<MyAlbumPhotoData>) {
         adapter = MyAlbumAdapter(requireContext())
@@ -152,33 +173,21 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
 
         val defaultImageUrl = listOf("add_photo.png")
 
+        // Todo:  이부분도 List<String> 관련 수정 조치 필요
         albumData.apply {
             add(MyAlbumPhotoData(defaultImageUrl))
             addAll(resultData)
         }
 
-        Log.d("retrofit","initAlbum, $albumData")
+        Log.d("retrofit", "initAlbum, $albumData")
 
         adapter.datas = albumData
         adapter.notifyDataSetChanged()
     }
 
-    // get memory-photo 결과 리스트 재정렬해서 giftData, dates에 저장
-    private fun getGiftDate(resultData: ArrayList<MyGiftData>) : List<String> {
-        giftData = ArrayList(resultData)
-        giftData.sortWith(compareByDescending<MyGiftData> { it.date.replace(".","").toInt() }.thenByDescending { it.time.replace("시","").toInt() })
-        // 클래스 데이터 2개 (cancellable이랑 message) 필요 없는데 없는 데이터클래스 생성 혹은 그냥 쓰기.?
-        Log.d("retrofit", "여기까지오션나요..?여기는 getGiftDate입니닷.^^ 원래 data는 $resultData 이고 수정된 data는 $giftData")
-        dates = giftData.map { it.date } // 이게 굳이 있어야 하나 싶긴 함. giftData로 받아와서 title이랑 date 다 출력할 수 있지 않나 싶음...
-        binding.tvAlbumDate.text = dates[giftIdx]
-
-        return dates
-
-    }
-
-
-    private fun RetrofitCallDate() {
-        RetrofitManager.instance.usersGiftSend(
+    // user gift receive 를 통해 예약 정보를 받아옴
+    private fun retrofitCallDate() {
+        RetrofitManager.instance.usersGiftReceive(
             completion = { responseState, responseBody ->
                 when (responseState) {
                     RESPONSE_STATE.OKAY -> {
@@ -190,34 +199,53 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
                         Log.d("retrofit", "api 호출 에러")
                     }
                 }
-            })
+            }
+        )
     }
 
+    // 위의 retrofitCallDate에서 호출하는 함수. get memory-photo 결과 리스트 재정렬해서 giftData, dates에 저장
+    private fun getGiftDate(resultData: ArrayList<MyGiftData>): List<String> {
+        giftData = ArrayList(resultData)
+        giftData.sortWith(compareByDescending<MyGiftData> { it.date.replace(".", "").toInt() }
+//            .thenByDescending {
+//            it.time.replace("시","").toInt()
+//        } // Todo: response 변경으로 time 처리 다시 해야함.
+        )
+        // 클래스 데이터 2개 (cancellable이랑 message) 필요 없는데 없는 데이터클래스 생성 혹은 그냥 쓰기.?
+        Log.d("retrofit", "original data: $resultData , replaced data: $giftData")
+        dates =
+            giftData.map { it.date } // 이게 굳이 있어야 하나 싶긴 함. giftData로 받아와서 title이랑 date 다 출력할 수 있지 않나 싶음...
+        binding.tvAlbumDate.text = dates[giftIdx]
+
+        return dates
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("SuspiciousIndentation")
     private fun getMemoryPhoto(date: String) {
         RetrofitManager.instance.getMemoryPhoto(
-            date = date,
-            completion = { responseState, responseBody ->
-
-                when (responseState) {
-                    RESPONSE_STATE.OKAY -> {
-                        Log.d("retrofit", "myalbum api : ${responseBody?.size}")
-                        responseBody?.forEach { myAlbumData ->
-                            val photoUrls: List<String> = myAlbumData.memoryImgs.toList()
-                                allPhotoData.add(MyAlbumPhotoData(photoUrls))
-                        }
-
-                        initAlbum(allPhotoData)
+            date = date
+        ) { responseState, responseBody ->
+            when (responseState) {
+                RESPONSE_STATE.OKAY -> {
+                    Log.d("retrofit", "myalbum api : ${responseBody?.size}")
+                    responseBody?.forEach { myAlbumData ->
+                        val photoUrls: List<String> = myAlbumData.memoryImgs.toList()
+                        allPhotoData.add(MyAlbumPhotoData(photoUrls))
+                        Log.d("get Memory Photo", "${responseBody}")
                     }
-
-                    RESPONSE_STATE.FAIL -> {
-                        Log.d("retrofit", "api 호출 에러")
-                    }
+                    initAlbum(allPhotoData)
                 }
-            })
+
+                RESPONSE_STATE.FAIL -> {
+                    Log.d("retrofit", "api 호출 에러")
+                }
+            }
+        }
     }
 
 
+    // 사진 접근 권한 요청
     private fun requestPermission() {
         val locationResultLauncher = registerForActivityResult(
             ActivityResultContracts.RequestPermission()
@@ -229,134 +257,58 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
         locationResultLauncher.launch(
             android.Manifest.permission.READ_EXTERNAL_STORAGE
         )
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if (!Environment.isExternalStorageManager()) {
-                val intent = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
-                requireActivity().startActivity(intent)
-            }
-        }
     }
+
     private val PICK_IMAGE_REQUEST = 1 // 요청 코드
 
     // 갤러리 열기
     private fun openGallery() {
-        Log.d("gallery","갤러리")
+        Log.d("gallery", "갤러리")
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(intent, PICK_IMAGE_REQUEST)
     }
 
     // startActivityForResult로부터 결과 처리
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
             // 선택한 이미지의 Uri 가져오기
             selectedImageUri = data?.data!!
-            System.out.println("selectedImageUri = "+selectedImageUri)
             path = selectedImageUri
             selectedImageUri =
-                selectedImageUri?.let { getImageAbsolutePath(it, requireContext())?.toUri() }!!// 선택한 이미지의 경로를 구하는 함수 호출
-            // newfile = File(selectedImageUri)
-            // Uri를 사용하여 이미지를 처리하거나 표시할 수 있습니다.
+                selectedImageUri?.let {
+                    getImageAbsolutePath(
+                        it,
+                        requireContext()
+                    )?.toUri()
+                }!!// 선택한 이미지의 경로를 구하는 함수 호출
             if (selectedImageUri != null) {
                 this.selectedImageUri = selectedImageUri
                 parseUri(selectedImageUri)
                 file = File(selectedImageUri.toString())
-                getImgUrl(ext, "uploads", filename, file)
-
+                upload()
             }
-
         }
     }
 
     private fun parseUri(selectedImageUri: Uri) {
-//        Toast.makeText(view?.context, "이미지의 URI는 $selectedImageUri 입 니 다", Toast.LENGTH_SHORT).show()
-        Log.d("Album Result", "$selectedImageUri")
         val fileForName = File(selectedImageUri.toString())
         filename = fileForName.nameWithoutExtension
         ext = fileForName.extension
-        Log.d("filename, ext", "$filename $ext")
-
-
-
-
-    }
-    private fun getImgUrl(ext: String, dir: String, filename: String, file:File) {
-        val data = BodyData(ext = ext, dir = dir, filename = filename)
-
-        Log.d("data","$data")
-        RetrofitManager.instance.getImgUrl(data,
-            completion = { responseState, imageKey, presignedUrl ->
-                when (responseState) {
-                    RESPONSE_STATE.OKAY -> {
-                        Log.d("retrofit", "getImgUrl api : ${responseState}")
-                        //API.UPLOAD_IMG=presignedUrl
-                        getImgUrlResult(imageKey, presignedUrl)
-
-                        // 파일의 MIME 유형 가져오기 (예: text/plain, image/jpeg 등)
-                        val mediaType = "image/*".toMediaTypeOrNull() // 파일의 MIME 유형에 따라 변경
-
-                        // RequestBody로 파일을 래핑
-                        val requestBody = file.asRequestBody(mediaType)
-
-                        // 파일을 MultipartBody.Part 형식으로 변환
-                        val filePart = MultipartBody.Part.createFormData("file", file.name, requestBody)
-
-                        uploadImg(filePart)
-
-                    }
-
-                    RESPONSE_STATE.FAIL -> {
-                        Log.d("retrofit", "api 호출 에러")
-                    }
-                }
-            })
-    }
-    private fun getImgUrlResult(imageKey: String, presignedUrl: String) {
-        this.imageKey = imageKey
-        Log.d("First presignedUrl","$presignedUrl")
-        this.presignedUrl = presignedUrl.substringAfter("https://shallwebucket.s3.ap-northeast-2.amazonaws.com/")
-        Log.d("presignedUrl","${this.presignedUrl}")
+//        Log.d("fileForName", "$fileForName")
+//        Log.d("filename, ext", "$filename $ext")
+//        Log.d("Album Result", "$selectedImageUri")
 
     }
 
-    private fun uploadImg(image: MultipartBody.Part) {
-        RetrofitManager.instance.uploadImg(
-            image = image,url="https://shallwebucket.s3.ap-northeast-2.amazonaws.com/", endPoint = this.presignedUrl,
-            completion = { responseState ->
-                when (responseState) {
-                    RESPONSE_STATE.OKAY -> {
-                        Log.d("retrofit", "uploadImg api : ${responseState}")
-                    }
-
-                    RESPONSE_STATE.FAIL -> {
-                        Log.d("retrofit", "uploadImg api 호출 에러")
-                    }
-                }
-                val uploadPhotoArray = UploadPhotoArray(imageKey, giftData[giftIdx].idx)
-                Log.d("post Memory Photo", "$uploadPhotoArray")
-                postMemoryPhoto(uploadPhotoArray)
-                val modDate = giftData[giftIdx].date.replace(".","-")
-                getMemoryPhoto(modDate)
-            })
-
-//            var selectedImageUri: Uri? = data?.data
-//            selectedImageUri =
-//                selectedImageUri?.let { getImageAbsolutePath(it, requireContext())?.toUri() }// 선택한 이미지의 경로를 구하는 함수 호출
-
-            // Uri를 사용하여 이미지를 처리하거나 표시할 수 있습니다.
-            if (selectedImageUri != null) {
-                Log.d("Album Result", "$selectedImageUri")
-            }
-        }
-
-    override fun onItemClick() {
+    override fun onItemClick(position: Int) {
         // 클릭된 아이템이 첫 번째 아이템(사진 추가 버튼)일 때
-        openGallery()
-
-
+        if (position == 0)
+            openGallery()
     }
-}
+
 
     // Uri에서 절대 경로 추출하기
     private fun getImageAbsolutePath(uri: Uri, context: Context): String? {
@@ -369,17 +321,15 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
                 if (it.moveToFirst()) {
                     val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
                     path = it.getString(columnIndex)
-                    val imageFile18 = File(path)
-                    //Todo: 여기가 imageFile
                     Log.d("getImageAbsolutePath", "절대경로 추출 uri = $path")
                 }
             }
         } catch (e: Exception) {
-            // 오류 처리를 여기에 추가하십시오.
             Log.e("getImageAbsolutePath", "절대경로 추출 오류: ${e.message}")
         } finally {
             cursor?.close()
         }
-
         return path
     }
+}
+

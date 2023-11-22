@@ -12,13 +12,11 @@ import com.shall_we.login.data.AuthResponse
 import com.shall_we.login.data.AuthSignOutResponse
 import com.shall_we.dto.UpdateReservationReq
 import com.shall_we.dto.UserDetail
-import com.shall_we.dto.UserDetailRes
 import com.shall_we.dto.catergoryResponse
-import com.shall_we.login.data.AuthTokenData
 import com.shall_we.login.signup.UserData
+import okhttp3.MultipartBody
 import retrofit2.http.DELETE
 import retrofit2.http.Header
-import okhttp3.MultipartBody
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -26,6 +24,7 @@ import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 import retrofit2.http.Url
+import java.time.LocalDate
 
 interface IRetrofit {
 
@@ -45,7 +44,7 @@ interface IRetrofit {
     fun usersGiftReceive() : Call<JsonElement>
 
     @GET(API.GET_MEMORY_PHOTO)
-    fun getMemoryPhoto(@Path("date") date: String) : Call<JsonElement>
+    fun getMemoryPhoto(@Query("date") date: String) : Call<JsonElement>
 
     @POST(API.POST_MEMORY_PHOTO)
     fun postMemoryPhoto(@Body uploadPhotoArray: UploadPhotoArray) : Call<JsonElement>

@@ -2,6 +2,8 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-parcelize'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+
 }
 
 android {
@@ -12,6 +14,7 @@ android {
         enabled true
     }
 
+
     defaultConfig {
         applicationId "com.shall_we"
         minSdk 24
@@ -20,6 +23,10 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+//
+//        buildConfigField "String", "access_key", properties['access_key']
+//        buildConfigField "String", "secret_key", properties['secret_key']
+
     }
 
     buildTypes {
@@ -37,6 +44,9 @@ android {
     }
     dataBinding{
         enabled true
+    }
+    buildFeatures{
+        buildConfig = true
     }
 
 }
@@ -95,6 +105,10 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:20.7.0'
     implementation 'com.google.android.gms:play-services-base:18.2.0'
 
+    implementation 'com.amazonaws:aws-android-sdk-s3:2.13.5'
+    implementation 'com.amazonaws:aws-android-sdk-mobile-client:2.13.5'
+    implementation 'com.amazonaws:aws-android-sdk-cognito:2.13.5'
+
     // dependency for slider view
 
 
@@ -102,6 +116,5 @@ dependencies {
 
 
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
-
 
 }
