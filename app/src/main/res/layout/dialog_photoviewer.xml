@@ -14,7 +14,6 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:background="@drawable/dialog_agreement"
-    android:padding="24dp"
     android:layout_marginStart="24dp"
     android:layout_marginEnd="24dp"
     tools:ignore="MissingConstraints">
@@ -22,27 +21,42 @@
 
     <ImageView
         android:id="@+id/iv_photo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="350dp"
+        android:layout_height="500dp"
         android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="@id/layout_context"
         app:layout_constraintEnd_toEndOf="@id/layout_context"
         android:layout_marginBottom="24dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
 
-<Button
-    android:id="@+id/btn_close"
-    android:layout_width="50dp"
-    android:layout_height="wrap_content"
-    app:layout_constraintTop_toBottomOf="@id/layout_context"
-    app:layout_constraintEnd_toEndOf="parent"
-    android:layout_marginTop="10dp"
-    android:background="@drawable/btn_cancel_reservation"
-    android:outlineProvider="none"
-    android:text="닫기"
-    android:textColor="@color/rose600"
-    android:textSize="14sp"
-    android:textStyle="bold"/>
+    <Button
+        android:id="@+id/btn_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/layout_context"
+        app:layout_constraintEnd_toStartOf="@id/btn_close"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="15dp"
+        android:background="@color/white"
+        android:outlineProvider="none"
+        android:text="사진 삭제"
+        android:textColor="@color/rose600"
+        android:textSize="14sp"
+        android:textStyle="bold"/>
+
+    <Button
+        android:id="@+id/btn_close"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/layout_context"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/btn_cancel_reservation"
+        android:outlineProvider="none"
+        android:text="닫기"
+        android:textColor="@color/rose600"
+        android:textSize="14sp"
+        android:textStyle="bold"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
