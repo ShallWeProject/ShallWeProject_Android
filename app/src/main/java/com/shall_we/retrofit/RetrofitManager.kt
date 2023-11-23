@@ -325,7 +325,7 @@ class RetrofitManager {
                                     memoryPhotoImages.add(item)
                                 }
 
-                                val myAlbumItem = MyAlbumData(idx = 0, date = date, memoryImgs = memoryPhotoImages.toTypedArray())
+                                val myAlbumItem = MyAlbumData(date = date, memoryImgs = memoryPhotoImages.toList())
 
                                 parsedMyAlbumDataArray.add(myAlbumItem)
                             }
@@ -448,13 +448,14 @@ class RetrofitManager {
                                 } else {
                                     null
                                 }
-                                val time: String = timeObj?.get("hour")?.asString ?: "99시"
+                                // respose 변경 전 데이터 time이 null인 경우 발생.
+                                val time: String = timeObj?.get("hour")?.asString ?: "13시"
 
                                 val sender = resultItemObject.getAsJsonObject("sender")
                                 val name = sender.get("name").asString
 
                                 val giftItem = MyGiftData(idx = reservationId, title = title, description = subtitle, date = date, time = time, cancellable = true, message = invitationComment, person = name)
-                                Log.d("gift - send result: ", "$giftItem")
+                                Log.d("gift - receive result: ", "$giftItem")
                                 parsedProductDataArray.add(giftItem)
                             }
                             completion(RESPONSE_STATE.OKAY, parsedProductDataArray)

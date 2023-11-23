@@ -36,8 +36,7 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
     private lateinit var binding: FragmentMyAlbumBinding
     private lateinit var adapter: MyAlbumAdapter
 
-    private val albumData = ArrayList<MyAlbumPhotoData>()
-    private val allPhotoData: ArrayList<MyAlbumPhotoData> = ArrayList()
+    private lateinit var albumData:MyAlbumPhotoData
     private lateinit var giftData: ArrayList<MyGiftData>
     private var giftIdx = 0
     private lateinit var dates: List<String>
@@ -49,13 +48,16 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
     private var path: Uri = Uri.EMPTY
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // 사진첩에 들어오면 권한 요청함.
         requestPermission()
+        // 사진첩 추억의 날짜 리스트를 받아옴.
         retrofitCallDate()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+        @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -108,15 +110,6 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
 //        adapter = MyAlbumAdapter(requireContext())
 //        viewBinding.recyclerAlbumView.adapter = adapter
 //         adapter.datas = giftData[]// 데이터 리스트 설정
-
-//        albumData.apply {
-//            add(
-//                MyAlbumData(
-//                idx = 1, date = "2023-08-21", memoryImgs = arrayOf("img1.jpg", "img2.jpg")
-//                )
-//            )
-//        }
-        initAlbum(allPhotoData)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -143,7 +136,8 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
         val uploadPhotoArray = UploadPhotoArray("uploads/$filename.$ext", giftData[giftIdx].idx)
         Log.d("upload memory photo array", "$uploadPhotoArray")
         postMemoryPhoto(uploadPhotoArray)
-        Log.d("postMemoryPhoto", "${giftData[giftIdx].date} 날짜에 업로드 완료")
+        Toast.makeText(view?.context , "사진이 추가되었습니다.", Toast.LENGTH_SHORT).show()
+        Log.d("postMemoryPhoto", "idx: ${giftData[giftIdx].idx},  ${giftData[giftIdx].date} 날짜에 업로드 완료")
         val modDate: String = giftData[giftIdx].date.replace(".", "-")
         getMemoryPhoto(modDate)
     }
@@ -166,33 +160,26 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
     }
 
 
-    private fun initAlbum(resultData: ArrayList<MyAlbumPhotoData>) {
+    private fun initAlbum(resultData: MyAlbumPhotoData) {
         adapter = MyAlbumAdapter(requireContext())
         binding.recyclerAlbumView.adapter = adapter
         adapter.setOnItemClickListener(this)
 
-        val defaultImageUrl = listOf("add_photo.png")
+        Log.d("retrofit", "initAlbum, $resultData")
 
-        // Todo:  이부분도 List<String> 관련 수정 조치 필요
-        albumData.apply {
-            add(MyAlbumPhotoData(defaultImageUrl))
-            addAll(resultData)
-        }
-
-        Log.d("retrofit", "initAlbum, $albumData")
-
-        adapter.datas = albumData
+        adapter.datas = resultData
         adapter.notifyDataSetChanged()
     }
 
     // user gift receive 를 통해 예약 정보를 받아옴
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun retrofitCallDate() {
         RetrofitManager.instance.usersGiftReceive(
             completion = { responseState, responseBody ->
                 when (responseState) {
                     RESPONSE_STATE.OKAY -> {
                         Log.d("retrofit", "mygift api : ${responseBody?.size}")
-                        getGiftDate(responseBody!!)
+                        getGiftData(responseBody!!)
                     }
 
                     RESPONSE_STATE.FAIL -> {
@@ -204,19 +191,23 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
     }
 
     // 위의 retrofitCallDate에서 호출하는 함수. get memory-photo 결과 리스트 재정렬해서 giftData, dates에 저장
-    private fun getGiftDate(resultData: ArrayList<MyGiftData>): List<String> {
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getGiftData(resultData: ArrayList<MyGiftData>): List<String> {
+        // gift/receive 의 결과 리스트를 받아옴.
         giftData = ArrayList(resultData)
-        giftData.sortWith(compareByDescending<MyGiftData> { it.date.replace(".", "").toInt() }
+        // 날짜 최신순으로 정렬.
+        giftData.sortWith(compareByDescending { it.date.replace(".", "").toInt() }
 //            .thenByDescending {
 //            it.time.replace("시","").toInt()
-//        } // Todo: response 변경으로 time 처리 다시 해야함.
+//        } // Todo: response 데이터 구조 변경으로 time 처리 다시 해야함.
         )
-        // 클래스 데이터 2개 (cancellable이랑 message) 필요 없는데 없는 데이터클래스 생성 혹은 그냥 쓰기.?
         Log.d("retrofit", "original data: $resultData , replaced data: $giftData")
         dates =
             giftData.map { it.date } // 이게 굳이 있어야 하나 싶긴 함. giftData로 받아와서 title이랑 date 다 출력할 수 있지 않나 싶음...
         binding.tvAlbumDate.text = dates[giftIdx]
 
+        val modDate: String = giftData[giftIdx].date.replace(".", "-")
+        getMemoryPhoto(modDate)
         return dates
     }
 
@@ -230,11 +221,12 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
                 RESPONSE_STATE.OKAY -> {
                     Log.d("retrofit", "myalbum api : ${responseBody?.size}")
                     responseBody?.forEach { myAlbumData ->
-                        val photoUrls: List<String> = myAlbumData.memoryImgs.toList()
-                        allPhotoData.add(MyAlbumPhotoData(photoUrls))
+                        val photoUrls: MutableList<String> = myAlbumData.memoryImgs.toMutableList()
+                        albumData = MyAlbumPhotoData(imgUrl = photoUrls)
+                        albumData.imgUrl?.add(0, "R.drawable.add_image")
                         Log.d("get Memory Photo", "${responseBody}")
                     }
-                    initAlbum(allPhotoData)
+                    initAlbum(albumData)
                 }
 
                 RESPONSE_STATE.FAIL -> {
