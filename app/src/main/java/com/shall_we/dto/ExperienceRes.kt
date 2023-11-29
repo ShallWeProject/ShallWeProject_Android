@@ -26,7 +26,7 @@ data class ExperienceRes(
     @SerializedName("price")
     val price: Int,
     @SerializedName("giftImgUrl")
-    val giftImgUrl: String,
+    val giftImgUrl: ArrayList<String>,
     @SerializedName("experienceGiftId")
     val experienceGiftId: Int
 )

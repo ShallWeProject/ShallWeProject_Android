@@ -4,6 +4,6 @@ data class ProductData (
     val title : String,
     val subtitle : String,
     val price : String,
-    val img : String,
+    val img : String?,
     val giftid : Int
 )
