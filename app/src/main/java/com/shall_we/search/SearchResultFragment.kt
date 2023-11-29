@@ -8,6 +8,7 @@ import com.shall_we.ExperienceDetail.ExperienceDetailFragment
 import com.shall_we.R
 import com.shall_we.base.BaseFragment
 import com.shall_we.databinding.FragmentSearchResultBinding
+import com.shall_we.dto.ExperienceRes
 import com.shall_we.home.ProductAdapter
 import com.shall_we.home.ProductData
 import com.shall_we.utils.initProductRecycler
@@ -45,10 +46,38 @@ class SearchResultFragment : BaseFragment<FragmentSearchResultBinding>(R.layout.
         } else{
             // 겸색 결과 있으면
             // 리사이클러뷰에 검색 결과 넣기, 텍스트는 안보이게
-            val data = arguments?.getSerializable("data") as ArrayList<ProductData>
+            val data = arguments?.getSerializable("data") as ArrayList<ExperienceRes>
+            val productDataList = ArrayList<ProductData>()
+            if (data != null) {
+                for (experienceResNode in data) {
+                    val title: String = experienceResNode.title ?: ""
+                    val subtitle: String = experienceResNode.subtitle ?: ""
+                    val price: Int = experienceResNode.price ?: 0
+                    val formattedPrice = String.format("%,d", price.toInt())
+                    val giftImgUrl : String
+                    if(experienceResNode.giftImgUrl.size == 0){
+                        giftImgUrl = ""
+                    }
+                    else{
+                        giftImgUrl = experienceResNode.giftImgUrl[0] ?: ""
+
+                    }
+                    val giftid: Int = experienceResNode.experienceGiftId ?: 0
+                    // ProductData 객체를 ArrayList에 추가
+                    productDataList.add(
+                        ProductData(
+                            title = title,
+                            subtitle = subtitle,
+                            price = formattedPrice,
+                            img = giftImgUrl,
+                            giftid = giftid
+                        )
+                    )
+                }
+            }
             rv_search_result.visibility = View.VISIBLE
             no_result.visibility = View.GONE
-            initProductRecycler(rv_search_result, data,this)
+            initProductRecycler(rv_search_result, productDataList,this)
         }
     }
 

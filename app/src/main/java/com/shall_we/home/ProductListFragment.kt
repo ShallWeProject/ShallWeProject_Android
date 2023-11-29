@@ -191,8 +191,35 @@ class ProductListFragment : Fragment() , ProductAdapter.OnItemClickListener{
                     responseState, responseBody ->
                 when (responseState) {
                     RESPONSE_STATE.OKAY -> {
-                        Log.d("retrofit", "api 호출 성공1 : $tabPosition $category ${responseBody?.size}")
-                        initProductRecycler(rvProduct,responseBody!!,this)
+                        val productDataList = ArrayList<ProductData>()
+                        if (responseBody != null) {
+                            for (experienceResNode in responseBody) {
+                                val title: String = experienceResNode.title ?: ""
+                                val subtitle: String = experienceResNode.subtitle ?: ""
+                                val price: Int = experienceResNode.price ?: 0
+                                val formattedPrice = String.format("%,d", price.toInt())
+                                val giftImgUrl : String
+                                if(experienceResNode.giftImgUrl.size == 0){
+                                    giftImgUrl = ""
+                                }
+                                else{
+                                    giftImgUrl = experienceResNode.giftImgUrl[0] ?: ""
+                                }
+                                val giftid: Int = experienceResNode.experienceGiftId ?: 0
+                                // ProductData 객체를 ArrayList에 추가
+                                productDataList.add(
+                                    ProductData(
+                                        title = title,
+                                        subtitle = subtitle,
+                                        price = formattedPrice,
+                                        img = giftImgUrl,
+                                        giftid = giftid
+                                    )
+                                )
+                            }
+                        }
+                        initProductRecycler(rvProduct,productDataList,this)
+
                     }
 
                     RESPONSE_STATE.FAIL -> {
@@ -215,7 +242,13 @@ class ProductListFragment : Fragment() , ProductAdapter.OnItemClickListener{
                                 val subtitle: String = experienceResNode.subtitle?: ""
                                 val price: Int = experienceResNode.price?: 0
                                 val formattedPrice = String.format("%,d", price.toInt())
-                                val giftImgUrl: String = experienceResNode.giftImgUrl[0] ?: ""
+                                val giftImgUrl : String
+                                if(experienceResNode.giftImgUrl.size == 0){
+                                    giftImgUrl = ""
+                                }
+                                else{
+                                    giftImgUrl = experienceResNode.giftImgUrl[0] ?: ""
+                                }
                                 val giftid: Int = experienceResNode.experienceGiftId?: 0
                                 // ProductData 객체를 ArrayList에 추가
                                 productDataList.add(ProductData(title=title, subtitle = subtitle, price = formattedPrice, img = giftImgUrl, giftid = giftid))

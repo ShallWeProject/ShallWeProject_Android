@@ -258,7 +258,13 @@ class HomeFragment : Fragment() , ProductAdapter.OnItemClickListener, CategoryAd
                                     val subtitle: String = experienceResNode.subtitle ?: ""
                                     val price: Int = experienceResNode.price ?: 0
                                     val formattedPrice = String.format("%,d", price.toInt())
-                                    val giftImgUrl: String? = experienceResNode.giftImgUrl[0] ?: null
+                                    val giftImgUrl : String
+                                    if(experienceResNode.giftImgUrl.size == 0){
+                                        giftImgUrl = ""
+                                    }
+                                    else{
+                                        giftImgUrl = experienceResNode.giftImgUrl[0] ?: ""
+                                    }
                                     val giftid: Int = experienceResNode.experienceGiftId ?: 0
                                     // ProductData 객체를 ArrayList에 추가
                                     productDataList.add(

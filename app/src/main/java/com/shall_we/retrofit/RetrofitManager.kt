@@ -7,7 +7,9 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonParser
 import com.shall_we.dto.ExperienceExpCategoryRes
 import com.shall_we.dto.ExperienceRes
+import com.shall_we.dto.MainSttCategoryRes
 import com.shall_we.dto.PopularRes
+import com.shall_we.dto.SttCategoryData
 import com.shall_we.dto.UpdateReservationReq
 import com.shall_we.dto.UserDetail
 import com.shall_we.dto.catergoryResponse
@@ -42,15 +44,15 @@ class RetrofitManager {
     fun experienceGiftSttCategory(
         categoryId: Int,
         category: String,
-        completion: (RESPONSE_STATE, ArrayList<ProductData>?) -> Unit
+        completion: (RESPONSE_STATE, ArrayList<MainSttCategoryRes>?) -> Unit
     ) {
         val call =
             iRetrofit?.experienceGiftSttCategory(categoryId = categoryId, category = category)
                 ?: return
 
-        call.enqueue(object : Callback<JsonElement> {
+        call.enqueue(object : Callback<SttCategoryData> {
             // 응답 성공
-            override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
+            override fun onResponse(call: Call<SttCategoryData>, response: Response<SttCategoryData>) {
                 Log.d(
                     "retrofit",
                     "RetrofitManager - onResponse() called / response : ${response.code()}"
@@ -58,40 +60,18 @@ class RetrofitManager {
 
                 when (response.code()) {
                     200 -> {
-                        response.body()?.let {
-                            var parsedProductDataArray = ArrayList<ProductData>()
-                            val body = it.asJsonObject
-                            val data = body.getAsJsonArray("data")
-
-                            data.forEach { resultItem ->
-                                val resultItemObject = resultItem.asJsonObject
-                                val title: String = resultItemObject.get("title").asString
-                                val subtitle: String = resultItemObject.get("subtitleTitle").asString
-                                val price: String = resultItemObject.get("price").asString
-                                val formattedPrice = String.format("%,d", price.toInt())
-
-                                val imgList = resultItemObject.get("giftImgUrl").asJsonArray
-                                val img = imgList[0].toString()
-                                val giftid: Int = resultItemObject.get("experienceGiftId").asInt
-
-                                val productItem = ProductData(
-                                    title = title,
-                                    subtitle = subtitle,
-                                    price = formattedPrice,
-                                    img = img,
-                                    giftid = giftid
-                                )
-
-                                parsedProductDataArray.add(productItem)
-                            }
-                            completion(RESPONSE_STATE.OKAY, parsedProductDataArray)
+                            completion(RESPONSE_STATE.OKAY, response.body()?.data)
                         }
+                    else -> {
+                        completion(RESPONSE_STATE.OKAY, null)
+
                     }
-                }
+                    }
+
             }
 
             // 응답 실패
-            override fun onFailure(call: Call<JsonElement>, t: Throwable) {
+            override fun onFailure(call: Call<SttCategoryData>, t: Throwable) {
                 Log.d("retrofit", "RetrofitManager - onFailure() called / t: $t")
                 completion(RESPONSE_STATE.FAIL, null)
             }
@@ -121,6 +101,10 @@ class RetrofitManager {
                     200 -> {
                             completion(RESPONSE_STATE.OKAY, response.body()?.data)
                         }
+                    else -> {
+                        completion(RESPONSE_STATE.OKAY, null)
+
+                    }
                     }
                 }
 
@@ -137,13 +121,13 @@ class RetrofitManager {
 
     fun experienceGiftSearch(
         title: String,
-        completion: (RESPONSE_STATE, ArrayList<ProductData>?) -> Unit
+        completion: (RESPONSE_STATE, ArrayList<ExperienceRes>?) -> Unit
     ) {
         val call = iRetrofit?.experienceGiftSearch(title = title) ?: return
 
-        call.enqueue(object : Callback<JsonElement> {
+        call.enqueue(object : Callback<PopularRes> {
             // 응답 성공
-            override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
+            override fun onResponse(call: Call<PopularRes>, response: Response<PopularRes>) {
                 Log.d(
                     "retrofit",
                     "RetrofitManager - onResponse() called / response : ${response.code()}"
@@ -151,39 +135,17 @@ class RetrofitManager {
 
                 when (response.code()) {
                     200 -> {
-                        response.body()?.let {
-                            var parsedProductDataArray = ArrayList<ProductData>()
-                            val body = it.asJsonObject
-                            val data = body.getAsJsonArray("data")
-
-                            data.forEach { resultItem ->
-                                val resultItemObject = resultItem.asJsonObject
-                                val title: String = resultItemObject.get("title").asString
-                                val subtitle: String = resultItemObject.get("subtitle").asString
-                                val price: String = resultItemObject.get("price").asString
-                                val formattedPrice = String.format("%,d", price.toInt())
-
-                                val img: String = resultItemObject.get("giftImgUrl").asString
-                                val giftid: Int = resultItemObject.get("experienceGiftId").asInt
-
-                                val productItem = ProductData(
-                                    title = title,
-                                    subtitle = subtitle,
-                                    price = formattedPrice,
-                                    img = img,
-                                    giftid = giftid
-                                )
-
-                                parsedProductDataArray.add(productItem)
-                            }
-                            completion(RESPONSE_STATE.OKAY, parsedProductDataArray)
+                            completion(RESPONSE_STATE.OKAY, response.body()?.data)
                         }
+                    else -> {
+                        completion(RESPONSE_STATE.OKAY, null)
+
                     }
                 }
             }
 
             // 응답 실패
-            override fun onFailure(call: Call<JsonElement>, t: Throwable) {
+            override fun onFailure(call: Call<PopularRes>, t: Throwable) {
                 Log.d("retrofit", "RetrofitManager - onFailure() called / t: $t")
                 completion(RESPONSE_STATE.FAIL, null)
 
