@@ -1,34 +1,27 @@
 package com.shall_we.giftExperience
 
-import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.Toast
-import androidx.core.graphics.createBitmap
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener
 import com.prolificinteractive.materialcalendarview.format.TitleFormatter
-import com.shall_we.ExperienceDetail.ExperienceDetailFragment
 import com.shall_we.ExperienceDetail.ExperienceDetailViewModel
 import com.shall_we.R
-import com.shall_we.base.BaseFragment
-import com.shall_we.changeReservation.CustomAlertDialog
 import com.shall_we.databinding.FragmentGiftResevationBinding
-import com.shall_we.dto.ExperienceReq
+import com.shall_we.dto.LocalTime
 import com.shall_we.retrofit.RESPONSE_STATE
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
@@ -38,10 +31,12 @@ class GiftResevationFragment : Fragment() {
     private lateinit var calendarView: MaterialCalendarView
     private var experienceGiftId: Int = 1
     var selectedDate: Date? = null
+    var selectedTime:LocalDateTime?=null
     lateinit var experienceDetailViewModel: ExperienceDetailViewModel
     private val locale: Locale = Locale("ko")
     private lateinit var binding: FragmentGiftResevationBinding  // Binding 객체 추가
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -123,6 +118,23 @@ class GiftResevationFragment : Fragment() {
         }
 
 
+        //시간 넘겨주기
+        val currentTime=LocalDateTime.now()
+        val formatter = DateTimeFormatter.ofPattern("HH:mm:ss")
+        val formatted = currentTime.format(formatter)
+
+        val hour = formatted.substringBefore(":").toInt()
+        val minute = formatted.substringAfter(":").substringBeforeLast(":").toInt()
+        val second = formatted.substringAfterLast(":").toInt()
+
+        val time= LocalTime(
+            hour = currentTime.hour,
+            minute = currentTime.minute,
+            second = currentTime.second,
+            nano = currentTime.nano
+        )
+
+
         binding.exgiftBtn03.setOnClickListener {
             val giftExperienceFragment = GiftExperienceFragment() // 전환할 프래그먼트 인스턴스 생성
             val fragmentTransaction = parentFragmentManager.beginTransaction()
@@ -133,6 +145,10 @@ class GiftResevationFragment : Fragment() {
                 val dateFormat = SimpleDateFormat("yyyy-MM-dd", locale) // 날짜 형식 지정
                 val dateString = dateFormat.format(selectedDate) // 문자열로 변환
                 bundle.putString("Date", dateString) // "Date" 키로 날짜 전달
+            }
+            if (time!=null){
+                bundle.putParcelable("time", time)
+
             }
 
 

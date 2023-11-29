@@ -3,9 +3,7 @@ package com.shall_we.dto
 import com.google.gson.annotations.SerializedName
 
 data class ExperienceDetailRes(
-    @SerializedName("giftImgUrl")
-    val giftImageUrl: String? = null,
-   // val thumbnail: String? = null,
+    val giftImageUrl: List<String>? = null,
     val title: String? = null,
     val subtitle: String? = null,
     val price: Int? = null,
