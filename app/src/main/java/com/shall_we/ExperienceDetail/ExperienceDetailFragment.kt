@@ -42,7 +42,7 @@ class ExperienceDetailFragment: Fragment() {
         }
 
         experienceDetailViewModel = ViewModelProvider(this).get(ExperienceDetailViewModel::class.java)
-        reservationViewModel = ViewModelProvider(this).get(ReservationViewModel::class.java)
+       // reservationViewModel = ViewModelProvider(this).get(ReservationViewModel::class.java)
 
         experienceDetailViewModel.get_experience_detail_data(
             experienceGiftId,
@@ -50,15 +50,16 @@ class ExperienceDetailFragment: Fragment() {
                 when (responseState) {
                     RESPONSE_STATE.OKAY -> {
                         responseBody?.get(0)?.let { item ->
+                            Log.d("exitem",item.toString())
                             binding.exdetailText01.text = item.subtitle
                             binding.exdetailText03.text = item.title
                             binding.exdetailText04.text = item.price.toString()
 
-                            // 여러 개의 이미지 URL을 사용하는 경우
-                            val dummyImageUrls = listOf(item.giftImageUrl, item.giftImageUrl, item.giftImageUrl)
-                            // ViewPager의 Adapter 설정
-                            val adapter = ImageAdapter(requireContext(), dummyImageUrls)
-                            binding.exdetailImage.adapter = adapter
+                            // 이미지 URL 리스트를 ViewPager의 Adapter에 전달
+                            item.giftImageUrl?.let { imageUrlList ->
+                                val adapter = ImageAdapter(requireContext(), imageUrlList)
+                                binding.exdetailImage.adapter = adapter
+                            }
                         }
                     }
                     RESPONSE_STATE.FAIL -> {
@@ -68,7 +69,11 @@ class ExperienceDetailFragment: Fragment() {
             }
         )
 
-        experienceDetailViewModel.get_experience_gift()
+
+
+
+
+
 
         binding.fab.setOnClickListener() {
             binding.fab.visibility = View.GONE

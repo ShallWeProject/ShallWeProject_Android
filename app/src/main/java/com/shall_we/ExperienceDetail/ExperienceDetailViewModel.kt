@@ -69,16 +69,17 @@ class ExperienceDetailViewModel:ViewModel() {
 
                             val data = body.getAsJsonObject("data")
 
-                            val giftImageUrl = data.get("giftImgUrl").asString
-                            //val thumbnail = data.get("thumbnail").asString
+                            val giftImageUrlJsonArray = data.getAsJsonArray("giftImgUrl")
+                            val giftImageUrlList = ArrayList<String>()
+                            giftImageUrlJsonArray?.forEach { imgUrl ->
+                                giftImageUrlList.add(imgUrl.asString)
+                            }
+
                             val title = data.get("title").asString
                             val subtitle = data.get("subtitle").asString
                             val price = data.get("price").asInt
                             val description = if (!data.get("description").isJsonNull) data.get("description").asString else null
-                           // val experienceCategory = data.get("expCategory").asInt
-                           // val statementCategory = data.get("sttCategory").asInt
                             val experienceGiftId = data.get("experienceGiftId").asInt
-
 
                             val explanationResJsonArray = data.getAsJsonArray("explanation")
                             val explanationResList = ArrayList<ExplanationRes>()
@@ -94,22 +95,18 @@ class ExperienceDetailViewModel:ViewModel() {
                             }
 
                             val experienceDetailRes = ExperienceDetailRes(
-                                giftImageUrl = giftImageUrl,
-                                //thumbnail = thumbnail,
+                                giftImageUrl = giftImageUrlList,
                                 title = title,
                                 subtitle = subtitle,
                                 price = price,
                                 explanation = explanationResList,
                                 description = description,
-                                //experienceCategory = experienceCategory,
-                                //statementCategory = statementCategory,
                                 experienceGiftId = experienceGiftId
                             )
 
                             parsedDataArray.add(experienceDetailRes)
 
                             completion(RESPONSE_STATE.OKAY, parsedDataArray)
-
                         }
                     } else {
                         Log.d("whatisthis", "_experience_detail_data, response 못받음")
@@ -126,6 +123,7 @@ class ExperienceDetailViewModel:ViewModel() {
                 }
             })
     }
+
 
 //    fun set_experience_gift(reservationRequest: ReservationRequest) {
 //        ExperienceDetailService.experienceDetailService
