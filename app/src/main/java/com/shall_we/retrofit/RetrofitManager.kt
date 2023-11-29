@@ -16,6 +16,7 @@ import com.shall_we.login.data.AuthResponse
 import com.shall_we.login.data.AuthSignOutResponse
 import com.shall_we.login.signup.UserData
 import com.shall_we.login.data.AuthTokenData
+import com.shall_we.login.data.UserInactiveReq
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -687,8 +688,8 @@ class RetrofitManager {
         })
     }
 
-    fun userInactive(completion: (RESPONSE_STATE) -> Unit){
-        val call = iRetrofit?.userInactive()?.enqueue(object : Callback<JsonElement>{
+    fun userInactive(complain : UserInactiveReq, completion: (RESPONSE_STATE) -> Unit){
+        val call = iRetrofit?.userInactive(complain)?.enqueue(object : Callback<JsonElement>{
             override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
                 val response = response.code()
                 if(response == 200){

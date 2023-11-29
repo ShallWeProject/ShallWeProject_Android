@@ -13,6 +13,7 @@ import com.shall_we.login.data.AuthSignOutResponse
 import com.shall_we.dto.UpdateReservationReq
 import com.shall_we.dto.UserDetail
 import com.shall_we.dto.catergoryResponse
+import com.shall_we.login.data.UserInactiveReq
 import com.shall_we.login.signup.UserData
 import okhttp3.MultipartBody
 import retrofit2.http.DELETE
@@ -96,8 +97,8 @@ interface IRetrofit {
     fun uploadImg(@Url url: String, @Part image: MultipartBody.Part): Call<JsonElement>
 
     // 유저 회원탈퇴
-    @PATCH(API.USER_INACTIVE)
-    fun userInactive() : Call<JsonElement>
+    @POST(API.USER_INACTIVE)
+    fun userInactive(@Body complain : UserInactiveReq) : Call<JsonElement>
 
 }
 

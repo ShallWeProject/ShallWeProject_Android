@@ -16,17 +16,19 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.Button
 import android.widget.Spinner
+import android.widget.Toast
 import com.shall_we.App
 import com.shall_we.R
 import com.shall_we.databinding.FragmentDeleteAccountBinding
 import com.shall_we.home.CustomSpinnerAdapter
+import com.shall_we.login.data.UserInactiveReq
 import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RefreshTokenArray
 import com.shall_we.retrofit.RetrofitManager
 import com.shall_we.utils.dpToPx
 
 class DeleteAccountFragment : Fragment() {
-    lateinit var spinnerString : String
+    var spinnerString : String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,8 +41,12 @@ class DeleteAccountFragment : Fragment() {
         initSpinner(binding.spinner2)
 
         binding.btnDelete.setOnClickListener {
-            cuDialog(it)
-
+            if(spinnerString == ""){
+                Toast.makeText(context,"불편한 점을 선택해주세요.",Toast.LENGTH_LONG).show()
+            }
+            else{
+                cuDialog(it)
+            }
         }
         return binding.root
     }
@@ -48,7 +54,7 @@ class DeleteAccountFragment : Fragment() {
     private fun initSpinner(spinner : Spinner) {
         //spinner
 
-        val spinnerItems = arrayOf("자주 사용하지 않아요.",
+        val spinnerItems = arrayOf("탈퇴하시는 이유를 선택해주세요.","자주 사용하지 않아요.",
             "중복 계정이 있어요.",
             "앱 오류가 있어요.",
             "타사 대비 가격이 비싸요.",
@@ -67,10 +73,14 @@ class DeleteAccountFragment : Fragment() {
                 position: Int,
                 id: Long
             ) {
+                spinneradapter.resetSpinnerOpenState()
                 //아이템이 클릭 되면 맨 위부터 position 0번부터 순서대로 동작하게 됩니다.
-                spinnerString = spinnerItems[position]
+                if(position != 0){
+                    spinnerString = spinnerItems[position]
+                }
             }
             override fun onNothingSelected(parent: AdapterView<*>) {
+                spinneradapter.resetSpinnerOpenState()
             }
         }
     }
@@ -92,7 +102,8 @@ class DeleteAccountFragment : Fragment() {
     }
 
     fun deleteRetrofitCall() {
-        RetrofitManager.instance.userInactive(completion = { responseState ->
+        val complain = UserInactiveReq(spinnerString)
+        RetrofitManager.instance.userInactive(complain, completion = { responseState ->
             when (responseState) {
                 RESPONSE_STATE.OKAY -> {
                     // 토큰 리셋
