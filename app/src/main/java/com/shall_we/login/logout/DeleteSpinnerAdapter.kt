@@ -49,7 +49,8 @@ class DeleteSpinnerAdapter (
         // 스피너에서는 spinner_down_btn을 뒤집어서 보여줌
         if (!isSpinnerOpened) {
             spinnerDownBtn.scaleY = -1f
-        } else {
+        }
+        else {
             spinnerDownBtn.scaleY = 1f // 드롭다운 메뉴가 닫혔을 때 원래대로 돌리기
         }
 
