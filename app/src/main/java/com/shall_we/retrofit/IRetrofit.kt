@@ -2,6 +2,7 @@ package com.shall_we.retrofit
 
 import com.google.gson.JsonElement
 import com.shall_we.dto.PopularRes
+import com.shall_we.dto.SttCategoryData
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -30,13 +31,13 @@ import java.time.LocalDate
 interface IRetrofit {
 
     @GET(API.EXPERIENCE_GIFT_STTCATEGORY)
-    fun experienceGiftSttCategory(@Path("SttCategoryId") categoryId : Int, @Query("category") category : String) : Call<JsonElement>
+    fun experienceGiftSttCategory(@Path("SttCategoryId") categoryId : Int, @Query("category") category : String) : Call<SttCategoryData>
 
     @GET(API.EXPERIENCE_GIFT_EXPCATEGORY)
     fun experienceGiftExpCategory(@Path("ExpCategoryId") categoryId : Int, @Query("category") category : String) : Call<catergoryResponse>
 
     @GET(API.EXPERIENCE_GIFT_SEARCH)
-    fun experienceGiftSearch(@Query("title") title : String) : Call<JsonElement>
+    fun experienceGiftSearch(@Query("title") title : String) : Call<PopularRes>
 
     @GET(API.USERS_GIFT_SEND)
     fun usersGiftSend() : Call<JsonElement>

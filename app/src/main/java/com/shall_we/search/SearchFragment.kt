@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.shall_we.R
 import com.shall_we.databinding.FragmentSearchBinding
+import com.shall_we.home.ProductData
 import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RetrofitManager
 import com.shall_we.utils.SharedPrefManager
@@ -122,7 +123,7 @@ class SearchFragment : Fragment() , SearchView.OnQueryTextListener,
         return true
     }
 
-        // 사진 검색 API 호출
+        // 검색 API 호출
     private fun searchPhotoApiCall(query: String){
      //레트로핏 연결
         RetrofitManager.instance.experienceGiftSearch(title = query, completion = { responseState, responseBody ->
