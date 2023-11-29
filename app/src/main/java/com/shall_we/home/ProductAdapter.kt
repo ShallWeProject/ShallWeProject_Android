@@ -48,7 +48,6 @@ class ProductAdapter(private val context: Context) : RecyclerView.Adapter<Produc
         private val txtName: TextView = itemView.findViewById(R.id.product_name)
         private val txtComment: TextView = itemView.findViewById(R.id.product_comment)
         private val txtPrice: TextView = itemView.findViewById(R.id.product_price)
-
         val imgProfile: ImageView = itemView.findViewById(R.id.product_image)
 
         fun bind(item: ProductData) {
@@ -56,7 +55,12 @@ class ProductAdapter(private val context: Context) : RecyclerView.Adapter<Produc
             txtComment.text = item.title
             txtPrice.text = item.price
 
-            Glide.with(context).load(item.img).into(imgProfile)
+            if(item.img == ""){
+                imgProfile.setImageResource(R.drawable.splash_icon)
+            }
+            else{
+                Glide.with(context).load(item.img).into(imgProfile)
+            }
 
         }
         init {

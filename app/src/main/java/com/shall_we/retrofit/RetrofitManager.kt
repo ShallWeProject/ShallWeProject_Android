@@ -70,7 +70,8 @@ class RetrofitManager {
                                 val price: String = resultItemObject.get("price").asString
                                 val formattedPrice = String.format("%,d", price.toInt())
 
-                                val img: String = resultItemObject.get("giftImgUrl").asString
+                                val imgList = resultItemObject.get("giftImgUrl").asJsonArray
+                                val img = imgList[0].toString()
                                 val giftid: Int = resultItemObject.get("experienceGiftId").asInt
 
                                 val productItem = ProductData(

@@ -215,7 +215,7 @@ class ProductListFragment : Fragment() , ProductAdapter.OnItemClickListener{
                                 val subtitle: String = experienceResNode.subtitle?: ""
                                 val price: Int = experienceResNode.price?: 0
                                 val formattedPrice = String.format("%,d", price.toInt())
-                                val giftImgUrl: String = experienceResNode.giftImgUrl ?: ""
+                                val giftImgUrl: String = experienceResNode.giftImgUrl[0] ?: ""
                                 val giftid: Int = experienceResNode.experienceGiftId?: 0
                                 // ProductData 객체를 ArrayList에 추가
                                 productDataList.add(ProductData(title=title, subtitle = subtitle, price = formattedPrice, img = giftImgUrl, giftid = giftid))

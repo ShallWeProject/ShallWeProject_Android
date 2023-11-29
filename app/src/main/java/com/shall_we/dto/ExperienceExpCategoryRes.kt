@@ -18,8 +18,6 @@ data class catergoryResponse(
 data class ExperienceExpCategoryRes(
     @SerializedName("expCategoryId")
     val expCategoryId: Int,
-    @SerializedName("thumbnail")
-    val thumbnail: String?,
     @SerializedName("subtitleTitle")
     val subtitle: String,
     @SerializedName("title")
@@ -27,7 +25,7 @@ data class ExperienceExpCategoryRes(
     @SerializedName("price")
     val price: Int,
     @SerializedName("giftImgUrl")
-    val giftImgUrl: String,
+    val giftImgUrl: ArrayList<String>,
     @SerializedName("experienceGiftId")
     val experienceGiftId: Int
 )
