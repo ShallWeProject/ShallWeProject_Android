@@ -1,5 +1,6 @@
 package com.shall_we.retrofit
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -26,6 +27,7 @@ import com.shall_we.myAlbum.MyAlbumData
 import com.shall_we.mypage.MyGiftData
 import okhttp3.MultipartBody
 import java.text.SimpleDateFormat
+import java.util.Locale
 
 class RetrofitManager {
     companion object {
@@ -375,6 +377,7 @@ class RetrofitManager {
         val call = iRetrofit?.usersGiftReceive() ?:return
         call.enqueue(object : Callback<JsonElement> {
             // 응답 성공
+            @SuppressLint("SimpleDateFormat")
             override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
                 Log.d(
                     "retrofit",
@@ -405,15 +408,17 @@ class RetrofitManager {
                                 val dateFormatter = SimpleDateFormat("yyyy.MM.dd")
                                 val date = dateFormatter.format(dateTimeStr)
 
-//                                val time: String = ""
-                                val timeElement = resultItemObject?.get("time")
-                                val timeObj = if (timeElement != null && !timeElement.isJsonNull) {
-                                    JsonParser.parseString(timeElement.toString()).asJsonObject
+                                val timeElement: String = resultItemObject?.get("time")?.toString() ?: "99"
+                                Log.d("timeElement","$timeElement")
+                                var time : String = ""
+
+                                if (!resultItemObject.get("time").isJsonNull) {
+                                    time = resultItemObject.get("time").asString
+                                    val parsedTime = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).parse(time)
+                                    time = SimpleDateFormat("HH시", Locale.getDefault()).format(parsedTime)
                                 } else {
-                                    null
+                                    time = "null"
                                 }
-                                // respose 변경 전 데이터 time이 null인 경우 발생.
-                                val time: String = timeObj?.get("hour")?.asString ?: "13시"
 
                                 val sender = resultItemObject.getAsJsonObject("sender")
                                 val name = sender.get("name").asString

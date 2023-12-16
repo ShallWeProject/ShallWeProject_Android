@@ -60,7 +60,7 @@ class MypageFragment : Fragment() {
                 val selectedTabIndex = tab?.position ?: 2
                 // 이제 선택된 탭에 대한 작업을 수행할 수 있습니다.
                 // 예: 선택된 탭의 인덱스를 이용해 데이터를 업데이트하거나 다른 동작 수행.
-                if (selectedTabIndex == 0) {
+                if (selectedTabIndex == 1) {
                     binding.fabAlbum.visibility = View.VISIBLE
                 }
                 else {
