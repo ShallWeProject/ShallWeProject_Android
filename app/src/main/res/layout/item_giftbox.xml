@@ -97,28 +97,33 @@
 
             <TextView
                 android:id="@+id/tv_title"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="@+id/tv_date"
                 app:layout_constraintTop_toBottomOf="@+id/tv_description"
                 android:layout_marginTop="2dp"
                 android:text="기념일 레터링 케이크 사지말고 함께 만들어요"
                 android:textSize="14sp"
+                android:layout_marginStart="17dp"
+                android:layout_marginEnd="17dp"
                 android:textColor="@color/black"/>
 
 
             <TextView
                 android:id="@+id/tv_message"
-                android:layout_width="296dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
                 android:gravity="center_vertical"
-                app:layout_constraintStart_toStartOf="@+id/tv_date"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_title"
                 android:layout_marginTop="12dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:padding="18dp"
                 android:background="@drawable/invitation"
-                android:text="메세지란입니다. 다희야 생일축하해 ㅋㅋ 어쩌구저쩌구말을좀마니할게 행복한하루되고 감자많이먹어라!!ㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴ"
+                android:text="메세지란입니다. 다희야 생일축하해 ㅋㅋ 어쩌구저쩌구말을좀마니할게 행복한하루되고 감자많이먹어라!!"
                 android:textSize="14sp"
                 android:textColor="@color/black"/>
 
