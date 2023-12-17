@@ -344,13 +344,13 @@ class RetrofitManager {
                                 val date = dateFormatter.format(dateTimeStr)
 
 //                                var time: String = ""
-                                val timeElement = resultItemObject?.get("time")
-                                val timeObj = if (timeElement != null && !timeElement.isJsonNull) {
-                                    JsonParser.parseString(timeElement.toString()).asJsonObject
-                                } else {
-                                    null
-                                }
-                                val time: String = timeObj?.get("hour")?.asString ?: ""
+//                                val timeElement = resultItemObject?.get("time")
+//                                val timeObj = if (timeElement != null && !timeElement.isJsonNull) {
+//                                    JsonParser.parseString(timeElement.toString()).asJsonObject
+//                                } else {
+//                                    null
+//                                }
+                                val time: String = resultItemObject?.get("time")?.asString ?: ""
 
                                 val receiver = resultItemObject.getAsJsonObject("receiver")
                                 val name = receiver.get("name").asString
