@@ -8,8 +8,7 @@ import com.google.gson.JsonElement
 import com.shall_we.dto.ExperienceDetailRes
 import com.shall_we.dto.ExperienceGiftDto
 import com.shall_we.dto.ExperienceMainRes
-import com.shall_we.dto.ExperienceReq
-import com.shall_we.dto.ExplanationRes
+import com.shall_we.dto.GiftDTO
 import com.shall_we.dto.ReservationRequest
 import com.shall_we.retrofit.RESPONSE_STATE
 import retrofit2.Call
@@ -52,72 +51,20 @@ class ExperienceDetailViewModel:ViewModel() {
     }
     fun get_experience_detail_data(
         ExperienceGiftId: Int,
-        completion: (RESPONSE_STATE, ArrayList<ExperienceDetailRes>?) -> Unit
+        completion: (RESPONSE_STATE, GiftDTO?) -> Unit
     ) {
         ExperienceDetailService.experienceDetailService?.get_experience_detail_data(ExperienceGiftId)
-            ?.enqueue(object : Callback<JsonElement> {
+            ?.enqueue(object : Callback<ExperienceDetailRes> {
                 override fun onResponse(
-                    call: Call<JsonElement>,
-                    response: Response<JsonElement>
+                    call: Call<ExperienceDetailRes>,
+                    response: Response<ExperienceDetailRes>
                 ) {
-                    if (response.isSuccessful) {
-                        Log.d("whatisthis", "_experience_detail_data, response 성공")
-
-                        response.body()?.let {
-                            val parsedDataArray = ArrayList<ExperienceDetailRes>()
-                            val body = it.asJsonObject
-
-                            val data = body.getAsJsonObject("data")
-
-                            val giftImageUrl = data.get("giftImgUrl").asString
-                            //val thumbnail = data.get("thumbnail").asString
-                            val title = data.get("title").asString
-                            val subtitle = data.get("subtitle").asString
-                            val price = data.get("price").asInt
-                            val description = if (!data.get("description").isJsonNull) data.get("description").asString else null
-                           // val experienceCategory = data.get("expCategory").asInt
-                           // val statementCategory = data.get("sttCategory").asInt
-                            val experienceGiftId = data.get("experienceGiftId").asInt
-
-
-                            val explanationResJsonArray = data.getAsJsonArray("explanation")
-                            val explanationResList = ArrayList<ExplanationRes>()
-                            explanationResJsonArray?.forEach { expItem ->
-                                val expItemObject = expItem.asJsonObject
-                                val description = expItemObject.get("description").asString
-                                val explanationUrl = expItemObject.get("explanationUrl").asString
-
-                                val explanationRes = ExplanationRes(
-                                    description = description,
-                                    explanationUrl=explanationUrl)
-                                explanationResList.add(explanationRes)
-                            }
-
-                            val experienceDetailRes = ExperienceDetailRes(
-                                giftImageUrl = giftImageUrl,
-                                //thumbnail = thumbnail,
-                                title = title,
-                                subtitle = subtitle,
-                                price = price,
-                                explanation = explanationResList,
-                                description = description,
-                                //experienceCategory = experienceCategory,
-                                //statementCategory = statementCategory,
-                                experienceGiftId = experienceGiftId
-                            )
-
-                            parsedDataArray.add(experienceDetailRes)
-
-                            completion(RESPONSE_STATE.OKAY, parsedDataArray)
-
-                        }
-                    } else {
-                        Log.d("whatisthis", "_experience_detail_data, response 못받음")
-                        completion(RESPONSE_STATE.FAIL, null)
+                    if (response.isSuccessful ) {
+                        completion(RESPONSE_STATE.OKAY, response.body()?.data)
                     }
                 }
 
-                override fun onFailure(call: Call<JsonElement>, t: Throwable) {
+                override fun onFailure(call: Call<ExperienceDetailRes>, t: Throwable) {
                     Log.d(
                         "whatisthis",
                         "get_experience_detail_data, 네트워크 오류가 발생했습니다. " + t.message.toString()

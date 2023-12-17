@@ -49,13 +49,23 @@ class ExperienceDetailFragment: Fragment() {
             completion = { responseState, responseBody ->
                 when (responseState) {
                     RESPONSE_STATE.OKAY -> {
-                        responseBody?.get(0)?.let { item ->
+                        responseBody?.let { item ->
                             binding.exdetailText01.text = item.subtitle
                             binding.exdetailText03.text = item.title
                             binding.exdetailText04.text = item.price.toString()
 
+                            val giftImgUrlSize = item.giftImgUrl.size
                             // 여러 개의 이미지 URL을 사용하는 경우
-                            val dummyImageUrls = listOf(item.giftImageUrl, item.giftImageUrl, item.giftImageUrl)
+                            val dummyImageUrls = mutableListOf<String>()
+
+                            // giftImgUrl 배열의 크기만큼 반복하여 dummyImageUrls에 이미지 URL을 추가합니다.
+                            for (i in 0 until giftImgUrlSize) {
+                                if (i < item.giftImgUrl.size) {
+                                    dummyImageUrls.add(item.giftImgUrl[i])
+                                } else {
+                                    dummyImageUrls.add("") // 이 부분을 필요에 따라 수정해주세요.
+                                }
+                            }
                             // ViewPager의 Adapter 설정
                             val adapter = ImageAdapter(requireContext(), dummyImageUrls)
                             binding.exdetailImage.adapter = adapter

@@ -40,25 +40,9 @@ class ExDetailFragment : Fragment() {
                 RESPONSE_STATE.OKAY -> {
                     Log.d("whatisthis?????", responseBody.toString())
 
-                    responseBody?.get(0)?.let { item ->
+                    responseBody?.let { item ->
                         item.explanation?.forEach { explanation ->
 
-                            // Add text view
-                            val textView = TextView(requireContext())
-                            textView.text = explanation.description
-                            textView.textSize = 14f
-                            textView.textAlignment = View.TEXT_ALIGNMENT_CENTER
-                            textView.setTextColor(Color.BLACK)
-                            textView.setPadding(0, 16, 0, 16)
-                            binding.imageContainer.addView(textView)
-
-                            // Add image view
-                            val imageView = ImageView(requireContext())
-                            Glide.with(this)
-                                .load(explanation.explanationUrl)
-                                .into(imageView)
-                            imageView.setPadding(0, 16, 0, 16)
-                            binding.imageContainer.addView(imageView)
                         }
                     }
                 }

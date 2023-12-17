@@ -54,6 +54,8 @@ class GiftResevationFragment : Fragment() {
             experienceGiftId = it.getInt("id") // id 키로 giftid 값을 불러와 저장하게 됩니다.
         }
 
+
+
         experienceDetailViewModel =
             ViewModelProvider(this).get(ExperienceDetailViewModel::class.java)
         experienceDetailViewModel.get_experience_detail_data(
@@ -61,12 +63,23 @@ class GiftResevationFragment : Fragment() {
             completion = { responseState, responseBody ->
                 when (responseState) {
                     RESPONSE_STATE.OKAY -> {
-                        responseBody?.get(0)?.let { item ->
+                        responseBody?.let { item ->
                             binding.exgiftText02.text = item.subtitle
                             binding.exgiftText04.text = item.title
+                            val giftImgUrlSize = item.giftImgUrl.size
+                            // 여러 개의 이미지 URL을 사용하는 경우
+                            val dummyImageUrls = mutableListOf<String>()
 
+                            // giftImgUrl 배열의 크기만큼 반복하여 dummyImageUrls에 이미지 URL을 추가합니다.
+                            for (i in 0 until giftImgUrlSize) {
+                                if (i < item.giftImgUrl.size) {
+                                    dummyImageUrls.add(item.giftImgUrl[i])
+                                } else {
+                                    dummyImageUrls.add("") // 이 부분을 필요에 따라 수정해주세요.
+                                }
+                            }
                             Glide.with(this)
-                                .load(item.giftImageUrl)
+                                .load(dummyImageUrls[0])
                                 .into(binding.samplePic)
                         }
                     }
