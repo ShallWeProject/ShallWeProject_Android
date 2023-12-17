@@ -24,7 +24,9 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferState
 import com.amazonaws.regions.Regions
 import com.shall_we.BuildConfig.access_key
 import com.shall_we.BuildConfig.secret_key
+import com.shall_we.R
 import com.shall_we.databinding.FragmentMyAlbumBinding
+import com.shall_we.mypage.MyAlbumEmptyFragment
 import com.shall_we.mypage.MyGiftData
 import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RetrofitManager
@@ -103,13 +105,6 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
         val gridLayoutManager = GridLayoutManager(requireContext(), 2)
         binding.recyclerAlbumView.layoutManager = gridLayoutManager
 
-//        // Adapter 설정
-//        albumadapter = MyAlbumAdapter(requireContext())
-//        viewBinding.recyclerAlbumView.adapter = albumadapter
-        // adapter.datas = // 데이터 리스트 설정
-//        adapter = MyAlbumAdapter(requireContext())
-//        viewBinding.recyclerAlbumView.adapter = adapter
-//         adapter.datas = giftData[]// 데이터 리스트 설정
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -159,7 +154,6 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
             })
     }
 
-
     private fun initAlbum(resultData: MyAlbumPhotoData) {
         adapter = MyAlbumAdapter(requireContext())
         binding.recyclerAlbumView.adapter = adapter
@@ -179,7 +173,11 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
                 when (responseState) {
                     RESPONSE_STATE.OKAY -> {
                         Log.d("retrofit", "mygift api : ${responseBody?.size}")
-                        getGiftData(responseBody!!)
+                        if (responseBody?.size == 0) {
+                            noData()
+                        } else {
+                            getGiftData(responseBody!!)
+                        }
                     }
 
                     RESPONSE_STATE.FAIL -> {
@@ -188,6 +186,15 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
                 }
             }
         )
+    }
+
+    private fun noData() {
+        val noDataFragment = MyAlbumEmptyFragment()
+        val fragmentTransaction = parentFragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.mypage_layout, noDataFragment, "myAlbumFragment")
+        fragmentTransaction.addToBackStack(null)
+        fragmentTransaction.commitAllowingStateLoss()
+        Log.d("clicked","change")
     }
 
     // 위의 retrofitCallDate에서 호출하는 함수. get memory-photo 결과 리스트 재정렬해서 giftData, dates에 저장
@@ -275,7 +282,7 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
                         it,
                         requireContext()
                     )?.toUri()
-                }!!// 선택한 이미지의 경로를 구하는 함수 호출
+                }!! // 선택한 이미지의 경로를 구하는 함수 호출
             if (selectedImageUri != null) {
                 this.selectedImageUri = selectedImageUri
                 parseUri(selectedImageUri)
@@ -300,7 +307,6 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
         if (position == 0)
             openGallery()
     }
-
 
     // Uri에서 절대 경로 추출하기
     private fun getImageAbsolutePath(uri: Uri, context: Context): String? {
