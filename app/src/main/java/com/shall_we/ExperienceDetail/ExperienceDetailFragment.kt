@@ -18,11 +18,12 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.shall_we.R
 import com.shall_we.databinding.FragmentExperienceDetailBinding
 import com.shall_we.giftExperience.GiftResevationFragment
+import com.shall_we.giftExperience.ReservationTimeAdapter
 import com.shall_we.giftExperience.ReservationViewModel
 import com.shall_we.retrofit.RESPONSE_STATE
 
 
-class ExperienceDetailFragment: Fragment() {
+class ExperienceDetailFragment: Fragment(){
     private lateinit var binding: FragmentExperienceDetailBinding
     lateinit var experienceDetailViewModel: ExperienceDetailViewModel
     lateinit var reservationViewModel: ReservationViewModel
@@ -49,17 +50,31 @@ class ExperienceDetailFragment: Fragment() {
             completion = { responseState, responseBody ->
                 when (responseState) {
                     RESPONSE_STATE.OKAY -> {
-                        responseBody?.get(0)?.let { item ->
-                            Log.d("exitem",item.toString())
+                        responseBody?.let { item ->
                             binding.exdetailText01.text = item.subtitle
                             binding.exdetailText03.text = item.title
                             binding.exdetailText04.text = item.price.toString()
 
-                            // 이미지 URL 리스트를 ViewPager의 Adapter에 전달
-                            item.giftImageUrl?.let { imageUrlList ->
-                                val adapter = ImageAdapter(requireContext(), imageUrlList)
-                                binding.exdetailImage.adapter = adapter
+
+                            val giftImgUrlSize = item.giftImgUrl.size
+                            // 여러 개의 이미지 URL을 사용하는 경우
+                            val dummyImageUrls = mutableListOf<String>()
+
+                            if(giftImgUrlSize == 0){
+                                dummyImageUrls.add("")
                             }
+
+                            // giftImgUrl 배열의 크기만큼 반복하여 dummyImageUrls에 이미지 URL을 추가합니다.
+                            for (i in 0 until giftImgUrlSize) {
+                                if (i < item.giftImgUrl.size) {
+                                    dummyImageUrls.add(item.giftImgUrl[i])
+                                } else {
+                                    dummyImageUrls.add("") // 이 부분을 필요에 따라 수정해주세요.
+                                }
+                            }
+                            // ViewPager의 Adapter 설정
+                            val adapter = ImageAdapter(requireContext(), dummyImageUrls)
+                            binding.exdetailImage.adapter = adapter
                         }
                     }
                     RESPONSE_STATE.FAIL -> {

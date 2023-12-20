@@ -64,7 +64,7 @@ class ChangeReservationFragment : BaseFragment<FragmentChangeReservationBinding>
                 selected: Boolean
             ) {
                 if (selected) {
-                    selectedDate = date.date // 선택된 날짜 저장
+                    selectedDate = date.toDate() // 선택된 날짜 저장
                 }
             }
         })
@@ -90,14 +90,14 @@ class ChangeReservationFragment : BaseFragment<FragmentChangeReservationBinding>
         }
 
 
-        val calendarDay = CalendarDay.from(calendar)
-        calendarView.selectedDate = calendarDay
-        calendarView.callOnClick()
-
-        binding.btnbtn.setOnClickListener {
-            isButtonSelected = !isButtonSelected
-            binding.btnbtn.isSelected = isButtonSelected
-        }
+//        val calendarDay = CalendarDay.from(calendar)
+//        calendarView.selectedDate = calendarDay
+//        calendarView.callOnClick()
+//
+//        binding.btnbtn.setOnClickListener {
+//            isButtonSelected = !isButtonSelected
+//            binding.btnbtn.isSelected = isButtonSelected
+//        }
         binding.btnbtnbtn.setOnClickListener {
             if (selectedDate != null) { // 선택된 날짜가 있으면
                 val dateFormat = SimpleDateFormat("yyyy-MM-dd", locale) // 날짜 형식 지정
@@ -172,6 +172,13 @@ class ChangeReservationFragment : BaseFragment<FragmentChangeReservationBinding>
             }
         })
     }
+
+    fun CalendarDay.toDate(): Date {
+        return Calendar.getInstance().apply {
+            set(year, month, day)
+        }.time
+    }
+
 
 }
 

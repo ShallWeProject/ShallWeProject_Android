@@ -6,6 +6,7 @@ import com.shall_we.dto.ExperienceGiftDto
 import com.shall_we.dto.ExperienceMainRes
 import com.shall_we.dto.ExperienceReq
 import com.shall_we.dto.ReservationRequest
+import com.shall_we.dto.ValidTimeRes
 import com.shall_we.retrofit.API
 import com.shall_we.retrofit.RetrofitClient
 import retrofit2.Call
@@ -23,7 +24,7 @@ object ExperienceDetailService {
 
         //경험상세
         @GET(API.EXPERIENCE_GIFT_EXPERIENCE_ID)
-        fun  get_experience_detail_data(@Path("ExperienceGiftId") ExperienceGiftId: Int): Call<JsonElement>
+        fun get_experience_detail_data(@Path("ExperienceGiftId") ExperienceGiftId: Int): Call<ExperienceDetailRes>
 
        // 예약추가
 //        @POST(API.RESERVATIONS)
