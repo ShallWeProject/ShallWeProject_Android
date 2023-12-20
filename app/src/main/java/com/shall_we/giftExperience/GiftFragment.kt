@@ -15,22 +15,18 @@ import com.shall_we.dto.ReservationRequest
 import com.shall_we.dto.ReservationStatus
 import com.shall_we.home.HomeFragment
 import com.shall_we.mypage.MyGiftSentFragment
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
-import java.util.Date
 
 
 class GiftFragment : Fragment() {
 
     lateinit var experienceDetailViewModel: ExperienceDetailViewModel
-    lateinit var reservationViewModel:ReservationViewModel
-    lateinit var reservationRequest: ReservationRequest
+//    lateinit var reservationRequest: ReservationRequest
     private var experienceGiftId:Int=1
     private var persons:Int=2
     private var date: String? = null
     private var time:LocalTime?=null
 
-    private var selectedTime:LocalTime?=null
+    private var selectedTime:String?=null
     private var receiverName:String="땡땡땡"
     private var phoneNum:String="01000000000"
     private var imageKey:String="?"
@@ -47,19 +43,19 @@ class GiftFragment : Fragment() {
     ): View? {
         binding = FragmentGiftBinding.inflate(inflater, container, false)  // Binding 객체 초기화
 
-        arguments?.let { // 아규먼트로부터 데이터를 가져옴
-
-            experienceGiftId = it.getInt("id")
-            persons = it.getInt("persons")
-            receiverName = it.getString("receivername").toString()
-            invitationComment = it.getString("invitationComment").toString()
-            date=it.getString("date")
-            selectedTime = it.getParcelable<LocalTime>("time")!!
-            phoneNum=it.getString("phonenumber").toString()
-
-            Log.d("bundle",it.toString())
-
-            }
+//        arguments?.let { // 아규먼트로부터 데이터를 가져옴
+//
+//            experienceGiftId = it.getInt("id")
+//            persons = it.getInt("persons")
+//            receiverName = it.getString("receivername").toString()
+//            invitationComment = it.getString("invitationComment").toString()
+//            date=it.getString("date")
+//            selectedTime = it.getParcelable<LocalTime>("time")!!
+//            phoneNum=it.getString("phonenumber").toString()
+//
+//            Log.d("bundle",it.toString())
+//
+//            }
 
 //        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 //        val localDate = LocalDate.parse(date, formatter)
@@ -72,17 +68,17 @@ class GiftFragment : Fragment() {
        // val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
         //localDateTime = zonedDateTime.format(formatter)
 
-            reservationRequest = ReservationRequest(
-                experienceGiftId = experienceGiftId,
-                persons = persons,
-                date = localDateTime,
-                //receiverName = receiverName,
-                phoneNumber = phoneNum,
-                imageKey = imageKey,
-                invitationComment = invitationComment,
-                time = selectedTime!!
-                //reservationStatus = "BOOKED"
-            )
+//            reservationRequest = ReservationRequest(
+//                experienceGiftId = experienceGiftId,
+//                persons = persons,
+//                date = localDateTime,
+//                //receiverName = receiverName,
+//                phoneNumber = phoneNum,
+//                imageKey = imageKey,
+//                invitationComment = invitationComment,
+//                time = selectedTime!!
+//                //reservationStatus = "BOOKED"
+//            )
 
 //        reservationRequest= ReservationRequest(
 //            experienceGiftId=16,
@@ -96,11 +92,10 @@ class GiftFragment : Fragment() {
 //
 //
 //        )
-            Log.d("reservationrequest", reservationRequest.toString())
+//            Log.d("reservationrequest", reservationRequest.toString())
             experienceDetailViewModel =
                 ViewModelProvider(this).get(ExperienceDetailViewModel::class.java)
-            reservationViewModel = ViewModelProvider(this).get(ReservationViewModel::class.java)
-            reservationViewModel.set_experience_gift(reservationRequest)
+
             binding.giftBtn01.setOnClickListener()
             {
 
