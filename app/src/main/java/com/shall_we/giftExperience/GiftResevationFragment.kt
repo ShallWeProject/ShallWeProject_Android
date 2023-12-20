@@ -37,7 +37,7 @@ class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickLis
     private var count: Int = 2
     private lateinit var calendarView: MaterialCalendarView
     private var experienceGiftId: Int = 1
-    var selectedDate: Date? = null
+    var formattedDate: String? = null
     var selectedTime:LocalDateTime?=null
     lateinit var experienceDetailViewModel: ExperienceDetailViewModel
     private val locale: Locale = Locale("ko")
@@ -131,10 +131,10 @@ class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickLis
                     val month = String.format("%02d", date.month) // 월을 두 자리 숫자로 변환하고 앞에 0을 채웁니다.
                     val day = String.format("%02d", date.day) // 일을 두 자리 숫자로 변환하고 앞에 0을 채웁니다.
 
-                    val formattedDate = "$year-$month-$day" // yyyy-mm-dd 형식의 문자열 생성
+                    formattedDate = "$year-$month-$day" // yyyy-mm-dd 형식의 문자열 생성
 
                     println("Formatted Date: $formattedDate")
-                    retrofitCall(binding.rvTime,formattedDate)
+                    retrofitCall(binding.rvTime,formattedDate!!)
                 } else {
                 }
             }
@@ -191,13 +191,12 @@ class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickLis
             val bundle = Bundle()
             bundle.putInt("id", experienceGiftId) // 클릭된 아이템의 이름을 "title" 키로 전달
             bundle.putInt("persons", count)
-            bundle.putString("time", time+":00")
-            if (selectedDate != null) { // 선택된 날짜가 있으면
-                val dateFormat = SimpleDateFormat("yyyy-MM-dd", locale) // 날짜 형식 지정
-                val dateString = dateFormat.format(selectedDate) // 문자열로 변환
-                bundle.putString("Date", dateString) // "Date" 키로 날짜 전달
+            bundle.putString("time", "${time}+:00")
+            if (formattedDate != null) { // 선택된 날짜가 있으면
+                bundle.putString("Date", formattedDate) // "Date" 키로 날짜 전달
+
             }
-            if (time!=null){
+            if (time==null){
                 bundle.putParcelable("time", time)
 
             }
