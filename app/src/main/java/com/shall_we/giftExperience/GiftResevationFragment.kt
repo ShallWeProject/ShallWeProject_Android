@@ -125,7 +125,7 @@ class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickLis
             ) {
                 if (selected) {
                     time = null
-                    binding.exgiftBtn03.isClickable = false
+                    binding.exgiftBtn03.isClickable = true
                     binding.exgiftBtn03.setBackgroundResource(R.drawable.gift_btn_black)
 
                     val year = date.year
@@ -176,14 +176,16 @@ class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickLis
             val bundle = Bundle()
             bundle.putInt("id", experienceGiftId) // 클릭된 아이템의 이름을 "title" 키로 전달
             bundle.putInt("persons", count)
-            bundle.putString("time", "${time}+:00")
             if (selectedDate != null) { // 선택된 날짜가 있으면
                 val dateFormat = SimpleDateFormat("yyyy-MM-dd", locale) // 날짜 형식 지정
                 val dateString = dateFormat.format(selectedDate) // 문자열로 변환
                 bundle.putString("Date", dateString) // "Date" 키로 날짜 전달
             }
-            if (time!=null){
-                bundle.putString("time", "00:00")
+            if (time==null){
+                bundle.putString("time", "00:00:00")
+
+            }else{
+                bundle.putString("time", "${time.toString().substring(0, 2)}:00:00")
 
             }
 
