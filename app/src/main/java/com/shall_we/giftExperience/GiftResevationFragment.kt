@@ -228,8 +228,11 @@ class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickLis
                 var time = mutableListOf<ReservationTimeData>()
                 if(responseBody != null){
                     for(i in 0 until responseBody.size){
-                        Log.d("time",responseBody.get(i).time)
-                        time.add(ReservationTimeData(time = responseBody.get(i).time.toString().substring(0, 2)))
+                        if(responseBody.get(i).status == "WAITING"){
+                            Log.d("time",responseBody.get(i).time)
+                            time.add(ReservationTimeData(time = responseBody.get(i).time.toString().substring(0, 2)))
+                        }
+
                     }
                 }
                 else{

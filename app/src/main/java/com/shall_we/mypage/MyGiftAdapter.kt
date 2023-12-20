@@ -153,6 +153,7 @@ class MyGiftAdapter(private val context: Context, private val parentFragmentMana
                 bundle.putString("title", title)
                 bundle.putString("description", description)
                 bundle.putString("date", date)
+                bundle.putString("time", datas[position].time)
 
                 newFragment.arguments = bundle
 
