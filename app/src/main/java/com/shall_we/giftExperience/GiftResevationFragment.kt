@@ -23,11 +23,13 @@ import com.prolificinteractive.materialcalendarview.format.TitleFormatter
 import com.shall_we.ExperienceDetail.ExperienceDetailViewModel
 import com.shall_we.R
 import com.shall_we.databinding.FragmentGiftResevationBinding
+import com.shall_we.dto.LocalTime
 import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RetrofitManager
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -191,7 +193,7 @@ class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickLis
             val bundle = Bundle()
             bundle.putInt("id", experienceGiftId) // 클릭된 아이템의 이름을 "title" 키로 전달
             bundle.putInt("persons", count)
-            bundle.putString("time", time+":00")
+            bundle.putString("time", "${time}+:00")
             if (selectedDate != null) { // 선택된 날짜가 있으면
                 val dateFormat = SimpleDateFormat("yyyy-MM-dd", locale) // 날짜 형식 지정
                 val dateString = dateFormat.format(selectedDate) // 문자열로 변환
