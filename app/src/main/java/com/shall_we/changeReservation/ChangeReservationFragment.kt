@@ -10,11 +10,15 @@ import android.view.View
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener
+import com.prolificinteractive.materialcalendarview.format.ArrayWeekDayFormatter
 import com.prolificinteractive.materialcalendarview.format.TitleFormatter
 import com.shall_we.R
 import com.shall_we.base.BaseFragment
 import com.shall_we.databinding.FragmentChangeReservationBinding
 import com.shall_we.dto.UpdateReservationReq
+import com.shall_we.giftExperience.DayDecorator
+import com.shall_we.giftExperience.ReservationTimeAdapter
+import com.shall_we.giftExperience.SelectedMonthDecorator
 import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RetrofitManager
 import java.text.SimpleDateFormat
@@ -33,6 +37,11 @@ class ChangeReservationFragment : BaseFragment<FragmentChangeReservationBinding>
     var selectedDate: Date? = null
     var idx: Int = 1
     var localDateTimeString : String? = null
+
+    lateinit var reservationTimeAdapter: ReservationTimeAdapter
+
+    var time : String? = null
+
     override fun init() {
         idx = arguments?.getInt("idx", 1)!!
         val title = arguments?.getString("title", "")
@@ -44,18 +53,15 @@ class ChangeReservationFragment : BaseFragment<FragmentChangeReservationBinding>
 
         val tabs = requireActivity().findViewById<View>(R.id.tabs)
         tabs.visibility = View.GONE
-        calendarView = binding.calendar
 
         var isButtonSelected = false
 
+        calendarView = binding.changeCalendar
 
-        calendarView.setTitleFormatter(object : TitleFormatter {
-            override fun format(calendarDay: CalendarDay?): CharSequence {
-                val monthFormat = SimpleDateFormat("MMMM yyyy", locale)
-                Log.d("date", "$monthFormat")
-                return monthFormat.format(calendarDay?.date)
-            }
-        })
+        var dayDecorator = DayDecorator(requireContext())
+        var selectedMonthDecorator = SelectedMonthDecorator(CalendarDay.today().month)
+
+        calendarView.addDecorators(dayDecorator,selectedMonthDecorator)
 
         calendarView.setOnDateChangedListener(object : OnDateSelectedListener {
             override fun onDateSelected(
@@ -64,61 +70,57 @@ class ChangeReservationFragment : BaseFragment<FragmentChangeReservationBinding>
                 selected: Boolean
             ) {
                 if (selected) {
-                    selectedDate = date.toDate() // 선택된 날짜 저장
+                    time = null
+                    val year = date.year
+                    val month = String.format("%02d", date.month) // 월을 두 자리 숫자로 변환하고 앞에 0을 채웁니다.
+                    val day = String.format("%02d", date.day) // 일을 두 자리 숫자로 변환하고 앞에 0을 채웁니다.
+
+                    val formattedDate = "$year-$month-$day" // yyyy-mm-dd 형식의 문자열 생성
+
+                    println("Formatted Date: $formattedDate")
+                    retrofitCall(binding.rvChTime,formattedDate)
+                } else {
                 }
             }
         })
 
+        calendarView.setOnMonthChangedListener { widget, date ->
+            // 기존에 설정되어 있던 Decorators 초기화
+            calendarView.removeDecorators()
 
-// 입력된 날짜 형식
-        val inputFormat = DateTimeFormatter.ofPattern("yyyy.MM.dd")
-
-// 날짜 문자열을 LocalDate 객체로 변환 (시각 정보가 없으므로 LocalDateTime으로 변환하지 않음)
-        val localDate = LocalDate.parse(date, inputFormat)
-
-        val year = localDate.year // 년
-        val month = localDate.monthValue // 월 (1 ~ 12)
-        val day = localDate.dayOfMonth // 일
-
-// 시간 추출 - 기본 시각을 0으로 사용
-        val hour = 0 // 시 (0 ~ 23)
-
-
-        val calendar = Calendar.getInstance().apply {
-            set(year, month - 1, day, 13, 0, 0)
-            set(Calendar.MILLISECOND, 0)
+            // Decorators 추가
+            selectedMonthDecorator = SelectedMonthDecorator(date.month)
+            calendarView.addDecorators(dayDecorator, selectedMonthDecorator)
         }
 
+        calendarView.setTitleFormatter(object : TitleFormatter {
+            override fun format(calendarDay: CalendarDay?): CharSequence {
+                val monthYearFormatter = SimpleDateFormat("yyyy년 MMMM", locale)
+                val year = calendarDay?.year ?: return "" // CalendarDay가 null이면 빈 문자열 반환
+                val month = calendarDay.month
+                val calendar = Calendar.getInstance().apply {
+                    set(Calendar.YEAR, year)
+                    set(Calendar.MONTH, month - 1) // Calendar의 월은 0부터 시작하므로 1을 빼줍니다.
+                }
+                return monthYearFormatter.format(calendar.time)
+            }
+        })
 
-//        val calendarDay = CalendarDay.from(calendar)
-//        calendarView.selectedDate = calendarDay
-//        calendarView.callOnClick()
-//
-//        binding.btnbtn.setOnClickListener {
-//            isButtonSelected = !isButtonSelected
-//            binding.btnbtn.isSelected = isButtonSelected
-//        }
+        // 요일을 한글로 보이게 설정 월..일 순서로 배치해서 캘린더에는 일..월 순서로 보이도록 설정
+        calendarView.setWeekDayFormatter(ArrayWeekDayFormatter(resources.getTextArray(R.array.custom_weekdays)))
+
+        // 좌우 화살표 사이 연, 월의 폰트 스타일 설정
+        calendarView.setHeaderTextAppearance(R.style.CalendarWidgetHeader)
+
         binding.btnbtnbtn.setOnClickListener {
             if (selectedDate != null) { // 선택된 날짜가 있으면
                 val dateFormat = SimpleDateFormat("yyyy-MM-dd", locale) // 날짜 형식 지정
-                val dateString = selectedDate?.let { it1 -> dateFormat.format(it1) } // 문자열로 변환
+                val dateString = dateFormat.format(selectedDate) // 문자열로 변환
+                val month = dateString.get(Calendar.MONTH) + 1 // 1을 더하는 이유는 0부터 시작하기 때문입니다.
+                val day = dateString.get(Calendar.DAY_OF_MONTH)
 
-                val date = dateFormat.parse(dateString)
-                // 월과 일 정보를 추출합니다.
-                calendar.time = date
-                val month = calendar.get(Calendar.MONTH) + 1 // 1을 더하는 이유는 0부터 시작하기 때문입니다.
-                val day = calendar.get(Calendar.DAY_OF_MONTH)
-
-                val localDateTime = selectedDate?.let {
-                    LocalDateTime.ofInstant(it.toInstant(), ZoneId.systemDefault())
-                }
-
-// 선택된 날짜와 원하는 시각(13시)을 설정한 LocalDateTime 객체를 생성합니다.
-                val targetDateTime = localDateTime?.withHour(13) ?: LocalDateTime.now()
 
 // LocalDateTime 객체를 문자열로 변환합니다. (원하는 포맷으로 지정)
-                val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
-                localDateTimeString = targetDateTime.format(dateTimeFormatter)
 
                 val customDialog = CustomAlertDialog(requireContext())
 
@@ -135,8 +137,6 @@ class ChangeReservationFragment : BaseFragment<FragmentChangeReservationBinding>
                     RetrofitCall()
 
                     // 프래그먼트 이동 로직 추가
-                    binding.btnbtn.visibility = View.GONE
-                    binding.btnbtnbtn.visibility = View.GONE
                     val transaction = requireActivity().supportFragmentManager.beginTransaction()
                     transaction.replace(
                         R.id.change_reservation_layout,
@@ -171,12 +171,6 @@ class ChangeReservationFragment : BaseFragment<FragmentChangeReservationBinding>
                 }
             }
         })
-    }
-
-    fun CalendarDay.toDate(): Date {
-        return Calendar.getInstance().apply {
-            set(year, month, day)
-        }.time
     }
 
 
