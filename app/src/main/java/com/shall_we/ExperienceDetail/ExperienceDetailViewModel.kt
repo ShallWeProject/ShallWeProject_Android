@@ -64,6 +64,7 @@ class ExperienceDetailViewModel:ViewModel() {
                 ) {
                     if (response.isSuccessful) {
                         completion(RESPONSE_STATE.OKAY, response.body()?.data)
+
                     }
                 }
 
@@ -76,6 +77,7 @@ class ExperienceDetailViewModel:ViewModel() {
                 }
             })
     }
+
 
 //    fun set_experience_gift(reservationRequest: ReservationRequest) {
 //        ExperienceDetailService.experienceDetailService

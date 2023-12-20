@@ -43,7 +43,7 @@ class ExperienceDetailFragment: Fragment(){
         }
 
         experienceDetailViewModel = ViewModelProvider(this).get(ExperienceDetailViewModel::class.java)
-        reservationViewModel = ViewModelProvider(this).get(ReservationViewModel::class.java)
+       // reservationViewModel = ViewModelProvider(this).get(ReservationViewModel::class.java)
 
         experienceDetailViewModel.get_experience_detail_data(
             experienceGiftId,
@@ -54,6 +54,7 @@ class ExperienceDetailFragment: Fragment(){
                             binding.exdetailText01.text = item.subtitle
                             binding.exdetailText03.text = item.title
                             binding.exdetailText04.text = item.price.toString()
+
 
                             val giftImgUrlSize = item.giftImgUrl.size
                             // 여러 개의 이미지 URL을 사용하는 경우
@@ -83,7 +84,11 @@ class ExperienceDetailFragment: Fragment(){
             }
         )
 
-        experienceDetailViewModel.get_experience_gift()
+
+
+
+
+
 
         binding.fab.setOnClickListener() {
             binding.fab.visibility = View.GONE

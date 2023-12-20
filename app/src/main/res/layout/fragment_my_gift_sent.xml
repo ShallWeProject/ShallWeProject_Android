@@ -8,6 +8,10 @@
     android:id="@+id/my_gift_sent_layout"
     android:backgroundTint="@color/white"
     android:background="@color/white"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
     tools:context=".mypage.MyGiftSentFragment">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -18,23 +22,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/item_giftbox" />
-
-
-<!--    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton-->
-<!--        android:id="@+id/fab_album"-->
-<!--        android:layout_width="124dp"-->
-<!--        android:layout_height="46dp"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        android:layout_marginBottom="27dp"-->
-<!--        android:layout_marginEnd="16dp"-->
-<!--        android:text="추억사진첩"-->
-<!--        android:textSize="10sp"-->
-<!--        android:minHeight="0dp"-->
-<!--        android:minWidth="0dp"-->
-<!--        android:textColor="@color/white"-->
-<!--        app:icon="@drawable/icon_book"-->
-<!--        app:iconTint="@color/white"-->
-<!--        android:backgroundTint="#F15F79"/>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

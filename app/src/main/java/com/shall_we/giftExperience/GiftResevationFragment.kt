@@ -26,7 +26,8 @@ import com.shall_we.databinding.FragmentGiftResevationBinding
 import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RetrofitManager
 import java.text.SimpleDateFormat
-import java.util.Calendar
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
@@ -37,6 +38,7 @@ class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickLis
     private lateinit var calendarView: MaterialCalendarView
     private var experienceGiftId: Int = 1
     var selectedDate: Date? = null
+    var selectedTime:LocalDateTime?=null
     lateinit var experienceDetailViewModel: ExperienceDetailViewModel
     private val locale: Locale = Locale("ko")
     private lateinit var binding: FragmentGiftResevationBinding  // Binding 객체 추가
@@ -45,7 +47,7 @@ class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickLis
     val reservationTimeData = mutableListOf<ReservationTimeData>()
 
     var time : String? = null
-
+  
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -166,6 +168,23 @@ class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickLis
         // 좌우 화살표 사이 연, 월의 폰트 스타일 설정
         calendarView.setHeaderTextAppearance(R.style.CalendarWidgetHeader)
 
+        //시간 넘겨주기
+        val currentTime=LocalDateTime.now()
+        val formatter = DateTimeFormatter.ofPattern("HH:mm:ss")
+        val formatted = currentTime.format(formatter)
+
+        val hour = formatted.substringBefore(":").toInt()
+        val minute = formatted.substringAfter(":").substringBeforeLast(":").toInt()
+        val second = formatted.substringAfterLast(":").toInt()
+
+        val time= LocalTime(
+            hour = currentTime.hour,
+            minute = currentTime.minute,
+            second = currentTime.second,
+            nano = currentTime.nano
+        )
+
+
         binding.exgiftBtn03.setOnClickListener {
             val giftExperienceFragment = GiftExperienceFragment() // 전환할 프래그먼트 인스턴스 생성
             val fragmentTransaction = parentFragmentManager.beginTransaction()
@@ -177,6 +196,10 @@ class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickLis
                 val dateFormat = SimpleDateFormat("yyyy-MM-dd", locale) // 날짜 형식 지정
                 val dateString = dateFormat.format(selectedDate) // 문자열로 변환
                 bundle.putString("Date", dateString) // "Date" 키로 날짜 전달
+            }
+            if (time!=null){
+                bundle.putParcelable("time", time)
+
             }
 
 

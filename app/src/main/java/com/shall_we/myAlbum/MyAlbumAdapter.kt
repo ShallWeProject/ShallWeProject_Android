@@ -98,9 +98,37 @@ class MyAlbumAdapter(private val context: Context) : RecyclerView.Adapter<MyAlbu
 
             dialog.show()
 
+            myLayout.findViewById<Button>(R.id.btn_delete).setOnClickListener {
+                cuDialog(it, position, position)
+
+            }
+
             myLayout.findViewById<Button>(R.id.btn_close).setOnClickListener {
                 dialog.dismiss()
             }
+        }
+    }
+
+    fun cuDialog(view: View, position: Int, idx: Int) {
+        val myLayout = LayoutInflater.from(context).inflate(R.layout.dialog_delete_photo, null)
+        val build = AlertDialog.Builder(view.context).apply {
+            setView(myLayout)
+        }
+        val dialog = build.create()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        dialog.show()
+
+        myLayout.findViewById<Button>(R.id.btn_cancel_reservation).setOnClickListener {
+            //retrofitdelResApiCall(idx)
+            datas.imgUrl?.removeAt(position)
+            notifyItemRemoved(position)
+            notifyItemRangeChanged(position, itemCount)
+            Toast.makeText(context, "삭제되었습니다.", Toast.LENGTH_SHORT).show()
+            dialog.dismiss()
+        }
+        myLayout.findViewById<Button>(R.id.btn_cancel).setOnClickListener {
+            dialog.dismiss()
         }
     }
 
@@ -111,64 +139,6 @@ class MyAlbumAdapter(private val context: Context) : RecyclerView.Adapter<MyAlbu
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val ivAlbum: ImageView = itemView.findViewById(R.id.iv_album)
-        @SuppressLint("SuspiciousIndentation")
-        fun bind(item : MyAlbumPhotoData) {
-            val position = adapterPosition
-
-//            if (item.imgUrl) {
-//                Glide.with(itemView).load(R.drawable.add_photo).into(ivAlbum)
-            //}
-
-            // 사진 뷰어
-//            else {
-//                Glide.with(itemView).load(datas[position].imgUrl).into(iv_album)
-
-//            val imgUrlList = datas[position].imgUrl
-            val imgUrlList = item.imgUrl
-            Log.d("MyAlbumAdapter", "imgUrl list $imgUrlList")
-            if (imgUrlList != null && imgUrlList.isNotEmpty()) {
-                // 첫 번째 이미지 URL을 기본값으로 설정
-                val firstImageUrl = imgUrlList[0]
-
-                // 첫 번째 이미지 URL을 플레이스홀더로 설정하고 로드 시작
-                Glide.with(itemView)
-                    .load(firstImageUrl)
-                    .apply(RequestOptions.placeholderOf(R.drawable.baking))
-                    .into(ivAlbum)
-
-                // 나머지 이미지 URL에 대한 처리
-                for (i in 1 until imgUrlList.size) {
-                    val imageUrl = imgUrlList[i]
-                    Glide.with(itemView)
-                        .load(imageUrl)
-//                        .transform(CenterCrop(), RoundedCorners(30))
-//                        .apply(RequestOptions.bitmapTransform(RoundedCorners(80)))
-                        .apply(RequestOptions.placeholderOf(R.drawable.baking))
-                        //.into(ivAlbum)
-                        .preload() // 이미지를 미리 로드
-                    Log.d("MyAlbumAdapter", "imgUrl $imageUrl")
-
-                }
-//            }
-//            if (imgUrlList != null) {
-//                for (imgUrl in imgUrlList) {
-//                    val file = File(imgUrl)
-//
-//                    //if (file.exists()) {
-//                    Glide.with(itemView).load(imgUrl).apply(RequestOptions.placeholderOf(R.drawable.baking)) // 플레이스홀더를 지정합니다.
-//                        .into(ivAlbum)
-//                    Log.d("MyAlbumAdapter", "imgUrl $imgUrl")
-//        //                    } else {
-//        //                        // 파일이 존재하지 않으면 이에 대해 적절히 처리합니다.
-//        //                        Log.e("FileNotFoundError", "다음 경로에서 파일을 찾을 수 없습니다: " + imgUrl) //+ file.absolutePath
-//        //                    }
-//
-//                    // }
-//                }
-            }
-            Log.d("MyAlbumAdapter", "memory photo 뷰어")
-        }
-
         init {
             // itemView를 클릭했을 때 해당 항목의 ProductData를 클릭 리스너를 통해 전달
             itemView.setOnClickListener {

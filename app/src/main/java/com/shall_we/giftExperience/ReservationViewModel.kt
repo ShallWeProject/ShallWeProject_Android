@@ -91,11 +91,12 @@ class ReservationViewModel:ViewModel() {
                 reservationRequest. experienceGiftId,
                 reservationRequest.persons,
                 reservationRequest.date,
-                reservationRequest.receiverName,
+                //reservationRequest.receiverName,
+                reservationRequest.time,
                 reservationRequest.phoneNumber,
                 reservationRequest.imageKey,
-                reservationRequest.invitationComment,
-                        reservationRequest.reservationStatus
+                reservationRequest.invitationComment
+                     //   reservationRequest.reservationStatus
            ))?.enqueue(object :
             Callback<JsonElement> {
             override fun onResponse(
