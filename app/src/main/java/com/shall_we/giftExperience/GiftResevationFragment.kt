@@ -23,11 +23,13 @@ import com.prolificinteractive.materialcalendarview.format.TitleFormatter
 import com.shall_we.ExperienceDetail.ExperienceDetailViewModel
 import com.shall_we.R
 import com.shall_we.databinding.FragmentGiftResevationBinding
+import com.shall_we.dto.LocalTime
 import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RetrofitManager
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
