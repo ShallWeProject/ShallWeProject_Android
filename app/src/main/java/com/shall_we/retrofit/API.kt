@@ -27,9 +27,7 @@ object API {
 
     const val EXPERIENCE_GIFT_EXPERIENCE_ID="api/v1/experience/gift/details/{ExperienceGiftId}"
 
-    const val GET_MEMORY_PHOTO = "/api/v1/memory-photo"
-
-    const val POST_MEMORY_PHOTO = "/api/v1/memory-photo"
+    const val MEMORY_PHOTO = "/api/v1/memory-photo"
 
     const val USERS_GIFT_SEND = "/api/v1/users/gift/send"
 

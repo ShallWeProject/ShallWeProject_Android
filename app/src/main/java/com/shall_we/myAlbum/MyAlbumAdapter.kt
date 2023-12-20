@@ -1,6 +1,5 @@
 package com.shall_we.myAlbum
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Color
@@ -11,15 +10,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.shall_we.R
-import java.io.File
-
-
-
+import com.shall_we.retrofit.RESPONSE_STATE
+import com.shall_we.retrofit.RetrofitManager
 
 
 class MyAlbumAdapter(private val context: Context) : RecyclerView.Adapter<MyAlbumAdapter.ViewHolder>() {
@@ -35,31 +31,22 @@ class MyAlbumAdapter(private val context: Context) : RecyclerView.Adapter<MyAlbu
     fun setOnItemClickListener(listener: OnItemClickListener) {
         itemClickListener = listener
     }
-//    fun setImageList(list: ArrayList<MyAlbumPhotoData>) {
-//        datas.addAll(list)
-//    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_album, parent, false)
-//        val binding = ItemAlbumBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-//        val gridLayoutManager = GridLayoutManager(parent.context, 2)
-//        binding.root.layoutManager = gridLayoutManager
-//        setImageList()
         return ViewHolder(view)
 
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
-        val data = datas.imgUrl?.get(position)
+        val data = datas.myPhoto?.get(position)?.memoryPhotoImgUrl
 
         if (position == 0) {
             // 맨 처음 아이템일 때 정해진 이미지 로드
             Glide.with(context)
                 .load(R.drawable.add_photo)
-                .apply(RequestOptions.placeholderOf(R.drawable.baking))
                 .into(holder.ivAlbum)
-        } else if (position < datas.imgUrl?.size ?: 0) {
+        } else if (position < datas.myPhoto?.size ?: 0) {
             // 나머지 아이템은 실제 데이터의 이미지 로드
             Glide.with(context)
                 .load(data)
@@ -67,7 +54,6 @@ class MyAlbumAdapter(private val context: Context) : RecyclerView.Adapter<MyAlbu
                 .into(holder.ivAlbum)
         }
 
-//        holder.bind(datas)
         holder.itemView.setOnClickListener {
             picDialog(it, position, datas)
 
@@ -80,15 +66,19 @@ class MyAlbumAdapter(private val context: Context) : RecyclerView.Adapter<MyAlbu
 //            Toast.makeText(view.context, "사진 추가 기능", Toast.LENGTH_SHORT).show()
             itemClickListener?.onItemClick(position)
 
-            //openGalleryForImageSelection()
         }
 
         // 사진 뷰어
         else {
             val myLayout = LayoutInflater.from(context).inflate(R.layout.dialog_photoviewer, null)
             val imageView = myLayout.findViewById<ImageView>(R.id.iv_photo)
+            val delbtn = myLayout.findViewById<Button>(R.id.btn_delete)
+            if (data.myPhoto?.get(position)?.isUploader == false)
+                delbtn.visibility = View.GONE
+            else
+                delbtn.visibility = View.VISIBLE
 
-            Glide.with(context).load(data.imgUrl?.get(position)).into(imageView)
+            Glide.with(context).load(data.myPhoto?.get(position)?.memoryPhotoImgUrl).into(imageView)
 
             val build = AlertDialog.Builder(view.context).apply {
                 setView(myLayout)
@@ -99,7 +89,10 @@ class MyAlbumAdapter(private val context: Context) : RecyclerView.Adapter<MyAlbu
             dialog.show()
 
             myLayout.findViewById<Button>(R.id.btn_delete).setOnClickListener {
-                cuDialog(it, position, position)
+                retrofitdelApiCall(datas.myPhoto?.get(position)!!.memoryPhotoImgUrl)
+                datas.myPhoto?.removeAt(position)
+                notifyItemRemoved(position)
+                notifyItemRangeChanged(position, itemCount)
 
             }
 
@@ -109,32 +102,23 @@ class MyAlbumAdapter(private val context: Context) : RecyclerView.Adapter<MyAlbu
         }
     }
 
-    fun cuDialog(view: View, position: Int, idx: Int) {
-        val myLayout = LayoutInflater.from(context).inflate(R.layout.dialog_delete_photo, null)
-        val build = AlertDialog.Builder(view.context).apply {
-            setView(myLayout)
-        }
-        val dialog = build.create()
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    private fun retrofitdelApiCall(url : String) {
+        RetrofitManager.instance.deleteMemoryPhoto(photoUrl = url) { responseState, responseBody ->
+            when (responseState) {
+                RESPONSE_STATE.OKAY -> {
+                    Log.d("retrofit", "$responseState")
+                }
 
-        dialog.show()
-
-        myLayout.findViewById<Button>(R.id.btn_cancel_reservation).setOnClickListener {
-            //retrofitdelResApiCall(idx)
-            datas.imgUrl?.removeAt(position)
-            notifyItemRemoved(position)
-            notifyItemRangeChanged(position, itemCount)
-            Toast.makeText(context, "삭제되었습니다.", Toast.LENGTH_SHORT).show()
-            dialog.dismiss()
-        }
-        myLayout.findViewById<Button>(R.id.btn_cancel).setOnClickListener {
-            dialog.dismiss()
+                RESPONSE_STATE.FAIL -> {
+                    Log.d("retrofit", "api 호출 에러")
+                }
+            }
         }
     }
 
 
     override fun getItemCount(): Int {
-        return datas.imgUrl?.size ?: 0
+        return datas.myPhoto?.size ?: 0
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -149,4 +133,27 @@ class MyAlbumAdapter(private val context: Context) : RecyclerView.Adapter<MyAlbu
             }
         }
     }
+//
+//    private fun delDialog(view: View, position: Int, idx: Int) {
+//        val myLayout = LayoutInflater.from(context).inflate(R.layout.dialog_delete_photo, null)
+//        val build = AlertDialog.Builder(view.context).apply {
+//            setView(myLayout)
+//        }
+//        val dialog = build.create()
+//        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+//
+//        dialog.show()
+//
+//        myLayout.findViewById<Button>(R.id.btn_cancel_reservation).setOnClickListener {
+////            //retrofitdelResApiCall(idx)
+////            datas.imgUrl?.removeAt(position)
+////            notifyItemRemoved(position)
+////            notifyItemRangeChanged(position, itemCount)
+////            Toast.makeText(context, "삭제되었습니다.", Toast.LENGTH_SHORT).show()
+////            dialog.dismiss()
+//        }
+//        myLayout.findViewById<Button>(R.id.btn_cancel).setOnClickListener {
+//            dialog.dismiss()
+//        }
+//    }
 }

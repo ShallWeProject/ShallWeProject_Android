@@ -16,6 +16,8 @@ import com.shall_we.dto.UserDetail
 import com.shall_we.dto.catergoryResponse
 import com.shall_we.login.data.UserInactiveReq
 import com.shall_we.login.signup.UserData
+import com.shall_we.myAlbum.MyAlbumData
+import com.shall_we.myAlbum.MyAlbumResponse
 import okhttp3.MultipartBody
 import retrofit2.http.DELETE
 import retrofit2.http.Header
@@ -45,11 +47,14 @@ interface IRetrofit {
     @GET(API.USERS_GIFT_RECEIVE)
     fun usersGiftReceive() : Call<JsonElement>
 
-    @GET(API.GET_MEMORY_PHOTO)
+    @GET(API.MEMORY_PHOTO)
     fun getMemoryPhoto(@Query("date") date: String) : Call<JsonElement>
 
-    @POST(API.POST_MEMORY_PHOTO)
+    @POST(API.MEMORY_PHOTO)
     fun postMemoryPhoto(@Body uploadPhotoArray: UploadPhotoArray) : Call<JsonElement>
+
+    @PATCH(API.MEMORY_PHOTO)
+    fun deleteMemoryPhoto(@Query("memory-photo-url") photoUrl: String) : Call<JsonElement>
 
     @DELETE(API.DELETE_RESERVATION)
     fun deleteReservation(@Header("id") id: Int): Call<JsonElement>

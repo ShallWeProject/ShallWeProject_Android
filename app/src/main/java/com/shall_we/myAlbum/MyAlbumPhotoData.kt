@@ -1,9 +1,8 @@
 package com.shall_we.myAlbum
 
 data class MyAlbumPhotoData(
-    var imgUrl: MutableList<String>?
-) {
-    constructor() : this(
-        imgUrl = null
-    )
-}
+    var myPhoto: MutableList<PhotoInfo>
+) data class PhotoInfo(
+    val isUploader: Boolean,
+    val memoryPhotoImgUrl: String
+)

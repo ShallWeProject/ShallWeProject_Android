@@ -30,8 +30,6 @@ class MypageFragment : Fragment() {
                 adapter = myVPAdapter
             }
 
-
-
         val tabTitleArray = arrayOf(
             "보낸 선물함",
             "받은 선물함",
@@ -44,7 +42,6 @@ class MypageFragment : Fragment() {
         val position = arguments?.getInt("position",0)
         if(position != null){
             setSelectedTab(binding.tabs, position!!-1)
-
         }
     }
 
@@ -52,8 +49,6 @@ class MypageFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-//        binding.fabAlbum.show()
-
         binding.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 // 선택된 탭의 인덱스를 얻습니다.
@@ -77,22 +72,8 @@ class MypageFragment : Fragment() {
 
         binding.fabAlbum.setOnClickListener {
 
-//            findNavController().navigate(
-//                R.id.myalbum
-//            )
-//            val myAlbumFragment = MyAlbumFragment() // 전환할 프래그먼트 인스턴스 생성
-//            val fragmentTransaction = parentFragmentManager.beginTransaction()
-//            fragmentTransaction.add(R.id.mypage_layout, myAlbumFragment, "get")
-//            fragmentTransaction.addToBackStack(null)
-//            fragmentTransaction.commitAllowingStateLoss()
-//            Log.d("clicked","change")
-
             val tabs = requireActivity().findViewById<View>(R.id.tabs)
             tabs.visibility = View.GONE
-//            mypageBinding.tabs.visibility = View.GONE
-            // 상태 토글
-//            isTabLayoutVisible = !isTabLayoutVisible
-
             binding.fabAlbum.visibility = View.GONE
             val myAlbumFragment = MyAlbumFragment()
             val fragmentTransaction = parentFragmentManager.beginTransaction()
@@ -120,24 +101,16 @@ class MypageFragment : Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        binding.fabAlbum.setOnClickListener {
-//            findNavController().navigate(
-//               R.id.action_mypageFragment_to_myAlbumFragment
-//          )
-//        }
-//        binding.fabAlbum.show()
-        // Fragment에서 뒤로가기 버튼 동작 처리
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-//        binding.fabAlbum.hide()
     }
 
     private fun setSelectedTab(tabLayout: TabLayout, selectedTabIndex: Int) {
         val tabCount = tabLayout.tabCount
-        if (selectedTabIndex >= 0 && selectedTabIndex < tabCount) {
+        if (selectedTabIndex in 0 until tabCount) {
             val tab = tabLayout.getTabAt(selectedTabIndex)
             tab?.select()
         }

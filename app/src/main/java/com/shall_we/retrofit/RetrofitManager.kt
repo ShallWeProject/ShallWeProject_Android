@@ -1,11 +1,8 @@
 package com.shall_we.retrofit
 
 import android.annotation.SuppressLint
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import com.google.gson.JsonElement
-import com.google.gson.JsonParser
 import com.shall_we.dto.ExperienceExpCategoryRes
 import com.shall_we.dto.ExperienceRes
 import com.shall_we.dto.MainSttCategoryRes
@@ -14,7 +11,6 @@ import com.shall_we.dto.SttCategoryData
 import com.shall_we.dto.UpdateReservationReq
 import com.shall_we.dto.UserDetail
 import com.shall_we.dto.catergoryResponse
-import com.shall_we.home.ProductData
 import com.shall_we.login.data.AuthResponse
 import com.shall_we.login.data.AuthSignOutResponse
 import com.shall_we.login.signup.UserData
@@ -24,6 +20,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import com.shall_we.myAlbum.MyAlbumData
+import com.shall_we.myAlbum.PhotoInfo
 import com.shall_we.mypage.MyGiftData
 import okhttp3.MultipartBody
 import java.text.SimpleDateFormat
@@ -268,49 +265,6 @@ class RetrofitManager {
     }
 
 
-    fun getMemoryPhoto(date: String, completion:(RESPONSE_STATE, ArrayList<MyAlbumData>?) -> Unit){
-        val call = iRetrofit?.getMemoryPhoto(date = date) ?:return
-
-        call.enqueue(object : Callback<JsonElement> {
-            // 응답 성공
-            override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
-                Log.d("retrofit","RetrofitManager - memoryPhoto onResponse() called / response : ${response.code()}")
-                when (response.code()) {
-                    200 -> {
-                        response.body()?.let {
-                            var parsedMyAlbumDataArray = ArrayList<MyAlbumData>()
-                            val body = it.asJsonObject
-                            val data = body.getAsJsonArray("data")
-                            data.forEach { resultItem ->
-                                val resultItemObject = resultItem.asJsonObject
-                                //val reservationId : Int = resultItemObject.get("reservationId").asInt
-                                val mutableList = resultItemObject.getAsJsonArray("memoryPhotoImages")
-                                val memoryPhotoImages = mutableListOf<String>()
-                                for (i in 0 until mutableList.size()) {
-                                    val item = mutableList[i].asString
-                                    memoryPhotoImages.add(item)
-                                }
-
-                                val myAlbumItem = MyAlbumData(date = date, memoryImgs = memoryPhotoImages.toList())
-
-                                parsedMyAlbumDataArray.add(myAlbumItem)
-                            }
-
-                            completion(RESPONSE_STATE.OKAY,parsedMyAlbumDataArray)
-                        }
-                    }
-                }
-            }
-
-            // 응답 실패
-            override fun onFailure(call: Call<JsonElement>, t: Throwable) {
-                Log.d("retrofit", "RetrofitManager - onFailure() called / t: $t")
-                completion(RESPONSE_STATE.FAIL, null)
-            }
-
-        })
-    }
-
     fun usersGiftSend(completion: (RESPONSE_STATE, ArrayList<MyGiftData>?) -> Unit) {
         val call = iRetrofit?.usersGiftSend() ?: return
 
@@ -344,13 +298,13 @@ class RetrofitManager {
                                 val date = dateFormatter.format(dateTimeStr)
 
 //                                var time: String = ""
-                                val timeElement = resultItemObject?.get("time")
-                                val timeObj = if (timeElement != null && !timeElement.isJsonNull) {
-                                    JsonParser.parseString(timeElement.toString()).asJsonObject
-                                } else {
-                                    null
-                                }
-                                val time: String = timeObj?.get("hour")?.asString ?: ""
+//                                val timeElement = resultItemObject?.get("time")
+//                                val timeObj = if (timeElement != null && !timeElement.isJsonNull) {
+//                                    JsonParser.parseString(timeElement.toString()).asJsonObject
+//                                } else {
+//                                    null
+//                                }
+                                val time: String = resultItemObject?.get("time")?.asString ?: ""
 
                                 val receiver = resultItemObject.getAsJsonObject("receiver")
                                 val name = receiver.get("name").asString
@@ -604,6 +558,96 @@ class RetrofitManager {
             override fun onFailure(call: Call<JsonElement>, t: Throwable) {
                 Log.d("retrofit","RetrofitManager - onFailure() called / t: $t")
                 completion(RESPONSE_STATE.FAIL)
+            }
+
+        })
+    }
+    fun getMemoryPhoto(date: String, completion:(RESPONSE_STATE, MutableList<PhotoInfo>?) -> Unit){
+        val call = iRetrofit?.getMemoryPhoto(date = date) ?:return
+
+        call.enqueue(object : Callback<JsonElement> {
+            // 응답 성공
+            override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
+                Log.d("retrofit","RetrofitManager - memoryPhoto onResponse() called / response : ${response.code()}")
+                when (response.code()) {
+                    200 -> {
+                        Log.d("getMemoryPhoto response, date", "${response.body()}, $date")
+                        response.body()?.let {
+                            var parsedMyAlbumDataArray = mutableListOf<PhotoInfo>()
+                        //response.body()?.let { parsedMyAlbumDataArray.addAll(it) }
+//                            val body = response.body()
+//                            val data = body?.data
+                            val body = it.asJsonObject
+                            val data = body.getAsJsonArray("data")
+                            data?.forEach { resultItem ->
+                                val resultItemObject = resultItem.asJsonObject
+                                val memoryPhotoImagesArray =
+                                    resultItemObject.getAsJsonArray("memoryPhotoImages")
+
+                                memoryPhotoImagesArray?.forEach { photoItem ->
+                                    val photoItemObject = photoItem.asJsonObject
+                                    val isUploader =
+                                        photoItemObject.get("isUploader").asBoolean
+                                    val memoryPhotoImgUrl =
+                                        photoItemObject.get("memoryPhotoImgUrl").asString
+
+                                    // Create MyAlbumPhotoData object and add to the list
+                                    val photoData =
+                                        PhotoInfo(isUploader, memoryPhotoImgUrl)
+                                    Log.d("photoData","$photoData")
+                                    parsedMyAlbumDataArray.add(photoData)
+//                                for (i in 0 until mutableList.size()) {
+//                                    val item = mutableList[i].asString
+//                                    memoryPhotoImages.add(item)
+//                                }
+////
+//                                val myAlbumItem = MyAlbumData(date = date, memoryImgs = memoryPhotoImages.toList())
+//
+//                                parsedMyAlbumDataArray.add(myAlbumItem)
+////
+////                                //val myalbum = it.asJsonObject
+                                }
+                                //parsedMyAlbumDataArray
+
+                                Log.d("parsedMyAlbumDataArray", "$parsedMyAlbumDataArray")
+                            }
+                            Log.d("parsedMyAlbumDataArray", "$parsedMyAlbumDataArray")
+
+                            completion(RESPONSE_STATE.OKAY, parsedMyAlbumDataArray)
+
+                        }
+                    }
+                }
+            }
+
+            // 응답 실패
+            override fun onFailure(call: Call<JsonElement>, t: Throwable) {
+                Log.d("retrofit", "RetrofitManager - onFailure() called / t: $t")
+                completion(RESPONSE_STATE.FAIL, null)
+            }
+
+        })
+    }
+
+    fun deleteMemoryPhoto(photoUrl: String, completion: (RESPONSE_STATE, Any?) -> Unit){
+        val call = iRetrofit?.deleteMemoryPhoto(photoUrl = photoUrl) ?:return
+
+        call.enqueue(object : Callback<JsonElement> {
+            // 응답 성공
+            override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
+                when(response.code()){
+                    200 -> {
+//                        response.body()?.let{
+//                            val body = it.asJsonObject
+//
+//                        }
+                        completion(RESPONSE_STATE.OKAY, response.body())
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<JsonElement>, t: Throwable) {
+                completion(RESPONSE_STATE.FAIL, null)
             }
 
         })
