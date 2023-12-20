@@ -47,6 +47,7 @@ object API {
 
     const val UPLOAD_IMG=""
 
+    const val RESERVATION_TIME = "api/v1/reservations/date"
 }
 
 enum class RESPONSE_STATE {

@@ -4,6 +4,7 @@ import com.google.gson.JsonElement
 import com.shall_we.ExperienceDetail.ExperienceDetailService
 import com.shall_we.dto.ExperienceReq
 import com.shall_we.dto.ReservationRequest
+import com.shall_we.dto.ValidTimeRes
 import com.shall_we.retrofit.API
 import com.shall_we.retrofit.RetrofitClient
 import retrofit2.Call
@@ -13,6 +14,7 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 import java.util.Objects
 
 object ReservationService {
@@ -34,6 +36,10 @@ object ReservationService {
         fun set_experience_gift(
             @Body reservationRequest: ReservationRequest
         ): Call<JsonElement>
+
+        //
+        @GET(API.RESERVATION_TIME)
+        fun get_reservation_time(@Query("giftId") ExperienceGiftId: Int, @Query("date") date: String): Call<ValidTimeRes>
 
     }
 

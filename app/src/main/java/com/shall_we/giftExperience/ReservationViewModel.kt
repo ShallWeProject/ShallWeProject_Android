@@ -5,19 +5,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.JsonElement
-import com.shall_we.ExperienceDetail.ExperienceDetailService
-import com.shall_we.dto.ExpCategoryRes
-import com.shall_we.dto.ExperienceDetailRes
-import com.shall_we.dto.ExperienceMainRes
-import com.shall_we.dto.ExperienceReq
 import com.shall_we.dto.Reservation
+import com.shall_we.dto.ReservationItem
 import com.shall_we.dto.ReservationRequest
 import com.shall_we.dto.SttCategoryRes
+import com.shall_we.dto.ValidTimeRes
 import com.shall_we.retrofit.RESPONSE_STATE
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.Objects
 
 class ReservationViewModel:ViewModel() {
 
@@ -86,7 +82,7 @@ class ReservationViewModel:ViewModel() {
     fun set_experience_gift(reservationRequest: ReservationRequest) {
         ReservationService.reservationService?.set_experience_gift(
             ReservationRequest(
-                reservationRequest. experienceGiftId,
+                reservationRequest.experienceGiftId,
                 reservationRequest.persons,
                 reservationRequest.date,
                 //reservationRequest.receiverName,
@@ -117,4 +113,5 @@ class ReservationViewModel:ViewModel() {
             }
         })
     }
+
 }

@@ -116,7 +116,7 @@
         android:id="@+id/btnbtn"
         android:layout_width="49dp"
         android:layout_height="27dp"
-        android:background="@drawable/giftdetail_btn_selector"
+        android:background="@drawable/reservation_time"
         android:text="13시"
         android:textColor="#EDA5B2"
         android:layout_marginLeft="33dp"
