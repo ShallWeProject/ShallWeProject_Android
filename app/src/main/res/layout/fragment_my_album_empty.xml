@@ -3,12 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".mypage.MyAlbumEmptyFragment">
+    tools:context=".myAlbum.MyAlbumEmptyFragment">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="선물 데이터가 없습니다"
-        android:textSize="60sp"/>
+        android:gravity="center"
+        android:text="셸위와 함께한 추억이 아직 없네요 ..."
+        android:textSize="14sp" />
 
 </FrameLayout>

@@ -1,7 +1,13 @@
 package com.shall_we.myAlbum
 
 data class MyAlbumData(
-//    val idx: Int,
     val date: String,
-    val memoryImgs: List<String>,
-)
+    val time: String,
+    val experienceGiftTitle: String,
+    val experienceGiftSubTitle: String,
+    var memoryPhotoImgs: MutableList<Photos>,
+) {
+    data class Photos(
+        val isUploader: Boolean,
+        val memoryPhotoImgUrl: String
+    )}
