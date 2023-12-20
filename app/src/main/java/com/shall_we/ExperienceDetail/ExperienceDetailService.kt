@@ -6,6 +6,7 @@ import com.shall_we.dto.ExperienceGiftDto
 import com.shall_we.dto.ExperienceMainRes
 import com.shall_we.dto.ExperienceReq
 import com.shall_we.dto.ReservationRequest
+import com.shall_we.dto.ValidTimeRes
 import com.shall_we.retrofit.API
 import com.shall_we.retrofit.RetrofitClient
 import retrofit2.Call

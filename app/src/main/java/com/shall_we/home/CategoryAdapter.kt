@@ -62,6 +62,4 @@ class CategoryAdapter (private val context: Context) : RecyclerView.Adapter<Cate
         }
     }
 
-
-
 }

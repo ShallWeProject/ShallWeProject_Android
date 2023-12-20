@@ -9,7 +9,9 @@ import com.shall_we.dto.ExperienceDetailRes
 import com.shall_we.dto.ExperienceGiftDto
 import com.shall_we.dto.ExperienceMainRes
 import com.shall_we.dto.GiftDTO
+import com.shall_we.dto.ReservationItem
 import com.shall_we.dto.ReservationRequest
+import com.shall_we.dto.ValidTimeRes
 import com.shall_we.retrofit.RESPONSE_STATE
 import retrofit2.Call
 import retrofit2.Callback
@@ -18,10 +20,10 @@ import retrofit2.Response
 class ExperienceDetailViewModel:ViewModel() {
 
 
-
     //경험 상세
     private var _experience_detail_data = MutableLiveData<ExperienceGiftDto>()
     val experience_detail_data: LiveData<ExperienceGiftDto> get() = _experience_detail_data
+
     //경험 메인
     private var _experience_gift_data = MutableLiveData<ExperienceMainRes>()
     val experience_gift_data: LiveData<ExperienceMainRes> get() = _experience_gift_data
@@ -39,7 +41,7 @@ class ExperienceDetailViewModel:ViewModel() {
                 response: Response<JsonElement>
             ) {
                 if (response.isSuccessful) {
-                    Log.d("what?",response.toString())
+                    Log.d("what?", response.toString())
                 }
             }
 
@@ -49,6 +51,7 @@ class ExperienceDetailViewModel:ViewModel() {
             }
         })
     }
+
     fun get_experience_detail_data(
         ExperienceGiftId: Int,
         completion: (RESPONSE_STATE, GiftDTO?) -> Unit
@@ -59,7 +62,7 @@ class ExperienceDetailViewModel:ViewModel() {
                     call: Call<ExperienceDetailRes>,
                     response: Response<ExperienceDetailRes>
                 ) {
-                    if (response.isSuccessful ) {
+                    if (response.isSuccessful) {
                         completion(RESPONSE_STATE.OKAY, response.body()?.data)
                     }
                 }

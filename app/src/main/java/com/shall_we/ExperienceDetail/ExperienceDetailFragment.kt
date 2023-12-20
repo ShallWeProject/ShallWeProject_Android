@@ -18,11 +18,12 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.shall_we.R
 import com.shall_we.databinding.FragmentExperienceDetailBinding
 import com.shall_we.giftExperience.GiftResevationFragment
+import com.shall_we.giftExperience.ReservationTimeAdapter
 import com.shall_we.giftExperience.ReservationViewModel
 import com.shall_we.retrofit.RESPONSE_STATE
 
 
-class ExperienceDetailFragment: Fragment() {
+class ExperienceDetailFragment: Fragment(){
     private lateinit var binding: FragmentExperienceDetailBinding
     lateinit var experienceDetailViewModel: ExperienceDetailViewModel
     lateinit var reservationViewModel: ReservationViewModel
@@ -57,6 +58,10 @@ class ExperienceDetailFragment: Fragment() {
                             val giftImgUrlSize = item.giftImgUrl.size
                             // 여러 개의 이미지 URL을 사용하는 경우
                             val dummyImageUrls = mutableListOf<String>()
+
+                            if(giftImgUrlSize == 0){
+                                dummyImageUrls.add("")
+                            }
 
                             // giftImgUrl 배열의 크기만큼 반복하여 dummyImageUrls에 이미지 URL을 추가합니다.
                             for (i in 0 until giftImgUrlSize) {
