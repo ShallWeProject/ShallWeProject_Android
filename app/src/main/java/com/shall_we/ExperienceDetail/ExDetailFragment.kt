@@ -39,26 +39,20 @@ class ExDetailFragment : Fragment() {
             when (responseState) {
                 RESPONSE_STATE.OKAY -> {
                     Log.d("whatisthis?????", responseBody.toString())
+                    responseBody?.let { item ->
+                        binding.exdetailDescription.text = item.description
+                        if(item.explanation.size != 0){
+                            binding.firStage.text = "1단계: "+item.explanation[0].stage
+                            binding.firDescription.text = item.explanation[0].description
+                            Glide.with(this).load(item.explanation[0].explanationUrl).into(binding.firImage)
 
-                    responseBody?.get(0)?.let { item ->
-                        item.explanation?.forEach { explanation ->
+                            binding.secStage.text = "2단계: "+item.explanation[1].stage
+                            binding.secDescription.text = item.explanation[1].description
+                            Glide.with(this).load(item.explanation[1].explanationUrl).into(binding.secImage)
 
-                            // Add text view
-                            val textView = TextView(requireContext())
-                            textView.text = explanation.description
-                            textView.textSize = 14f
-                            textView.textAlignment = View.TEXT_ALIGNMENT_CENTER
-                            textView.setTextColor(Color.BLACK)
-                            textView.setPadding(0, 16, 0, 16)
-                            binding.imageContainer.addView(textView)
-
-                            // Add image view
-                            val imageView = ImageView(requireContext())
-                            Glide.with(this)
-                                .load(explanation.explanationUrl)
-                                .into(imageView)
-                            imageView.setPadding(0, 16, 0, 16)
-                            binding.imageContainer.addView(imageView)
+                            binding.thrStage.text = "3단계: "+item.explanation[2].stage
+                            binding.thrDescription.text = item.explanation[2].description
+                            Glide.with(this).load(item.explanation[2].explanationUrl).into(binding.thrImage)
                         }
                     }
                 }

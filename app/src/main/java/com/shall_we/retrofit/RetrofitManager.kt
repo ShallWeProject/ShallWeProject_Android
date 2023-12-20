@@ -10,10 +10,13 @@ import com.shall_we.dto.ExperienceExpCategoryRes
 import com.shall_we.dto.ExperienceRes
 import com.shall_we.dto.MainSttCategoryRes
 import com.shall_we.dto.PopularRes
+import com.shall_we.dto.ReservationItem
 import com.shall_we.dto.SttCategoryData
 import com.shall_we.dto.UpdateReservationReq
 import com.shall_we.dto.UserDetail
+import com.shall_we.dto.ValidTimeRes
 import com.shall_we.dto.catergoryResponse
+import com.shall_we.giftExperience.ReservationService
 import com.shall_we.home.ProductData
 import com.shall_we.login.data.AuthResponse
 import com.shall_we.login.data.AuthSignOutResponse
@@ -672,6 +675,32 @@ class RetrofitManager {
                 completion(RESPONSE_STATE.FAIL)
             }
         })
+    }
+
+
+    fun get_reservation_date(
+        ExperienceGiftId: Int, date:String,
+        completion: (RESPONSE_STATE, List<ReservationItem>?) -> Unit
+    ) {
+        ReservationService.reservationService?.get_reservation_time(ExperienceGiftId,date)
+            ?.enqueue(object : Callback<ValidTimeRes> {
+                override fun onResponse(
+                    call: Call<ValidTimeRes>,
+                    response: Response<ValidTimeRes>
+                ) {
+                    if (response.isSuccessful ) {
+                        completion(RESPONSE_STATE.OKAY, response.body()?.data)
+                    }
+                }
+
+                override fun onFailure(call: Call<ValidTimeRes>, t: Throwable) {
+                    Log.d(
+                        "whatisthis",
+                        "get_experience_detail_data, 네트워크 오류가 발생했습니다. " + t.message.toString()
+                    )
+                    completion(RESPONSE_STATE.FAIL, null)
+                }
+            })
     }
 
 
