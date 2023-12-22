@@ -175,7 +175,7 @@ class GiftExperienceFragment : Fragment() {
                 experienceGiftId = experienceGiftId,
                 persons = persons,
                 date = selectedDate,
-                phoneNumber = phonenum,
+                phoneNumber = phoneNum,
                 imageKey = imageKey,
                 invitationComment = invitationComment,
                 time = selectedTime
