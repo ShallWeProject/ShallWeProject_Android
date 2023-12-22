@@ -4,9 +4,12 @@ import android.database.Cursor
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
+import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.widget.Button
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
@@ -42,6 +45,7 @@ class ChangeReservationFragment : BaseFragment<FragmentChangeReservationBinding>
 
     lateinit var reservationTimeAdapter: ReservationTimeAdapter
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun init() {
         idx = arguments?.getInt("expId", 1)!!
         reservationId = arguments?.getInt("idx", 1)!!
@@ -254,6 +258,12 @@ class ChangeReservationFragment : BaseFragment<FragmentChangeReservationBinding>
     override fun onItemClick(position: Int, text: String) {
         Log.d("time",text)
         time = "${text}:00"
+    }
+
+    override fun onPause() {
+        super.onPause()
+        val fab = requireActivity().findViewById<Button>(R.id.fab_album)
+        fab.visibility = View.GONE
     }
 }
 
