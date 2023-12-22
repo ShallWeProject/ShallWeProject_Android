@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.shall_we.ExperienceDetail.ExperienceDetailViewModel
 import com.shall_we.R
 import com.shall_we.databinding.FragmentGiftExperienceBinding
 import com.shall_we.dto.ReservationRequest
@@ -18,22 +19,22 @@ import com.shall_we.dto.ReservationStatus
 
 class GiftExperienceFragment : Fragment() {
 
+  lateinit var experienceDetailViewModel: ExperienceDetailViewModel
     lateinit var reservationViewModel:ReservationViewModel
     lateinit var reservationRequest: ReservationRequest
+
     private var experienceGiftId:Int=1
     private var persons:Int=2
     var selectedDate: String? = null
-    var selectedTime: String?=null
+    var selectedTime: String? = null
     private lateinit var binding: FragmentGiftExperienceBinding
     private var receiverName:String="땡땡땡"
     private var senderName:String="땡땡땡떙"
     private var phonenum1:String="010"
     private var phonenum2:String="000"
     private var phonenum3:String="000"
-    private var phonenumber:String="01000000000"
     private var imageKey:String="?"
     private var invitationComment: String="환영해!"
-    private var reservationStatus: ReservationStatus=ReservationStatus.BOOKED
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,7 +50,6 @@ class GiftExperienceFragment : Fragment() {
             persons=it.getInt("persons")
             selectedDate=it.getString("Date")
             selectedTime = it.getString("time")!!
-
         }
 
         //보내는사람 이름
@@ -171,20 +171,26 @@ class GiftExperienceFragment : Fragment() {
             reservationViewModel.set_experience_gift(reservationRequest)
 
 
-            val giftFragment = GiftFragment() // 전환할 프래그먼트 인스턴스 생성
-//            val bundle = Bundle()
-//            bundle.putInt("id", experienceGiftId) // 클릭된 아이템의 이름을 "title" 키로 전달
-//            bundle.putString("date",selectedDate)
-//            bundle.putInt("persons",persons)
-//            bundle.putString("receivername", receiverName) // 클릭된 아이템의 이름을 "title" 키로 전달
-//            bundle.putString("invitationComment",invitationComment)
-//            bundle.putString("phonenumber",phoneNum)
-//            if (selectedTime!=null){
-//                bundle.putParcelable("time", selectedTime)
-//                Log.d("time", selectedTime.toString())
-//            }
-        //    giftFragment.arguments = bundle
+            reservationRequest = ReservationRequest(
+                experienceGiftId = experienceGiftId,
+                persons = persons,
+                date = selectedDate,
+                phoneNumber = phonenum,
+                imageKey = imageKey,
+                invitationComment = invitationComment,
+                time = selectedTime
+            )
 
+            Log.d("reservationrequest", reservationRequest.toString())
+            experienceDetailViewModel =
+                ViewModelProvider(this).get(ExperienceDetailViewModel::class.java)
+            reservationViewModel = ViewModelProvider(this).get(ReservationViewModel::class.java)
+            reservationViewModel.set_experience_gift(reservationRequest)
+
+
+            val giftFragment = GiftFragment() // 전환할 프래그먼트 인스턴스 생성
+            val bundle = Bundle()
+            giftFragment.arguments = bundle
 
             val fragmentTransaction = parentFragmentManager.beginTransaction()
             fragmentTransaction.replace(R.id.nav_host_fragment, giftFragment, "gift")

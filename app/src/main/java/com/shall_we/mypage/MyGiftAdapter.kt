@@ -24,6 +24,7 @@ import com.shall_we.search.SearchResultFragment
 
 class MyGiftAdapter(private val context: Context, private val parentFragmentManager: FragmentManager) : RecyclerView.Adapter<MyGiftAdapter.ViewHolder>(){
     var datas = mutableListOf<MyGiftData>()
+    var expId = mutableListOf<Int>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemGiftboxBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -153,7 +154,8 @@ class MyGiftAdapter(private val context: Context, private val parentFragmentMana
                 bundle.putString("title", title)
                 bundle.putString("description", description)
                 bundle.putString("date", date)
-
+                bundle.putString("time", datas[position].time)
+                bundle.putInt("expId", expId[position])
                 newFragment.arguments = bundle
 
                 // 프래그먼트 전환

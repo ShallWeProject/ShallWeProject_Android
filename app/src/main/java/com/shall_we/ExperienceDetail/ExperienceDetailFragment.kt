@@ -53,7 +53,8 @@ class ExperienceDetailFragment: Fragment(){
                         responseBody?.let { item ->
                             binding.exdetailText01.text = item.subtitle
                             binding.exdetailText03.text = item.title
-                            binding.exdetailText04.text = item.price.toString()
+                            val formattedPrice = String.format("%,d", item.price.toInt())
+                            binding.exdetailText04.text = formattedPrice.toString()
 
 
                             val giftImgUrlSize = item.giftImgUrl.size

@@ -46,7 +46,6 @@ class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickLis
     private lateinit var binding: FragmentGiftResevationBinding  // Binding 객체 추가
 
     lateinit var reservationTimeAdapter: ReservationTimeAdapter
-    val reservationTimeData = mutableListOf<ReservationTimeData>()
 
     var time : String? = null
   
@@ -136,7 +135,7 @@ class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickLis
                     formattedDate = "$year-$month-$day" // yyyy-mm-dd 형식의 문자열 생성
 
                     println("Formatted Date: $formattedDate")
-                    retrofitCall(binding.rvTime,formattedDate!!)
+                    retrofitCall(binding.rvTime, formattedDate!!)
                 } else {
                 }
             }
@@ -170,22 +169,6 @@ class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickLis
         // 좌우 화살표 사이 연, 월의 폰트 스타일 설정
         calendarView.setHeaderTextAppearance(R.style.CalendarWidgetHeader)
 
-        //시간 넘겨주기
-        val currentTime=LocalDateTime.now()
-        val formatter = DateTimeFormatter.ofPattern("HH:mm:ss")
-        val formatted = currentTime.format(formatter)
-
-        val hour = formatted.substringBefore(":").toInt()
-        val minute = formatted.substringAfter(":").substringBeforeLast(":").toInt()
-        val second = formatted.substringAfterLast(":").toInt()
-
-        val time= LocalTime(
-            hour = currentTime.hour,
-            minute = currentTime.minute,
-            second = currentTime.second,
-            nano = currentTime.nano
-        )
-
 
         binding.exgiftBtn03.setOnClickListener {
             val giftExperienceFragment = GiftExperienceFragment() // 전환할 프래그먼트 인스턴스 생성
@@ -193,13 +176,14 @@ class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickLis
             val bundle = Bundle()
             bundle.putInt("id", experienceGiftId) // 클릭된 아이템의 이름을 "title" 키로 전달
             bundle.putInt("persons", count)
-            bundle.putString("time", "${time}+:00")
             if (formattedDate != null) { // 선택된 날짜가 있으면
                 bundle.putString("Date", formattedDate) // "Date" 키로 날짜 전달
-
             }
             if (time==null){
-                bundle.putParcelable("time", time)
+                bundle.putString("time", "00:00:00")
+
+            }else{
+                bundle.putString("time", "${time.toString().substring(0, 2)}:00:00")
 
             }
 
@@ -244,8 +228,11 @@ class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickLis
                 var time = mutableListOf<ReservationTimeData>()
                 if(responseBody != null){
                     for(i in 0 until responseBody.size){
-                        Log.d("time",responseBody.get(i).time)
-                        time.add(ReservationTimeData(time = responseBody.get(i).time.toString().substring(0, 2)))
+                        if(responseBody.get(i).status == "WAITING"){
+                            Log.d("time",responseBody.get(i).time)
+                            time.add(ReservationTimeData(time = responseBody.get(i).time.toString().substring(0, 2)))
+                        }
+
                     }
                 }
                 else{
@@ -258,34 +245,35 @@ class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickLis
         }
     })
     }
-    /* 선택된 날짜의 background를 설정하는 클래스 */
-    inner class DayDecorator(context: Context) : DayViewDecorator {
-        private val drawable = ContextCompat.getDrawable(context,R.drawable.calendar_selector)
-        // true를 리턴 시 모든 요일에 내가 설정한 드로어블이 적용된다
-        override fun shouldDecorate(day: CalendarDay): Boolean {
-            return true
-        }
-
-        // 일자 선택 시 내가 정의한 드로어블이 적용되도록 한다
-        override fun decorate(view: DayViewFacade) {
-            view.setSelectionDrawable(drawable!!)
-        }
-    }
-
-    /* 이번달에 속하지 않지만 캘린더에 보여지는 이전달/다음달의 일부 날짜를 설정하는 클래스 */
-    inner class SelectedMonthDecorator(val selectedMonth : Int) : DayViewDecorator {
-        override fun shouldDecorate(day: CalendarDay): Boolean {
-            return day.month != selectedMonth
-        }
-        override fun decorate(view: DayViewFacade) {
-            view.addSpan(ForegroundColorSpan(Color.parseColor("#DBDBDB")))
-        }
-    }
 
     override fun onItemClick(position: Int, text: String) {
         Log.d("time",text)
         time = text
         binding.exgiftBtn03.isClickable = true
         binding.exgiftBtn03.setBackgroundResource(R.drawable.gift_btn)
+    }
+}
+
+/* 선택된 날짜의 background를 설정하는 클래스 */
+class DayDecorator(context: Context) : DayViewDecorator {
+    private val drawable = ContextCompat.getDrawable(context,R.drawable.calendar_selector)
+    // true를 리턴 시 모든 요일에 내가 설정한 드로어블이 적용된다
+    override fun shouldDecorate(day: CalendarDay): Boolean {
+        return true
+    }
+
+    // 일자 선택 시 내가 정의한 드로어블이 적용되도록 한다
+    override fun decorate(view: DayViewFacade) {
+        view.setSelectionDrawable(drawable!!)
+    }
+}
+
+/* 이번달에 속하지 않지만 캘린더에 보여지는 이전달/다음달의 일부 날짜를 설정하는 클래스 */
+class SelectedMonthDecorator(val selectedMonth : Int) : DayViewDecorator {
+    override fun shouldDecorate(day: CalendarDay): Boolean {
+        return day.month != selectedMonth
+    }
+    override fun decorate(view: DayViewFacade) {
+        view.addSpan(ForegroundColorSpan(Color.parseColor("#DBDBDB")))
     }
 }
