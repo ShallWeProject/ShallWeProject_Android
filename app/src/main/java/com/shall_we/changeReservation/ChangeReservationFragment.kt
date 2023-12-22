@@ -34,15 +34,17 @@ import java.util.Locale
 class ChangeReservationFragment : BaseFragment<FragmentChangeReservationBinding>(R.layout.fragment_change_reservation), ReservationTimeAdapter.OnItemClickListener {
     private lateinit var calendarView: MaterialCalendarView
     private val locale: Locale = Locale("ko")
-    var selectedDate: Date? = null
+    var selectedDate: String? = null
     var idx: Int = 1
     var localDateTimeString : String? = null
     var time : String? = null
+    var reservationId : Int = 1
 
     lateinit var reservationTimeAdapter: ReservationTimeAdapter
 
     override fun init() {
-        idx = arguments?.getInt("idx", 1)!!
+        idx = arguments?.getInt("expId", 1)!!
+        reservationId = arguments?.getInt("idx", 1)!!
         val title = arguments?.getString("title", "")
         val description = arguments?.getString("description", "")
         val date = arguments?.getString("date", "")
@@ -51,6 +53,15 @@ class ChangeReservationFragment : BaseFragment<FragmentChangeReservationBinding>
 
         binding.exgiftText02.text = description
         binding.exgiftText04.text = title
+
+        val dateFormatInput = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
+        val parsedDate: Date = dateFormatInput.parse(date) ?: Date()
+
+// Format the parsed date into "yyyy-MM-dd" format
+        val dateFormatOutput = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        selectedDate = dateFormatOutput.format(parsedDate)
+
+        Log.d("date",selectedDate.toString())
 
 
         val tabs = requireActivity().findViewById<View>(R.id.tabs)
@@ -81,6 +92,7 @@ class ChangeReservationFragment : BaseFragment<FragmentChangeReservationBinding>
 
                     println("Formatted Date: $formattedDate")
                     timeRetrofitCall(binding.rvChTime,formattedDate)
+                    selectedDate = formattedDate
                 } else {
                 }
             }
@@ -138,12 +150,10 @@ class ChangeReservationFragment : BaseFragment<FragmentChangeReservationBinding>
         calendarView.setDateSelected(calendarDay, true)
 
         timeRetrofitCall(binding.rvChTime,"$year-$month-$day")
-        binding.btnbtnbtn.setOnClickListener {
+        binding.btnChange.setOnClickListener {
             if (selectedDate != null) { // 선택된 날짜가 있으면
-                val dateFormat = SimpleDateFormat("yyyy-MM-dd", locale) // 날짜 형식 지정
-                val dateString = dateFormat.format(selectedDate) // 문자열로 변환
-                val month = dateString.get(Calendar.MONTH) + 1 // 1을 더하는 이유는 0부터 시작하기 때문입니다.
-                val day = dateString.get(Calendar.DAY_OF_MONTH)
+                val month = selectedDate.toString().substring(5,7) // 1을 더하는 이유는 0부터 시작하기 때문입니다.
+                val day = selectedDate.toString().substring(8,10)
 
 
 // LocalDateTime 객체를 문자열로 변환합니다. (원하는 포맷으로 지정)
@@ -151,7 +161,8 @@ class ChangeReservationFragment : BaseFragment<FragmentChangeReservationBinding>
                 val customDialog = CustomAlertDialog(requireContext())
 
                 customDialog.setTitle("예약변경")
-                customDialog.setMessage("${month}월 ${day}일 13시")
+                val simpleTime = time.toString().substring(0,2)
+                customDialog.setMessage("${month}월 ${day}일 ${simpleTime}시")
 
                 val alertDialog = customDialog.create()
                 alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -165,7 +176,7 @@ class ChangeReservationFragment : BaseFragment<FragmentChangeReservationBinding>
                     // 프래그먼트 이동 로직 추가
                     val transaction = requireActivity().supportFragmentManager.beginTransaction()
                     transaction.replace(
-                        R.id.change_reservation_layout,
+                        R.id.mypage_layout,
                         ChangedReservationFragment()
                     )
                     transaction.addToBackStack(null)
@@ -185,7 +196,7 @@ class ChangeReservationFragment : BaseFragment<FragmentChangeReservationBinding>
     }
     fun RetrofitCall(){
         Log.d("date","$localDateTimeString")
-        val updateReservationReq = UpdateReservationReq(idx, localDateTimeString.toString())
+        val updateReservationReq = UpdateReservationReq(reservationId, selectedDate.toString(),time.toString())
         RetrofitManager.instance.putUpdateReservation(updateReservationReq = updateReservationReq,  completion = {
                 responseState ->
             when(responseState){
@@ -204,23 +215,22 @@ class ChangeReservationFragment : BaseFragment<FragmentChangeReservationBinding>
                 responseState, responseBody ->
             when(responseState){
                 RESPONSE_STATE.OKAY -> {
-                    var time = mutableListOf<ReservationTimeData>()
+                    var times = mutableListOf<ReservationTimeData>()
                     if(responseBody != null){
                         if(time != null){
-                            time.add(ReservationTimeData(time = time.toString().substring(0, 2)))
-                            time.add(ReservationTimeData(time="13시"))
-                            time.add(ReservationTimeData(time="11시"))
-
+                            times.add(ReservationTimeData(time = time.toString().substring(0, 2)))
                         }
                         for(i in 0 until responseBody.size){
-                            Log.d("time",responseBody.get(i).time)
-                            time.add(ReservationTimeData(time = responseBody.get(i).time.toString().substring(0, 2)))
+                            if(responseBody.get(i).status == "WAITING"){
+                                Log.d("time",responseBody.get(i).time)
+                                times.add(ReservationTimeData(time = responseBody.get(i).time.toString().substring(0, 2)))
+                            }
                         }
                     }
                     else{
                     }
-                    time.sortBy { it.time }
-                    initRecycler(rvCategory,time)
+                    times.sortBy { it.time }
+                    initRecycler(rvCategory,times)
                 }
                 RESPONSE_STATE.FAIL -> {
                     Log.d("retrofit", "api 호출 에러")
@@ -243,7 +253,7 @@ class ChangeReservationFragment : BaseFragment<FragmentChangeReservationBinding>
 
     override fun onItemClick(position: Int, text: String) {
         Log.d("time",text)
-        time = text
+        time = "${text}:00"
     }
 }
 

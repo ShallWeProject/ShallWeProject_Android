@@ -1,9 +1,7 @@
 package com.shall_we.retrofit
 
 import android.annotation.SuppressLint
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import com.google.gson.JsonElement
 import com.google.gson.JsonParser
 import com.shall_we.dto.ExperienceExpCategoryRes
@@ -17,7 +15,6 @@ import com.shall_we.dto.UserDetail
 import com.shall_we.dto.ValidTimeRes
 import com.shall_we.dto.catergoryResponse
 import com.shall_we.giftExperience.ReservationService
-import com.shall_we.home.ProductData
 import com.shall_we.login.data.AuthResponse
 import com.shall_we.login.data.AuthSignOutResponse
 import com.shall_we.login.signup.UserData
@@ -376,7 +373,7 @@ class RetrofitManager {
         })
     }
 
-    fun usersGiftReceive(completion:(RESPONSE_STATE,ArrayList<MyGiftData>?) -> Unit){
+    fun usersGiftReceive(completion:(RESPONSE_STATE,ArrayList<MyGiftData>?,ArrayList<Int>?) -> Unit){
         val call = iRetrofit?.usersGiftReceive() ?:return
         call.enqueue(object : Callback<JsonElement> {
             // 응답 성공
@@ -390,11 +387,13 @@ class RetrofitManager {
                     200 -> {
                         response.body()?.let {
                             var parsedProductDataArray = ArrayList<MyGiftData>()
+                            var experienceGiftIdArray = ArrayList<Int>()
                             val body = it.asJsonObject
 
                             Log.d("JSON Object", "${body}")
 
                             val gifts = body.getAsJsonArray("data")
+
                             gifts.forEach { resultItem ->
                                 val resultItemObject = resultItem.asJsonObject
                                 val reservationId : Int = resultItemObject.get("reservationId").asInt
@@ -425,12 +424,16 @@ class RetrofitManager {
 
                                 val sender = resultItemObject.getAsJsonObject("sender")
                                 val name = sender.get("name").asString
+                                val experienceGiftId : Int = resultItemObject.get("experienceGiftId").asInt
+
 
                                 val giftItem = MyGiftData(idx = reservationId, title = title, description = subtitle, date = date, time = time, cancellable = true, message = invitationComment, person = name)
                                 Log.d("gift - receive result: ", "$giftItem")
                                 parsedProductDataArray.add(giftItem)
+                                experienceGiftIdArray.add(experienceGiftId)
+
                             }
-                            completion(RESPONSE_STATE.OKAY, parsedProductDataArray)
+                            completion(RESPONSE_STATE.OKAY, parsedProductDataArray,experienceGiftIdArray)
                         }
                     }
                 }
@@ -439,7 +442,7 @@ class RetrofitManager {
             // 응답 실패
             override fun onFailure(call: Call<JsonElement>, t: Throwable) {
                 Log.d("retrofit", "RetrofitManager - onFailure() called / t: $t")
-                completion(RESPONSE_STATE.FAIL, null)
+                completion(RESPONSE_STATE.FAIL, null, null)
             }
 
         })

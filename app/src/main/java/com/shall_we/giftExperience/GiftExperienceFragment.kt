@@ -53,6 +53,7 @@ class GiftExperienceFragment : Fragment() {
             experienceGiftId = it.getInt("id") // id 키로 giftid 값을 불러와 저장하게 됩니다.
             persons=it.getInt("persons")
             selectedDate=it.getString("Date")
+            Log.d("selectedDate",selectedDate.toString())
             selectedTime = it.getString("time")
 
 

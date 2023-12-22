@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName
 import java.util.Date
 
 data class UpdateReservationReq (
-    val id: Int,
+    val reservationId: Int,
     val date: String,
+    val time: String
 )
