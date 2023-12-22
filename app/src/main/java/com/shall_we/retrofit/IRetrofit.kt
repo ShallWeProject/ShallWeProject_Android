@@ -45,11 +45,14 @@ interface IRetrofit {
     @GET(API.USERS_GIFT_RECEIVE)
     fun usersGiftReceive() : Call<JsonElement>
 
-    @GET(API.GET_MEMORY_PHOTO)
+    @GET(API.MEMORY_PHOTO)
     fun getMemoryPhoto(@Query("date") date: String) : Call<JsonElement>
 
-    @POST(API.POST_MEMORY_PHOTO)
+    @POST(API.MEMORY_PHOTO)
     fun postMemoryPhoto(@Body uploadPhotoArray: UploadPhotoArray) : Call<JsonElement>
+
+    @PATCH(API.MEMORY_PHOTO)
+    fun deleteMemoryPhoto(@Query("memory-photo-url") photoUrl: String) : Call<JsonElement>
 
     @DELETE(API.DELETE_RESERVATION)
     fun deleteReservation(@Header("id") id: Int): Call<JsonElement>

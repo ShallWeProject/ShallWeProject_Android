@@ -1,11 +1,5 @@
 package com.shall_we.dto
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.util.Date
-
 
 data class ReservationRequest(
     val experienceGiftId: Int, // integer($int64)으로 변경

@@ -1,5 +1,6 @@
 package com.shall_we.mypage
 
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -34,11 +35,36 @@ class MyGiftReceivedFragment : Fragment() {
         adapter = MyGiftAdapter(requireContext(),parentFragmentManager)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        val bottomSpaceItemDecoration = BottomSpaceItemDecoration(dpToPx(70))
+        recyclerView.addItemDecoration(bottomSpaceItemDecoration)
         Log.d("setupRecycler giftdata: ", "$giftData")
 
         adapter.datas = giftData
         adapter.expId = expId
         adapter.notifyDataSetChanged()
+    }
+
+    private fun dpToPx(dp: Int): Int {
+        val density = resources.displayMetrics.density
+        return (dp.toFloat() * density).toInt()
+    }
+    class BottomSpaceItemDecoration(private val bottomSpaceHeight: Int) : RecyclerView.ItemDecoration() {
+
+        override fun getItemOffsets(
+            outRect: Rect,
+            view: View,
+            parent: RecyclerView,
+            state: RecyclerView.State
+        ) {
+            val itemPosition = parent.getChildAdapterPosition(view)
+            val itemCount = parent.adapter?.itemCount ?: 0
+
+            if (itemPosition == itemCount - 1) {
+                // 맨 마지막 아이템인 경우만 여백 추가
+                outRect.bottom = bottomSpaceHeight
+            }
+        }
     }
 
     private fun retrofitApiCall(){

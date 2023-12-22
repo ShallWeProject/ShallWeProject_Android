@@ -26,22 +26,27 @@ import com.shall_we.BuildConfig.access_key
 import com.shall_we.BuildConfig.secret_key
 import com.shall_we.R
 import com.shall_we.databinding.FragmentMyAlbumBinding
-import com.shall_we.mypage.MyAlbumEmptyFragment
 import com.shall_we.mypage.MyGiftData
 import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RetrofitManager
 import com.shall_we.retrofit.UploadPhotoArray
 import com.shall_we.utils.S3Util
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
 
 class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
     private lateinit var binding: FragmentMyAlbumBinding
     private lateinit var adapter: MyAlbumAdapter
 
-    private lateinit var albumData:MyAlbumPhotoData
+    private lateinit var albumData: MyAlbumPhotoData
+    private lateinit var tempData:ArrayList<MyGiftData>
+    private var tempAlbumData:MutableList<MyAlbumData> = mutableListOf()
     private lateinit var giftData: ArrayList<MyGiftData>
     private var giftIdx = 0
     private lateinit var dates: List<String>
+
+    val firstAdd: PhotoInfo = PhotoInfo(isUploader = false, memoryPhotoImgUrl = "R.drawable.add_image")
 
     private var selectedImageUri: Uri = Uri.EMPTY
     private var filename: String = ""
@@ -73,6 +78,9 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
                 binding.tvAlbumDate.text = dates[giftIdx]
                 binding.tvAlbumDescription.text = giftData[giftIdx].description
                 binding.tvAlbumTitle.text = giftData[giftIdx].title
+//                if (giftData[giftIdx].date == giftData[giftIdx-1].date){ // 같은 날짜 다른 추억 = 이미 이전 ㅜ
+//                    initAlbum(tempAlbumData[0])
+//                }
                 val modDate: String = giftData[giftIdx].date.replace(".", "-")
                 getMemoryPhoto(modDate)
                 Log.d("album date", "album date ++ is not null")
@@ -129,10 +137,10 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
             );
         Log.d("S3Util", "hi")
         val uploadPhotoArray = UploadPhotoArray("uploads/$filename.$ext", giftData[giftIdx].idx)
-        Log.d("upload memory photo array", "$uploadPhotoArray")
+        Log.d("upload photo array", "$uploadPhotoArray")
         postMemoryPhoto(uploadPhotoArray)
         Toast.makeText(view?.context , "사진이 추가되었습니다.", Toast.LENGTH_SHORT).show()
-        Log.d("postMemoryPhoto", "idx: ${giftData[giftIdx].idx},  ${giftData[giftIdx].date} 날짜에 업로드 완료")
+        Log.d("postMemoryPhoto", "idx: ${giftData[giftIdx].idx},  ${giftData[giftIdx].date} 날짜에 업로드 완료 key: uploads/$filename.$ext")
         val modDate: String = giftData[giftIdx].date.replace(".", "-")
         getMemoryPhoto(modDate)
     }
@@ -144,7 +152,7 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
             completion = { responseState ->
                 when (responseState) {
                     RESPONSE_STATE.OKAY -> {
-                        Log.d("retrofit", "postmemoryphoto api : ${responseState}")
+                        Log.d("retrofit", "post Memory Photo api : ${responseState}")
                     }
 
                     RESPONSE_STATE.FAIL -> {
@@ -155,9 +163,11 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
     }
 
     private fun initAlbum(resultData: MyAlbumPhotoData) {
-        adapter = MyAlbumAdapter(requireContext())
-        binding.recyclerAlbumView.adapter = adapter
-        adapter.setOnItemClickListener(this)
+        if (!::adapter.isInitialized) {
+            adapter = MyAlbumAdapter(requireContext())
+            binding.recyclerAlbumView.adapter = adapter
+            adapter.setOnItemClickListener(this)
+        }
 
         Log.d("retrofit", "initAlbum, $resultData")
 
@@ -165,18 +175,46 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
         adapter.notifyDataSetChanged()
     }
 
+    var size: Int = 0
     // user gift receive 를 통해 예약 정보를 받아옴
     @RequiresApi(Build.VERSION_CODES.O)
     private fun retrofitCallDate() {
+        var giftBoxData: ArrayList<MyGiftData> = arrayListOf()
+
+        RetrofitManager.instance.usersGiftSend(
+            completion = { responseState, responseBody ->
+                when (responseState) {
+                    RESPONSE_STATE.OKAY -> {
+                        Log.d("retrofit", "mygift api : ${responseBody?.size}")
+                        if (responseBody?.size != 0) {
+                            giftBoxData.addAll(responseBody!!)
+                            retrofitCallDate2(giftBoxData)
+                            //getGiftData(responseBody!!)
+                        }
+                        size = responseBody.size
+                    }
+
+                    RESPONSE_STATE.FAIL -> {
+                        Log.d("retrofit", "api 호출 에러")
+                    }
+                }
+            }
+        )
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun retrofitCallDate2(giftBoxData: ArrayList<MyGiftData>){
         RetrofitManager.instance.usersGiftReceive(
             completion = { responseState, responseBody,expId ->
                 when (responseState) {
                     RESPONSE_STATE.OKAY -> {
                         Log.d("retrofit", "mygift api : ${responseBody?.size}")
-                        if (responseBody?.size == 0) {
+                        if (responseBody?.size == 0 && size == 0) {
                             noData()
                         } else {
-                            getGiftData(responseBody!!)
+                            giftBoxData.addAll(responseBody!!)
+                            getGiftData(giftBoxData)
+                            //getGiftData(responseBody!!)
                         }
                     }
 
@@ -194,27 +232,40 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
         fragmentTransaction.replace(R.id.mypage_layout, noDataFragment, "myAlbumFragment")
         fragmentTransaction.addToBackStack(null)
         fragmentTransaction.commitAllowingStateLoss()
-        Log.d("clicked","change")
+        Log.d("noData","noData")
+    }
+
+    fun extractHour(time: String): String {
+        val sdf1 = SimpleDateFormat("HH시")
+        val sdf2 = SimpleDateFormat("HH:mm:ss")
+        val date1: Date? = try { sdf1.parse(time) } catch (e: Exception) { null }
+        val date2: Date? = try { sdf2.parse(time) } catch (e: Exception) { null }
+
+        return when {
+            date1 != null -> SimpleDateFormat("HH").format(date1)
+            date2 != null -> SimpleDateFormat("HH").format(date2)
+            else -> ""
+        }
     }
 
     // 위의 retrofitCallDate에서 호출하는 함수. get memory-photo 결과 리스트 재정렬해서 giftData, dates에 저장
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getGiftData(resultData: ArrayList<MyGiftData>): List<String> {
         // gift/receive 의 결과 리스트를 받아옴.
-        giftData = ArrayList(resultData)
+        giftData = ArrayList(resultData) //ArrayList(resultData)
         // 날짜 최신순으로 정렬.
-        giftData.sortWith(compareByDescending { it.date.replace(".", "").toInt() }
-//            .thenByDescending {
-//            it.time.replace("시","").toInt()
-//        } // Todo: response 데이터 구조 변경으로 time 처리 다시 해야함.
-        )
-        Log.d("retrofit", "original data: $resultData , replaced data: $giftData")
+        giftData = giftData.sortedWith(compareByDescending<MyGiftData> { it.date.replace(".", "").toInt() }
+            .thenByDescending { extractHour(it.time).toInt() }
+        ).toMutableList() as ArrayList<MyGiftData>
+        Log.d("retrofit", "original data: $resultData")
+        Log.d("retrofit", "replaced data: $giftData")
         dates =
             giftData.map { it.date } // 이게 굳이 있어야 하나 싶긴 함. giftData로 받아와서 title이랑 date 다 출력할 수 있지 않나 싶음...
         binding.tvAlbumDate.text = dates[giftIdx]
 
         val modDate: String = giftData[giftIdx].date.replace(".", "-")
         getMemoryPhoto(modDate)
+        Log.d("modDate","$modDate")
         return dates
     }
 
@@ -226,14 +277,22 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
         ) { responseState, responseBody ->
             when (responseState) {
                 RESPONSE_STATE.OKAY -> {
-                    Log.d("retrofit", "myalbum api : ${responseBody?.size}")
-                    responseBody?.forEach { myAlbumData ->
-                        val photoUrls: MutableList<String> = myAlbumData.memoryImgs.toMutableList()
-                        albumData = MyAlbumPhotoData(imgUrl = photoUrls)
-                        albumData.imgUrl?.add(0, "R.drawable.add_image")
-                        Log.d("get Memory Photo", "${responseBody}")
+                    Log.d("getMemoryPhoto Okay", "myalbum api : ${responseBody?.size}")
+                    Log.d("responseBody", "$responseBody")
+//
+                    albumData = MyAlbumPhotoData(myPhoto = mutableListOf(firstAdd))
+                    if (responseBody != null) {
+                        albumData.myPhoto.addAll(responseBody)
                     }
-                    initAlbum(albumData)
+//                    albumData.apply {
+//                        myPhoto.add(0, firstAdd)
+//                    }
+                    //albumData.myPhoto.add
+                        Log.d("get Memory Photo", "${albumData}")
+                        initAlbum(albumData)
+                    //}
+                    Log.d("responseBody", "$responseBody")
+
                 }
 
                 RESPONSE_STATE.FAIL -> {

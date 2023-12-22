@@ -7,23 +7,19 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.shall_we.ExperienceDetail.ExperienceDetailViewModel
 import com.shall_we.R
 import com.shall_we.databinding.FragmentGiftExperienceBinding
-import com.shall_we.dto.LocalTime
 import com.shall_we.dto.ReservationRequest
 import com.shall_we.dto.ReservationStatus
 
 
 class GiftExperienceFragment : Fragment() {
 
-    lateinit var experienceDetailViewModel: ExperienceDetailViewModel
-
+  lateinit var experienceDetailViewModel: ExperienceDetailViewModel
     lateinit var reservationViewModel:ReservationViewModel
     lateinit var reservationRequest: ReservationRequest
 
@@ -34,7 +30,7 @@ class GiftExperienceFragment : Fragment() {
     private lateinit var binding: FragmentGiftExperienceBinding
     private var receiverName:String="땡땡땡"
     private var senderName:String="땡땡땡떙"
-    private var phonenum1:String="000"
+    private var phonenum1:String="010"
     private var phonenum2:String="000"
     private var phonenum3:String="000"
     private var imageKey:String="?"
@@ -53,10 +49,7 @@ class GiftExperienceFragment : Fragment() {
             experienceGiftId = it.getInt("id") // id 키로 giftid 값을 불러와 저장하게 됩니다.
             persons=it.getInt("persons")
             selectedDate=it.getString("Date")
-            Log.d("selectedDate",selectedDate.toString())
-            selectedTime = it.getString("time")
-
-
+            selectedTime = it.getString("time")!!
         }
 
         //보내는사람 이름
@@ -112,6 +105,12 @@ class GiftExperienceFragment : Fragment() {
             }
         })
 
+//        // 스피너 어댑터 생성
+//        val spinneradapter =
+//            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, numdata)
+//
+//        // 스피너 드롭다운 레이아웃 설정
+//        spinneradapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
         // 모든 EditText들을 담는 리스트
         val editTextList = listOf(
@@ -147,14 +146,30 @@ class GiftExperienceFragment : Fragment() {
 
         binding.giftreserveBtn02.setOnClickListener(){
             binding.giftreserveBtn02.visibility = View.GONE
-            binding.giftreserveBtn01.visibility=View.GONE
            // binding.exgiftBtn02.visibility=View.GONE
 
             binding.giftreserveEdittext03.visibility=View.GONE
 
             binding.giftreserveBtn02.visibility=View.GONE
-            binding.giftreserveBtn01.visibility=View.GONE
-            val phonenum = String.format("%s-%s-%s", phonenum1, phonenum2, phonenum3)
+            //val phoneNum = String.format("%s-%s-%s", phonenum1, phonenum2, phonenum3)
+            val phoneNum = phonenum1+phonenum2+phonenum3
+            reservationRequest = ReservationRequest(
+                experienceGiftId = experienceGiftId,
+                persons = persons,
+                date = selectedDate!!,
+                //receiverName = receiverName,
+                time = selectedTime!!,
+                phoneNumber = phoneNum,
+                imageKey = imageKey,
+                invitationComment = invitationComment
+                //reservationStatus = "BOOKED"
+            )
+
+            Log.d("ReservationRequest", "$reservationRequest")
+
+            reservationViewModel = ViewModelProvider(this).get(ReservationViewModel::class.java)
+            reservationViewModel.set_experience_gift(reservationRequest)
+
 
             reservationRequest = ReservationRequest(
                 experienceGiftId = experienceGiftId,
@@ -176,8 +191,9 @@ class GiftExperienceFragment : Fragment() {
             val giftFragment = GiftFragment() // 전환할 프래그먼트 인스턴스 생성
             val bundle = Bundle()
             giftFragment.arguments = bundle
+
             val fragmentTransaction = parentFragmentManager.beginTransaction()
-            fragmentTransaction.replace(R.id.nav_host_fragment,giftFragment, "gift")
+            fragmentTransaction.replace(R.id.nav_host_fragment, giftFragment, "gift")
 
             fragmentTransaction.addToBackStack(null)
             fragmentTransaction.commitAllowingStateLoss()

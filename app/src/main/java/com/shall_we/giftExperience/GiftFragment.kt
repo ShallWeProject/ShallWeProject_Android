@@ -15,9 +15,6 @@ import com.shall_we.dto.ReservationRequest
 import com.shall_we.dto.ReservationStatus
 import com.shall_we.home.HomeFragment
 import com.shall_we.mypage.MyGiftSentFragment
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
-import java.util.Date
 
 
 class GiftFragment : Fragment() {
@@ -36,7 +33,6 @@ class GiftFragment : Fragment() {
             val fragmentTransaction = parentFragmentManager.beginTransaction()
             // 기존 프래그먼트를 숨기고 새로운 프래그먼트로 교체
             fragmentTransaction.replace(R.id.nav_host_fragment, homeFragment, "home")
-
             fragmentTransaction.addToBackStack(null)
             fragmentTransaction.commitAllowingStateLoss()
         }
