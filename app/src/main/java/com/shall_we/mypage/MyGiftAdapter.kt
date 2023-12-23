@@ -158,9 +158,10 @@ class MyGiftAdapter(private val context: Context, private val parentFragmentMana
                 bundle.putInt("expId", expId[position])
                 newFragment.arguments = bundle
 
+
                 // 프래그먼트 전환
                 parentFragmentManager.beginTransaction()
-                    .replace(R.id.nav_host_fragment, newFragment)
+                    .replace(R.id.mypage_layout, newFragment)
                     .addToBackStack(null)
                     .commit()
 
