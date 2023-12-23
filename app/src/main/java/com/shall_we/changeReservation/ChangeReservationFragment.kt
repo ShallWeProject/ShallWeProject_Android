@@ -1,11 +1,8 @@
 package com.shall_we.changeReservation
 
-import android.database.Cursor
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.net.Uri
 import android.os.Build
-import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.Button
@@ -260,10 +257,11 @@ class ChangeReservationFragment : BaseFragment<FragmentChangeReservationBinding>
         time = "${text}:00"
     }
 
-    override fun onPause() {
-        super.onPause()
+    override fun onStart() {
+        super.onStart()
         val fab = requireActivity().findViewById<Button>(R.id.fab_album)
         fab.visibility = View.GONE
+
     }
 }
 
