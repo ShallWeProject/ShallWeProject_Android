@@ -160,7 +160,7 @@ class MyGiftAdapter(private val context: Context, private val parentFragmentMana
 
                 // 프래그먼트 전환
                 parentFragmentManager.beginTransaction()
-                    .replace(R.id.mypage_layout, newFragment)
+                    .replace(R.id.nav_host_fragment, newFragment)
                     .addToBackStack(null)
                     .commit()
 
