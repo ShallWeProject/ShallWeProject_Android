@@ -119,7 +119,7 @@ class ProductListFragment : Fragment() , ProductAdapter.OnItemClickListener{
         tabLayout.addOnTabSelectedListener(object :TabLayout.OnTabSelectedListener{
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 tab?.position?.let { tabPosition = it }
-                initSpinner(binding.spinner)
+                initSpinner(binding.etFirNum)
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
@@ -131,7 +131,7 @@ class ProductListFragment : Fragment() , ProductAdapter.OnItemClickListener{
 
         })
 
-        initSpinner(binding.spinner)
+        initSpinner(binding.etFirNum)
 
 
 

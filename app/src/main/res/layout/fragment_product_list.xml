@@ -74,11 +74,11 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinner"
+            app:layout_constraintTop_toBottomOf="@+id/et_fir_num"
             tools:listitem="@layout/item_product" />
 
         <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/spinner"
+            android:id="@+id/et_fir_num"
             android:layout_width="82dp"
             android:layout_height="25dp"
             android:layout_marginTop="17dp"
