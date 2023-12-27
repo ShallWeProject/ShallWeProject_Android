@@ -31,7 +31,7 @@ class MyGiftReceivedFragment : Fragment() {
         retrofitApiCall()
         return viewBinding.root
     }
-    private fun setupRecyclerView(recyclerView: RecyclerView, giftData: ArrayList<MyGiftData>) {
+    private fun setupRecyclerView(recyclerView: RecyclerView, giftData: ArrayList<MyGiftData>,expId:ArrayList<Int>) {
         adapter = MyGiftAdapter(requireContext(),parentFragmentManager)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -41,6 +41,7 @@ class MyGiftReceivedFragment : Fragment() {
         Log.d("setupRecycler giftdata: ", "$giftData")
 
         adapter.datas = giftData
+        adapter.expId = expId
         adapter.notifyDataSetChanged()
     }
 
@@ -68,14 +69,16 @@ class MyGiftReceivedFragment : Fragment() {
 
     private fun retrofitApiCall(){
         RetrofitManager.instance.usersGiftReceive(
-            completion = { responseState, responseBody ->
+            completion = { responseState, responseBody,expId ->
                 when (responseState) {
                     RESPONSE_STATE.OKAY -> {
                         Log.d("retrofit", "gift receive api : ${responseBody?.size}, ${responseBody!!}")
                         giftData.apply {
                             addAll(responseBody)
                         }
-                        setupRecyclerView(viewBinding.recyclerView, giftData)
+                        if (expId != null) {
+                            setupRecyclerView(viewBinding.recyclerView, giftData,expId)
+                        }
 
                         Log.d("giftdata: ", "$giftData")
                     }

@@ -16,8 +16,6 @@ import com.shall_we.dto.UserDetail
 import com.shall_we.dto.catergoryResponse
 import com.shall_we.login.data.UserInactiveReq
 import com.shall_we.login.signup.UserData
-import com.shall_we.myAlbum.MyAlbumData
-import com.shall_we.myAlbum.MyAlbumResponse
 import okhttp3.MultipartBody
 import retrofit2.http.DELETE
 import retrofit2.http.Header

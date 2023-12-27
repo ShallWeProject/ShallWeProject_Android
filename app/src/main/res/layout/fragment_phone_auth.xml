@@ -43,6 +43,7 @@
         android:inputType="text"
         android:textSize="12sp"
         android:paddingLeft="18dp"
+        android:textCursorDrawable="@color/black"
         app:layout_constraintBottom_toTopOf="@+id/phonenumber_et"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
@@ -57,7 +58,7 @@
         android:inputType="phone"
         android:paddingLeft="18dp"
         android:textSize="12sp"
-
+        android:textCursorDrawable="@color/black"
         app:layout_constraintEnd_toStartOf="@+id/auth_send"
         app:layout_constraintHorizontal_weight="212"
         app:layout_constraintStart_toStartOf="@+id/name_et"
@@ -76,6 +77,7 @@
         android:paddingLeft="18dp"
         android:hint="인증번호를 입력해주세요"
         android:inputType="number"
+        android:textCursorDrawable="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/phonenumber_et" />

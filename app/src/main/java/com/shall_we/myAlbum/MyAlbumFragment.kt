@@ -205,7 +205,7 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun retrofitCallDate2(giftBoxData: ArrayList<MyGiftData>){
         RetrofitManager.instance.usersGiftReceive(
-            completion = { responseState, responseBody ->
+            completion = { responseState, responseBody,expId ->
                 when (responseState) {
                     RESPONSE_STATE.OKAY -> {
                         Log.d("retrofit", "mygift api : ${responseBody?.size}")

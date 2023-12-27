@@ -8,8 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.shall_we.ExperienceDetail.ExperienceDetailViewModel
 import com.shall_we.R
 import com.shall_we.databinding.FragmentGiftExperienceBinding
 import com.shall_we.dto.ReservationRequest
@@ -18,22 +20,22 @@ import com.shall_we.dto.ReservationStatus
 
 class GiftExperienceFragment : Fragment() {
 
+  lateinit var experienceDetailViewModel: ExperienceDetailViewModel
     lateinit var reservationViewModel:ReservationViewModel
     lateinit var reservationRequest: ReservationRequest
+
     private var experienceGiftId:Int=1
     private var persons:Int=2
     var selectedDate: String? = null
-    var selectedTime: String?=null
+    var selectedTime: String? = null
     private lateinit var binding: FragmentGiftExperienceBinding
     private var receiverName:String="땡땡땡"
     private var senderName:String="땡땡땡떙"
     private var phonenum1:String="010"
     private var phonenum2:String="000"
     private var phonenum3:String="000"
-    private var phonenumber:String="01000000000"
     private var imageKey:String="?"
     private var invitationComment: String="환영해!"
-    private var reservationStatus: ReservationStatus=ReservationStatus.BOOKED
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,58 +51,72 @@ class GiftExperienceFragment : Fragment() {
             persons=it.getInt("persons")
             selectedDate=it.getString("Date")
             selectedTime = it.getString("time")!!
-
         }
 
         //보내는사람 이름
-                binding.giftreserveEdittext01.addTextChangedListener(object : TextWatcher {
+                binding.etSenderName.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                setEditTextBackground(binding.giftreserveEdittext01, s)
+                setEditTextBackground(binding.etSenderName, s)
                 senderName=s.toString()
                 // 수정된 부분
             }
         })
         //받는 사람 이름
-        binding.giftreserveEdittext02.addTextChangedListener(object : TextWatcher {
+        binding.etReceiverName.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 
             }
             override fun afterTextChanged(s: Editable?) {
-                setEditTextBackground(binding.giftreserveEdittext02, s)
+                setEditTextBackground(binding.etReceiverName, s)
                 Log.d("receivername",receiverName)
                 receiverName = s.toString()
             }
         })
+        binding.etInvitationComment.bringToFront()
         //초대장 내용
-        binding.giftreserveEdittext03.addTextChangedListener(object : TextWatcher {
+        binding.etInvitationComment.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                setEditTextBackground(binding.giftreserveEdittext03, s)
                 invitationComment = s.toString()
+                var currentLineCount = 0
 
+                val text = s.toString()
+                val lines = text.split("\n")
+                currentLineCount = binding.etInvitationComment.lineCount
+
+                // 최대 줄 수를 초과하는 경우 입력을 막음
+                if (currentLineCount > 5) {
+                    binding.etInvitationComment.isEnabled = false
+                    binding.etInvitationComment.isFocusable = false
+                    binding.etInvitationComment.isFocusableInTouchMode = false
+                    Toast.makeText(requireContext(), "최대 5줄까지 입력 가능합니다.", Toast.LENGTH_SHORT).show()
+                }
+                binding.etInvitationComment.isEnabled = true
+                binding.etInvitationComment.isFocusable = true
+                binding.etInvitationComment.isFocusableInTouchMode = true
             }
         })
 
         //번호2
-        binding.giftreserveEdittext04.addTextChangedListener(object : TextWatcher {
+        binding.etSecNum.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                setEditTextBackground(binding.giftreserveEdittext04, s)
+                setEditTextBackground(binding.etSecNum, s)
                 phonenum2=s.toString()
             }
         })
 
         //번호3
-        binding.giftreserveEdittext05.addTextChangedListener(object : TextWatcher {
+        binding.etLastNum.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                setEditTextBackground(binding.giftreserveEdittext05, s)
+                setEditTextBackground(binding.etLastNum, s)
                 phonenum3=s.toString()
             }
         })
@@ -114,11 +130,11 @@ class GiftExperienceFragment : Fragment() {
 
         // 모든 EditText들을 담는 리스트
         val editTextList = listOf(
-            binding.giftreserveEdittext01,
-            binding.giftreserveEdittext02,
-            binding.giftreserveEdittext03,
-            binding.giftreserveEdittext04,
-            binding.giftreserveEdittext05
+            binding.etSenderName,
+            binding.etReceiverName,
+            binding.etInvitationComment,
+            binding.etSecNum,
+            binding.etLastNum
         )
 
         // EditText들의 텍스트가 변경될 때마다 호출되는 리스너
@@ -131,10 +147,10 @@ class GiftExperienceFragment : Fragment() {
 
                 // 버튼 디자인 변경
                 if (allFilled) {
-                    binding.giftreserveBtn02.setBackgroundResource(R.drawable.btn_payment)
+                    binding.giftreserveBtn02.setBackgroundResource(R.drawable.gift_btn)
                     binding.giftreserveBtn02.isClickable = true
                 } else {
-                    binding.giftreserveBtn02.setBackgroundResource(R.drawable.btn_pay)
+                    binding.giftreserveBtn02.setBackgroundResource(R.drawable.gift_btn_black)
                     binding.giftreserveBtn02.isClickable=false
                 }
             }
@@ -148,7 +164,7 @@ class GiftExperienceFragment : Fragment() {
             binding.giftreserveBtn02.visibility = View.GONE
            // binding.exgiftBtn02.visibility=View.GONE
 
-            binding.giftreserveEdittext03.visibility=View.GONE
+            binding.etInvitationComment.visibility=View.GONE
 
             binding.giftreserveBtn02.visibility=View.GONE
             //val phoneNum = String.format("%s-%s-%s", phonenum1, phonenum2, phonenum3)
@@ -157,34 +173,22 @@ class GiftExperienceFragment : Fragment() {
                 experienceGiftId = experienceGiftId,
                 persons = persons,
                 date = selectedDate!!,
-                //receiverName = receiverName,
                 time = selectedTime!!,
                 phoneNumber = phoneNum,
                 imageKey = imageKey,
                 invitationComment = invitationComment
-                //reservationStatus = "BOOKED"
             )
 
-            Log.d("ReservationRequest", "$reservationRequest")
-
+            Log.d("reservationrequest", reservationRequest.toString())
+            experienceDetailViewModel =
+                ViewModelProvider(this).get(ExperienceDetailViewModel::class.java)
             reservationViewModel = ViewModelProvider(this).get(ReservationViewModel::class.java)
             reservationViewModel.set_experience_gift(reservationRequest)
 
 
             val giftFragment = GiftFragment() // 전환할 프래그먼트 인스턴스 생성
-//            val bundle = Bundle()
-//            bundle.putInt("id", experienceGiftId) // 클릭된 아이템의 이름을 "title" 키로 전달
-//            bundle.putString("date",selectedDate)
-//            bundle.putInt("persons",persons)
-//            bundle.putString("receivername", receiverName) // 클릭된 아이템의 이름을 "title" 키로 전달
-//            bundle.putString("invitationComment",invitationComment)
-//            bundle.putString("phonenumber",phoneNum)
-//            if (selectedTime!=null){
-//                bundle.putParcelable("time", selectedTime)
-//                Log.d("time", selectedTime.toString())
-//            }
-        //    giftFragment.arguments = bundle
-
+            val bundle = Bundle()
+            giftFragment.arguments = bundle
 
             val fragmentTransaction = parentFragmentManager.beginTransaction()
             fragmentTransaction.replace(R.id.nav_host_fragment, giftFragment, "gift")

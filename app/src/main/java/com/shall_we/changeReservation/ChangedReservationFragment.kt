@@ -24,7 +24,7 @@ class ChangedReservationFragment : BaseFragment<FragmentChangedReservationBindin
             val homeFragment = HomeFragment() // 전환할 프래그먼트 인스턴스 생성
             val fragmentTransaction = parentFragmentManager.beginTransaction()
             // 기존 프래그먼트를 숨기고 새로운 프래그먼트로 교체
-            fragmentTransaction.add(R.id.mypage_layout, homeFragment, "home")
+            fragmentTransaction.add(R.id.nav_host_fragment, homeFragment, "home")
 
             fragmentTransaction.addToBackStack(null)
             fragmentTransaction.commitAllowingStateLoss()
