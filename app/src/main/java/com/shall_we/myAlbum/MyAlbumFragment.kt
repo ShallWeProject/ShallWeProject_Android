@@ -136,7 +136,7 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
         val uploadPhotoArray = UploadPhotoArray("uploads/$filename.$ext", giftData[giftIdx].idx)
         Log.d("upload photo array", "$uploadPhotoArray")
         postMemoryPhoto(uploadPhotoArray)
-        Toast.makeText(view?.context , "사진이 추가되었습니다.", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(view?.context , "사진이 추가되었습니다.", Toast.LENGTH_SHORT).show()
         Log.d("postMemoryPhoto", "idx: ${giftData[giftIdx].idx},  ${giftData[giftIdx].date} 날짜에 업로드 완료 key: uploads/$filename.$ext")
         val modDate: String = giftData[giftIdx].date.replace(".", "-")
         getMemoryPhoto(modDate, giftData[giftIdx].time)
@@ -160,11 +160,10 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
     }
 
     private fun initAlbum(resultData: MyAlbumPhotoData) {
-        if (!::adapter.isInitialized) {
-            adapter = MyAlbumAdapter(requireContext())
-            binding.recyclerAlbumView.adapter = adapter
-            adapter.setOnItemClickListener(this)
-        }
+        adapter = MyAlbumAdapter(requireContext())
+        binding.recyclerAlbumView.adapter = adapter
+        adapter.setOnItemClickListener(this)
+
 
         Log.d("retrofit", "initAlbum, $resultData")
 
@@ -281,11 +280,11 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
                     if (responseBody != null) {
 //                        albumData.myPhoto.addAll(responseBody)
 //                    }
-                        var parsedMyAlbumDataArray = mutableListOf<PhotoInfo>()
                         val body = responseBody?.asJsonObject
                         val data = body?.getAsJsonArray("data")
                         data?.forEach { resultItem ->
                             val resultItemObject = resultItem.asJsonObject
+                            Log.d("data resultItemObject", "$resultItemObject")
                             if (resultItemObject.get("time").asString == time) {
                                 val memoryPhotoImagesArray =
                                     resultItemObject.getAsJsonArray("memoryPhotoImages")
@@ -301,14 +300,14 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
                                     val photoData =
                                         PhotoInfo(isUploader, memoryPhotoImgUrl)
                                     Log.d("photoData", "$photoData")
-                                    parsedMyAlbumDataArray.add(photoData)
                                     albumData.myPhoto.add(photoData)
 
                                     Log.d("get Memory Photo", "${albumData}")
                                 }
-                                initAlbum(albumData)
                             }
-                        }}
+                        }
+                        initAlbum(albumData)
+                    }
                     Log.d("responseBody", "$responseBody")
 
                 }

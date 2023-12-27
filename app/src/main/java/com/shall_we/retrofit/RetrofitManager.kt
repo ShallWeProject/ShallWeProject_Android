@@ -369,17 +369,8 @@ class RetrofitManager {
 
                                 val timeElement: String = resultItemObject?.get("time")?.toString() ?: "99"
                                 Log.d("timeElement","$timeElement")
-                                var time : String = ""
-
-                                if (!resultItemObject.get("time").isJsonNull) {
-                                    time = resultItemObject.get("time").asString
-                                    val parsedTime = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).parse(time)
-                                    time = SimpleDateFormat("HH시", Locale.getDefault()).format(parsedTime)
-                                } else {
-                                    time = "null"
-                                }
-
-                                val sender = resultItemObject.getAsJsonObject("sender")
+                                val time: String = resultItemObject?.get("time")?.asString ?: ""
+                            val sender = resultItemObject.getAsJsonObject("sender")
                                 val name = sender.get("name").asString
                                 val experienceGiftId : Int = resultItemObject.get("experienceGiftId").asInt
 
@@ -612,7 +603,7 @@ class RetrofitManager {
                             //parsedMyAlbumDataArray
 
                             //}
-
+                            Log.d("getMemoryBody","${it}")
                             completion(RESPONSE_STATE.OKAY, response.body())
 
                         }
