@@ -40,12 +40,12 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
     private lateinit var adapter: MyAlbumAdapter
 
     private lateinit var albumData: MyAlbumPhotoData
-    private lateinit var tempData:ArrayList<MyGiftData>
-    private var tempAlbumData:MutableList<MyAlbumData> = mutableListOf()
+    //private lateinit var tempData:ArrayList<MyGiftData>
+    //private var tempAlbumData:MutableList<MyAlbumData> = mutableListOf()
     private lateinit var giftData: ArrayList<MyGiftData>
     private var giftIdx = 0
-    private lateinit var dates: List<String>
-
+    private lateinit var dates: List<DateTime>
+    data class DateTime(val date: String, val time: String)
     val firstAdd: PhotoInfo = PhotoInfo(isUploader = false, memoryPhotoImgUrl = "R.drawable.add_image")
 
     private var selectedImageUri: Uri = Uri.EMPTY
@@ -64,7 +64,7 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
         retrofitCallDate()
     }
 
-        @RequiresApi(Build.VERSION_CODES.O)
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -75,14 +75,11 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
         binding.ivLeft.setOnClickListener {
             if (giftData.size > giftIdx + 1) {
                 giftIdx += 1
-                binding.tvAlbumDate.text = dates[giftIdx]
+                binding.tvAlbumDate.text = dates[giftIdx].date
                 binding.tvAlbumDescription.text = giftData[giftIdx].description
                 binding.tvAlbumTitle.text = giftData[giftIdx].title
-//                if (giftData[giftIdx].date == giftData[giftIdx-1].date){ // 같은 날짜 다른 추억 = 이미 이전 ㅜ
-//                    initAlbum(tempAlbumData[0])
-//                }
                 val modDate: String = giftData[giftIdx].date.replace(".", "-")
-                getMemoryPhoto(modDate)
+                getMemoryPhoto(modDate, giftData[giftIdx].time)
                 Log.d("album date", "album date ++ is not null")
             } else {
                 Log.d("album date", "album date ++ is null, ${binding.tvAlbumDate.text}")
@@ -93,11 +90,11 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
         binding.ivRight.setOnClickListener {
             if (giftIdx >= 1) {
                 giftIdx -= 1
-                binding.tvAlbumDate.text = dates[giftIdx]
+                binding.tvAlbumDate.text = dates[giftIdx].date
                 binding.tvAlbumDescription.text = giftData[giftIdx].description
                 binding.tvAlbumTitle.text = giftData[giftIdx].title
                 val modDate: String = giftData[giftIdx].date.replace(".", "-")
-                getMemoryPhoto(modDate)
+                getMemoryPhoto(modDate, giftData[giftIdx].time)
                 Log.d("album date", "album date -- is not null")
             } else {
                 Log.d("album date", "album date -- is null, ${binding.tvAlbumDate.text}")
@@ -142,7 +139,7 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
         Toast.makeText(view?.context , "사진이 추가되었습니다.", Toast.LENGTH_SHORT).show()
         Log.d("postMemoryPhoto", "idx: ${giftData[giftIdx].idx},  ${giftData[giftIdx].date} 날짜에 업로드 완료 key: uploads/$filename.$ext")
         val modDate: String = giftData[giftIdx].date.replace(".", "-")
-        getMemoryPhoto(modDate)
+        getMemoryPhoto(modDate, giftData[giftIdx].time)
     }
 
     // 버킷 내의 이미지를 해당 추억에 post
@@ -205,7 +202,7 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun retrofitCallDate2(giftBoxData: ArrayList<MyGiftData>){
         RetrofitManager.instance.usersGiftReceive(
-            completion = { responseState, responseBody,expId ->
+            completion = { responseState, responseBody, expId ->
                 when (responseState) {
                     RESPONSE_STATE.OKAY -> {
                         Log.d("retrofit", "mygift api : ${responseBody?.size}")
@@ -235,7 +232,7 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
         Log.d("noData","noData")
     }
 
-    fun extractHour(time: String): String {
+    private fun extractHour(time: String): String {
         val sdf1 = SimpleDateFormat("HH시")
         val sdf2 = SimpleDateFormat("HH:mm:ss")
         val date1: Date? = try { sdf1.parse(time) } catch (e: Exception) { null }
@@ -250,7 +247,7 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
 
     // 위의 retrofitCallDate에서 호출하는 함수. get memory-photo 결과 리스트 재정렬해서 giftData, dates에 저장
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun getGiftData(resultData: ArrayList<MyGiftData>): List<String> {
+    private fun getGiftData(resultData: ArrayList<MyGiftData>): List<DateTime> {
         // gift/receive 의 결과 리스트를 받아옴.
         giftData = ArrayList(resultData) //ArrayList(resultData)
         // 날짜 최신순으로 정렬.
@@ -260,37 +257,58 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
         Log.d("retrofit", "original data: $resultData")
         Log.d("retrofit", "replaced data: $giftData")
         dates =
-            giftData.map { it.date } // 이게 굳이 있어야 하나 싶긴 함. giftData로 받아와서 title이랑 date 다 출력할 수 있지 않나 싶음...
-        binding.tvAlbumDate.text = dates[giftIdx]
+            giftData.map { DateTime(it.date, it.time) } // 이게 굳이 있어야 하나 싶긴 함. giftData로 받아와서 title이랑 date 다 출력할 수 있지 않나 싶음...
+        binding.tvAlbumDate.text = dates[giftIdx].date
 
         val modDate: String = giftData[giftIdx].date.replace(".", "-")
-        getMemoryPhoto(modDate)
+        getMemoryPhoto(modDate, giftData[giftIdx].time)
         Log.d("modDate","$modDate")
         return dates
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("SuspiciousIndentation")
-    private fun getMemoryPhoto(date: String) {
+    private fun getMemoryPhoto(date: String, time: String) {
         RetrofitManager.instance.getMemoryPhoto(
             date = date
         ) { responseState, responseBody ->
             when (responseState) {
                 RESPONSE_STATE.OKAY -> {
-                    Log.d("getMemoryPhoto Okay", "myalbum api : ${responseBody?.size}")
+//                    Log.d("getMemoryPhoto Okay", "myalbum api : ${responseBody?.size}")
                     Log.d("responseBody", "$responseBody")
 //
                     albumData = MyAlbumPhotoData(myPhoto = mutableListOf(firstAdd))
                     if (responseBody != null) {
-                        albumData.myPhoto.addAll(responseBody)
-                    }
-//                    albumData.apply {
-//                        myPhoto.add(0, firstAdd)
+//                        albumData.myPhoto.addAll(responseBody)
 //                    }
-                    //albumData.myPhoto.add
-                        Log.d("get Memory Photo", "${albumData}")
-                        initAlbum(albumData)
-                    //}
+                        var parsedMyAlbumDataArray = mutableListOf<PhotoInfo>()
+                        val body = responseBody?.asJsonObject
+                        val data = body?.getAsJsonArray("data")
+                        data?.forEach { resultItem ->
+                            val resultItemObject = resultItem.asJsonObject
+                            if (resultItemObject.get("time").asString == time) {
+                                val memoryPhotoImagesArray =
+                                    resultItemObject.getAsJsonArray("memoryPhotoImages")
+
+                                memoryPhotoImagesArray?.forEach { photoItem ->
+                                    val photoItemObject = photoItem.asJsonObject
+                                    val isUploader =
+                                        photoItemObject.get("isUploader").asBoolean
+                                    val memoryPhotoImgUrl =
+                                        photoItemObject.get("memoryPhotoImgUrl").asString
+
+                                    // Create MyAlbumPhotoData object and add to the list
+                                    val photoData =
+                                        PhotoInfo(isUploader, memoryPhotoImgUrl)
+                                    Log.d("photoData", "$photoData")
+                                    parsedMyAlbumDataArray.add(photoData)
+                                    albumData.myPhoto.add(photoData)
+
+                                    Log.d("get Memory Photo", "${albumData}")
+                                }
+                                initAlbum(albumData)
+                            }
+                        }}
                     Log.d("responseBody", "$responseBody")
 
                 }

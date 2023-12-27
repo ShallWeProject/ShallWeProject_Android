@@ -35,14 +35,13 @@ class MyAlbumAdapter(private val context: Context) : RecyclerView.Adapter<MyAlbu
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_album, parent, false)
         return ViewHolder(view)
-
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val data = datas.myPhoto?.get(position)?.memoryPhotoImgUrl
 
         if (position == 0) {
-            // 맨 처음 아이템일 때 정해진 이미지 로드
+            // 맨 처음 아이템일 때 이미지 추가 버튼 로드
             Glide.with(context)
                 .load(R.drawable.add_photo)
                 .into(holder.ivAlbum)
@@ -63,7 +62,6 @@ class MyAlbumAdapter(private val context: Context) : RecyclerView.Adapter<MyAlbu
     private fun picDialog(view: View, position: Int, data: MyAlbumPhotoData) {
         // 사진 추가
         if (position == 0) {
-//            Toast.makeText(view.context, "사진 추가 기능", Toast.LENGTH_SHORT).show()
             itemClickListener?.onItemClick(position)
 
         }
@@ -89,11 +87,12 @@ class MyAlbumAdapter(private val context: Context) : RecyclerView.Adapter<MyAlbu
             dialog.show()
 
             myLayout.findViewById<Button>(R.id.btn_delete).setOnClickListener {
-                retrofitdelApiCall(datas.myPhoto?.get(position)!!.memoryPhotoImgUrl)
+                retrofitDelApiCall(datas.myPhoto?.get(position)!!.memoryPhotoImgUrl)
+                Log.d("삭제할 이미지 url: ", "${datas.myPhoto?.get(position)!!.memoryPhotoImgUrl}")
                 datas.myPhoto?.removeAt(position)
+                dialog.dismiss()
                 notifyItemRemoved(position)
                 notifyItemRangeChanged(position, itemCount)
-
             }
 
             myLayout.findViewById<Button>(R.id.btn_close).setOnClickListener {
@@ -102,7 +101,7 @@ class MyAlbumAdapter(private val context: Context) : RecyclerView.Adapter<MyAlbu
         }
     }
 
-    private fun retrofitdelApiCall(url : String) {
+    private fun retrofitDelApiCall(url : String) {
         RetrofitManager.instance.deleteMemoryPhoto(photoUrl = url) { responseState, responseBody ->
             when (responseState) {
                 RESPONSE_STATE.OKAY -> {
@@ -133,27 +132,4 @@ class MyAlbumAdapter(private val context: Context) : RecyclerView.Adapter<MyAlbu
             }
         }
     }
-//
-//    private fun delDialog(view: View, position: Int, idx: Int) {
-//        val myLayout = LayoutInflater.from(context).inflate(R.layout.dialog_delete_photo, null)
-//        val build = AlertDialog.Builder(view.context).apply {
-//            setView(myLayout)
-//        }
-//        val dialog = build.create()
-//        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-//
-//        dialog.show()
-//
-//        myLayout.findViewById<Button>(R.id.btn_cancel_reservation).setOnClickListener {
-////            //retrofitdelResApiCall(idx)
-////            datas.imgUrl?.removeAt(position)
-////            notifyItemRemoved(position)
-////            notifyItemRangeChanged(position, itemCount)
-////            Toast.makeText(context, "삭제되었습니다.", Toast.LENGTH_SHORT).show()
-////            dialog.dismiss()
-//        }
-//        myLayout.findViewById<Button>(R.id.btn_cancel).setOnClickListener {
-//            dialog.dismiss()
-//        }
-//    }
 }
