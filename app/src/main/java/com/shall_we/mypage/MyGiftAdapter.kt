@@ -19,7 +19,8 @@ import com.shall_we.changeReservation.ChangeReservationFragment
 import com.shall_we.databinding.ItemGiftboxBinding
 import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RetrofitManager
-import com.shall_we.search.SearchResultFragment
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 
 class MyGiftAdapter(private val context: Context, private val parentFragmentManager: FragmentManager) : RecyclerView.Adapter<MyGiftAdapter.ViewHolder>(){
@@ -33,9 +34,11 @@ class MyGiftAdapter(private val context: Context, private val parentFragmentMana
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val data = datas[position]
+        val parsedTime = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).parse(data.time)
+        val time = SimpleDateFormat("HH시", Locale.getDefault()).format(parsedTime)
         holder.binding.tvPerson.text = data.person
         holder.binding.tvDate.text = data.date
-        holder.binding.tvTime.text = data.time
+        holder.binding.tvTime.text = time
         holder.binding.tvTitle.text = data.title
         holder.binding.tvDescription.text = data.description
         holder.binding.tvMessage.text = data.message

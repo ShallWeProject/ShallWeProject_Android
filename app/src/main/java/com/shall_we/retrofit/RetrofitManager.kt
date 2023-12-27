@@ -369,17 +369,8 @@ class RetrofitManager {
 
                                 val timeElement: String = resultItemObject?.get("time")?.toString() ?: "99"
                                 Log.d("timeElement","$timeElement")
-                                var time : String = ""
-
-                                if (!resultItemObject.get("time").isJsonNull) {
-                                    time = resultItemObject.get("time").asString
-                                    val parsedTime = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).parse(time)
-                                    time = SimpleDateFormat("HH시", Locale.getDefault()).format(parsedTime)
-                                } else {
-                                    time = "null"
-                                }
-
-                                val sender = resultItemObject.getAsJsonObject("sender")
+                                val time: String = resultItemObject?.get("time")?.asString ?: ""
+                            val sender = resultItemObject.getAsJsonObject("sender")
                                 val name = sender.get("name").asString
                                 val experienceGiftId : Int = resultItemObject.get("experienceGiftId").asInt
 
@@ -571,7 +562,7 @@ class RetrofitManager {
 
         })
     }
-    fun getMemoryPhoto(date: String, completion:(RESPONSE_STATE, MutableList<PhotoInfo>?) -> Unit){
+    fun getMemoryPhoto(date: String, completion:(RESPONSE_STATE, JsonElement?) -> Unit){
         val call = iRetrofit?.getMemoryPhoto(date = date) ?:return
 
         call.enqueue(object : Callback<JsonElement> {
@@ -582,47 +573,38 @@ class RetrofitManager {
                     200 -> {
                         Log.d("getMemoryPhoto response, date", "${response.body()}, $date")
                         response.body()?.let {
-                            var parsedMyAlbumDataArray = mutableListOf<PhotoInfo>()
-                        //response.body()?.let { parsedMyAlbumDataArray.addAll(it) }
-//                            val body = response.body()
-//                            val data = body?.data
-                            val body = it.asJsonObject
-                            val data = body.getAsJsonArray("data")
-                            data?.forEach { resultItem ->
-                                val resultItemObject = resultItem.asJsonObject
-                                val memoryPhotoImagesArray =
-                                    resultItemObject.getAsJsonArray("memoryPhotoImages")
-
-                                memoryPhotoImagesArray?.forEach { photoItem ->
-                                    val photoItemObject = photoItem.asJsonObject
-                                    val isUploader =
-                                        photoItemObject.get("isUploader").asBoolean
-                                    val memoryPhotoImgUrl =
-                                        photoItemObject.get("memoryPhotoImgUrl").asString
-
-                                    // Create MyAlbumPhotoData object and add to the list
-                                    val photoData =
-                                        PhotoInfo(isUploader, memoryPhotoImgUrl)
-                                    Log.d("photoData","$photoData")
-                                    parsedMyAlbumDataArray.add(photoData)
-//                                for (i in 0 until mutableList.size()) {
-//                                    val item = mutableList[i].asString
-//                                    memoryPhotoImages.add(item)
-//                                }
+////                            var parsedMyAlbumDataArray = mutableListOf<PhotoInfo>()
+//                            val body = it.asJsonObject
+//                            val data = body.getAsJsonArray("data")
+//                            data?.forEach { resultItem ->
+//                                val resultItemObject = resultItem.asJsonObject
+//                                val memoryPhotoImagesArray =
+//                                    resultItemObject.getAsJsonArray("memoryPhotoImages")
+//
+//                                memoryPhotoImagesArray?.forEach { photoItem ->
+//                                    val photoItemObject = photoItem.asJsonObject
+//                                    val isUploader =
+//                                        photoItemObject.get("isUploader").asBoolean
+//                                    val memoryPhotoImgUrl =
+//                                        photoItemObject.get("memoryPhotoImgUrl").asString
+//
+//                                    // Create MyAlbumPhotoData object and add to the list
+//                                    val photoData =
+//                                        PhotoInfo(isUploader, memoryPhotoImgUrl)
+//                                    Log.d("photoData","$photoData")
+//                                    parsedMyAlbumDataArray.add(photoData)
 ////
 //                                val myAlbumItem = MyAlbumData(date = date, memoryImgs = memoryPhotoImages.toList())
 //
 //                                parsedMyAlbumDataArray.add(myAlbumItem)
 ////
 ////                                //val myalbum = it.asJsonObject
-                                }
-                                //parsedMyAlbumDataArray
+                            //    }
+                            //parsedMyAlbumDataArray
 
-                                Log.d("parsedMyAlbumDataArray", "$parsedMyAlbumDataArray")
-                            }
-                            Log.d("parsedMyAlbumDataArray", "$parsedMyAlbumDataArray")
-
-                            completion(RESPONSE_STATE.OKAY, parsedMyAlbumDataArray)
+                            //}
+                            Log.d("getMemoryBody","${it}")
+                            completion(RESPONSE_STATE.OKAY, response.body())
 
                         }
                     }
