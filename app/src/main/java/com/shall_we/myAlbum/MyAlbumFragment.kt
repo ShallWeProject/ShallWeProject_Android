@@ -138,17 +138,20 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
         postMemoryPhoto(uploadPhotoArray)
         //Toast.makeText(view?.context , "사진이 추가되었습니다.", Toast.LENGTH_SHORT).show()
         Log.d("postMemoryPhoto", "idx: ${giftData[giftIdx].idx},  ${giftData[giftIdx].date} 날짜에 업로드 완료 key: uploads/$filename.$ext")
-        val modDate: String = giftData[giftIdx].date.replace(".", "-")
-        getMemoryPhoto(modDate, giftData[giftIdx].time)
+        //val modDate: String = giftData[giftIdx].date.replace(".", "-")
+        //getMemoryPhoto(modDate, giftData[giftIdx].time)
     }
 
     // 버킷 내의 이미지를 해당 추억에 post
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun postMemoryPhoto(uploadPhotoArray: UploadPhotoArray) {
         RetrofitManager.instance.postMemoryPhoto(
             uploadPhotoArray = uploadPhotoArray,
             completion = { responseState ->
                 when (responseState) {
                     RESPONSE_STATE.OKAY -> {
+                        val modDate: String = giftData[giftIdx].date.replace(".", "-")
+                        getMemoryPhoto(modDate, giftData[giftIdx].time)
                         Log.d("retrofit", "post Memory Photo api : ${responseState}")
                     }
 
