@@ -42,6 +42,12 @@ class MypageFragment : Fragment() {
         val position = arguments?.getInt("position",0)
         if(position != null){
             setSelectedTab(binding.tabs, position!!-1)
+            if (position == 2) {
+                binding.fabAlbum.visibility = View.VISIBLE
+            }
+            else {
+                binding.fabAlbum.visibility = View.GONE
+            }
         }
     }
 
