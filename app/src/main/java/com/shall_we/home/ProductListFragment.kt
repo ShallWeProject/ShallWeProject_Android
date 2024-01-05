@@ -168,7 +168,7 @@ class ProductListFragment : Fragment() , ProductAdapter.OnItemClickListener{
                     }
 
                     1 -> {
-                        spinnerString = "최근순"
+                        spinnerString = "추천순"
                     }
                     2->{
                         spinnerString = "가격높은순"
