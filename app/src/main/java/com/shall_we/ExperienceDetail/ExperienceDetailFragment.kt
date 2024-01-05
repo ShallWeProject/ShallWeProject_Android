@@ -85,12 +85,6 @@ class ExperienceDetailFragment: Fragment(){
             }
         )
 
-
-
-
-
-
-
         binding.fab.setOnClickListener() {
             binding.fab.visibility = View.GONE
 
@@ -103,7 +97,7 @@ class ExperienceDetailFragment: Fragment(){
             }
 
             parentFragmentManager.beginTransaction()
-                .replace(R.id.nav_host_fragment, giftReservationFragment, "giftreserve")
+                .add(R.id.nav_host_fragment, giftReservationFragment, "giftreserve")
                 .addToBackStack(null)
                 .commitAllowingStateLoss()
         }

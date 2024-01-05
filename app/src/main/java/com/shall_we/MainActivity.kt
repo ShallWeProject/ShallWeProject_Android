@@ -130,6 +130,15 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onBackPressed() {
+        if (supportFragmentManager.backStackEntryCount > 1) {
+            supportFragmentManager.popBackStackImmediate(null, 0)
+        }else{
+            supportFragmentManager.popBackStackImmediate(null, 0)
+            supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        }
+    }
+
 
 }
 data class DrawerData(

@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Button
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.tabs.TabLayout
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener
@@ -64,11 +65,10 @@ class ChangeReservationFragment : BaseFragment<FragmentChangeReservationBinding>
 
         Log.d("date",selectedDate.toString())
 
+        timeRetrofitCall(binding.rvChTime,selectedDate.toString())
 
         val tabs = requireActivity().findViewById<View>(R.id.tabs)
         tabs.visibility = View.GONE
-
-        var isButtonSelected = false
 
         calendarView = binding.changeCalendar
 
@@ -135,22 +135,12 @@ class ChangeReservationFragment : BaseFragment<FragmentChangeReservationBinding>
         val month = localDate.monthValue // 월 (1 ~ 12)
         val day = localDate.dayOfMonth // 일
 
-// 시간 추출 - 기본 시각을 0으로 사용
-        val hour = 0 // 시 (0 ~ 23)
-
-
-        val calendar = Calendar.getInstance().apply {
-            set(year, month - 1, day, 13, 0, 0)
-            set(Calendar.MILLISECOND, 0)
-        }
-
         val calendarDay: CalendarDay = CalendarDay.from(year, month, day)
 
 // Set the selected date on the MaterialCalendarView
         calendarView.selectedDate = calendarDay
         calendarView.setDateSelected(calendarDay, true)
 
-        timeRetrofitCall(binding.rvChTime,"$year-$month-$day")
         binding.btnChange.setOnClickListener {
             if (selectedDate != null) { // 선택된 날짜가 있으면
                 val month = selectedDate.toString().substring(5,7) // 1을 더하는 이유는 0부터 시작하기 때문입니다.
@@ -190,8 +180,6 @@ class ChangeReservationFragment : BaseFragment<FragmentChangeReservationBinding>
                 // 취소버튼 누르면 대화상자 종료
                 alertDialog.dismiss()
             })
-
-
             }
         }
     }
@@ -261,7 +249,14 @@ class ChangeReservationFragment : BaseFragment<FragmentChangeReservationBinding>
         super.onStart()
         val fab = requireActivity().findViewById<Button>(R.id.fab_album)
         fab.visibility = View.GONE
+    }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        val tab = requireActivity().findViewById<TabLayout>(R.id.tabs)
+        tab.visibility = View.VISIBLE
+        val fab = requireActivity().findViewById<Button>(R.id.fab_album)
+        fab.visibility = View.VISIBLE
     }
 }
 
