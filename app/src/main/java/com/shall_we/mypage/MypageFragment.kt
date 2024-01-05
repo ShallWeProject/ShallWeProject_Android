@@ -121,5 +121,4 @@ class MypageFragment : Fragment() {
             tab?.select()
         }
     }
-
 }

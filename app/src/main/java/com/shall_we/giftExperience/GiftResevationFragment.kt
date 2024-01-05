@@ -234,10 +234,7 @@ class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickLis
                             Log.d("time",responseBody.get(i).time)
                             time.add(ReservationTimeData(time = responseBody.get(i).time.toString().substring(0, 2)))
                         }
-
                     }
-                }
-                else{
                 }
                 initRecycler(rvCategory,time)
             }
