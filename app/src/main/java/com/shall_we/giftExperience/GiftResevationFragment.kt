@@ -8,11 +8,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.google.android.material.tabs.TabLayout
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.DayViewDecorator
 import com.prolificinteractive.materialcalendarview.DayViewFacade
@@ -40,7 +43,6 @@ class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickLis
     private lateinit var calendarView: MaterialCalendarView
     private var experienceGiftId: Int = 1
     var formattedDate: String? = null
-    var selectedTime:LocalDateTime?=null
     lateinit var experienceDetailViewModel: ExperienceDetailViewModel
     private val locale: Locale = Locale("ko")
     private lateinit var binding: FragmentGiftResevationBinding  // Binding 객체 추가
@@ -196,7 +198,7 @@ class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickLis
             binding.exgiftBtn01.visibility = View.GONE
             binding.exgiftBtn02.visibility = View.GONE
             binding.exgiftBtn03.visibility = View.GONE
-            fragmentTransaction.replace(
+            fragmentTransaction.add(
                 R.id.nav_host_fragment,
                 giftExperienceFragment,
                 "giftreserve"
@@ -250,6 +252,12 @@ class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickLis
         time = text
         binding.exgiftBtn03.isClickable = true
         binding.exgiftBtn03.setBackgroundResource(R.drawable.gift_btn)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        val fab = requireActivity().findViewById<ExtendedFloatingActionButton>(R.id.fab)
+        fab.visibility = View.VISIBLE
     }
 }
 

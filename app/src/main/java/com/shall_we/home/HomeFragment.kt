@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -22,6 +23,7 @@ import com.shall_we.ExperienceDetail.ExperienceDetailFragment
 import com.shall_we.R
 import com.shall_we.databinding.FragmentHomeBinding
 import com.shall_we.dto.ExperienceRes
+import com.shall_we.mypage.isTabLayoutVisible
 import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RetrofitManager
 import com.shall_we.search.SearchFragment
@@ -173,7 +175,6 @@ class HomeFragment : Fragment() , ProductAdapter.OnItemClickListener, CategoryAd
             bannerViewPagerAdapter.submitList(bannerItemList)
         })
     }
-
     private fun initCategoryRecycler(rvCategory: RecyclerView) {
         categoryAdapter = CategoryAdapter(requireContext())
         categoryAdapter.setOnItemClickListener(this)
