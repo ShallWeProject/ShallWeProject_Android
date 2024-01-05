@@ -187,10 +187,9 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
                         Log.d("retrofit", "mygift api : ${responseBody?.size}")
                         if (responseBody?.size != 0) {
                             giftBoxData.addAll(responseBody!!)
-                            retrofitCallDate2(giftBoxData)
-                            //getGiftData(responseBody!!)
                         }
                         size = responseBody.size
+                        retrofitCallDate2(giftBoxData)
                     }
 
                     RESPONSE_STATE.FAIL -> {
