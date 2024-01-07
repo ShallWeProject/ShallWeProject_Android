@@ -1,18 +1,21 @@
 package com.shall_we.drawer
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.navigation.NavigationView
 import com.shall_we.MainActivity
 import com.shall_we.R
 import com.shall_we.databinding.FragmentDrawerHelpBinding
-import com.shall_we.home.HomeRecomFragment
 import com.shall_we.mypage.FaqFragment
 import com.shall_we.utils.HorizontalSpaceItemDecoration
 import com.shall_we.utils.dpToPx
@@ -32,19 +35,16 @@ class DrawerHelpFragment : Fragment(), DrawerAdapter.OnItemClickListener  {
             newFragment = FaqFragment() // faq페이지로 이동
             val bundle = Bundle()
             newFragment.arguments = bundle
-
+            parentFragmentManager.beginTransaction()
+                .add(R.id.nav_host_fragment, newFragment)
+                .addToBackStack(null)
+                .commit()
         }
         else {
-            newFragment = FaqFragment() // 메일 문의 페이지로 이동 **수정하기
-            val bundle = Bundle()
-            newFragment.arguments = bundle
+            sendEmail()
         }
 
-        // 프래그먼트 전환
-        parentFragmentManager.beginTransaction()
-            .add(R.id.nav_host_fragment, newFragment)
-            .addToBackStack(null)
-            .commit()
+
 
     }
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,7 +84,25 @@ class DrawerHelpFragment : Fragment(), DrawerAdapter.OnItemClickListener  {
         }
         val spaceDecoration = HorizontalSpaceItemDecoration(dpToPx(15))
         rv.addItemDecoration(spaceDecoration)
-
-
     }
+    private fun sendEmail() {
+        val emailIntent = Intent(Intent.ACTION_SEND)
+
+        try {
+            emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("connect.shallwe@gmail.com"))
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, "[메일 문의]")
+            emailIntent.type = "text/html"
+            emailIntent.setPackage("com.google.android.gm")
+            if (emailIntent.resolveActivity(requireActivity().packageManager) != null) startActivity(emailIntent)
+            startActivity(emailIntent)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emailIntent.type = "text/html"
+            emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("connect.shallwe@gmail.com"))
+            startActivity(Intent.createChooser(emailIntent, "Send Email"))
+        }
+    }
+
+
+
 }
