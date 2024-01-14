@@ -53,6 +53,8 @@ class ExDetailFragment : Fragment() {
                             binding.thrStage.text = "3단계: "+item.explanation[2].stage
                             binding.thrDescription.text = item.explanation[2].description
                             Glide.with(this).load(item.explanation[2].explanationUrl).into(binding.thrImage)
+
+                            binding.location.text = item.location
                         }
                     }
                 }
