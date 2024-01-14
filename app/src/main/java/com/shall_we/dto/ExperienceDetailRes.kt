@@ -16,8 +16,7 @@ data class GiftDTO(
     val price: Int,
     val explanation: List<Explanation>,
     val description: String,
-    val expCategory: String,
-    val sttCategory: String,
+    val location: String,
     val experienceGiftId: Int
 )
 
