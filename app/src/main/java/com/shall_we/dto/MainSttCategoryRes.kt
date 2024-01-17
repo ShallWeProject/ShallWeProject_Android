@@ -16,9 +16,7 @@ data class SttCategoryData(
 )
 
 data class MainSttCategoryRes(
-    @SerializedName("thumbnail")
-    val thumbnail: String?,
-    @SerializedName("subtitle")
+    @SerializedName("subtitleTitle")
     val subtitle: String,
     @SerializedName("title")
     val title: String,
