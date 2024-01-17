@@ -66,6 +66,7 @@ class LoginActivity : AppCompatActivity(),ILoginEvent{
     fun loginSuccess(){
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
+        finish()
     }
     fun showLoginFragment(){
         val newFragment = LoginFragment() // 전환할 다른 프래그먼트 객체 생성
