@@ -74,6 +74,8 @@ class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickLis
                             binding.exgiftText02.text = item.subtitle
                             binding.exgiftText04.text = item.title
                             val giftImgUrlSize = item.giftImgUrl.size
+                            val formattedPrice = String.format("%,d", item.price.toInt())
+                            binding.tvPrice.text = formattedPrice.toString()+" 원"
 
                             // 여러 개의 이미지 URL을 사용하는 경우
                             val dummyImageUrls = mutableListOf<String>()

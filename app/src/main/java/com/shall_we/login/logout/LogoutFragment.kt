@@ -2,6 +2,7 @@ package com.shall_we.login.logout
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -12,8 +13,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import com.shall_we.App
+import com.shall_we.MainActivity
 import com.shall_we.R
 import com.shall_we.databinding.FragmentLogoutBinding
+import com.shall_we.login.LoginActivity
 import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RefreshTokenArray
 import com.shall_we.retrofit.RetrofitManager
@@ -87,6 +90,8 @@ class LogoutFragment : Fragment() {
                     App.accessToken = sharedPref?.getString("ACCESS_TOKEN", null)
                     App.refreshToken = sharedPref?.getString("REFRESH_TOKEN", null)
                     //로그인 화면으로 돌아가기
+                    val intent = Intent(requireContext(), LoginActivity::class.java)
+                    startActivity(intent)
                     requireActivity().finish()
                 }
 

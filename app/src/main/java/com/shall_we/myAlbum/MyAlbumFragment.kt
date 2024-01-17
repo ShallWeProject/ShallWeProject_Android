@@ -13,6 +13,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -22,6 +23,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState
 import com.amazonaws.regions.Regions
+import com.google.android.material.tabs.TabLayout
 import com.shall_we.BuildConfig.access_key
 import com.shall_we.BuildConfig.secret_key
 import com.shall_we.R
@@ -406,6 +408,14 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
             cursor?.close()
         }
         return path
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        val tab = requireActivity().findViewById<TabLayout>(R.id.tabs)
+        tab.visibility = View.VISIBLE
+        val fab = requireActivity().findViewById<Button>(R.id.fab_album)
+        fab.visibility = View.VISIBLE
     }
 }
 

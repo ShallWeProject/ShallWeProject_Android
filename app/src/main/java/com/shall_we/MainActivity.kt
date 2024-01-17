@@ -3,12 +3,15 @@ package com.shall_we
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Base64
 import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -33,6 +36,9 @@ class MainActivity : AppCompatActivity() {
 
     val drawerData = mutableListOf<DrawerData>()
      //페이지 번호
+     //
+     private var backPressCount = 0
+     private val DOUBLE_BACK_PRESS_INTERVAL = 2000 // milliseconds
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -131,11 +137,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        Log.d("back",supportFragmentManager.backStackEntryCount.toString())
         if (supportFragmentManager.backStackEntryCount > 1) {
-            supportFragmentManager.popBackStackImmediate(null, 0)
-        }else{
-            supportFragmentManager.popBackStackImmediate(null, 0)
+            supportFragmentManager.popBackStackImmediate()
+        }
+        else if(supportFragmentManager.backStackEntryCount == 1) {
+            supportFragmentManager.popBackStackImmediate()
             supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        }
+        else {
+            Log.d("back",supportFragmentManager.backStackEntryCount.toString())
+            supportActionBar?.setDisplayHomeAsUpEnabled(false)
+            if (backPressCount == 2) {
+                super.onBackPressed()
+            } else {
+                backPressCount++
+                Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT).show()
+                Handler(Looper.getMainLooper()).postDelayed({
+                    backPressCount = 0
+                }, DOUBLE_BACK_PRESS_INTERVAL.toLong())
+            }
         }
     }
 
