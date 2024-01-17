@@ -122,9 +122,10 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
             .setRegion(Regions.AP_NORTHEAST_2)
             .uploadWithTransferUtility(
                 this.context,
-                "shallwebucket",
-                "uploads",
-                file,
+                bucketName = "shallwebucket",
+                folder = "uploads",
+                file = file,
+                fileName = "$filename.$ext",
                 object : TransferListener {
                     override fun onStateChanged(id: Int, state: TransferState?) {
                     }
@@ -147,6 +148,7 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
     // 버킷 내의 이미지를 해당 추억에 post
     @RequiresApi(Build.VERSION_CODES.O)
     private fun postMemoryPhoto(uploadPhotoArray: UploadPhotoArray) {
+        Log.d("postmemoryphoto",uploadPhotoArray.toString())
         RetrofitManager.instance.postMemoryPhoto(
             uploadPhotoArray = uploadPhotoArray,
             completion = { responseState ->
@@ -262,7 +264,8 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
         dates =
             giftData.map { DateTime(it.date, it.time) } // 이게 굳이 있어야 하나 싶긴 함. giftData로 받아와서 title이랑 date 다 출력할 수 있지 않나 싶음...
         binding.tvAlbumDate.text = dates[giftIdx].date
-
+        binding.tvAlbumDescription.text = giftData[giftIdx].description
+        binding.tvAlbumTitle.text = giftData[giftIdx].title
         val modDate: String = giftData[giftIdx].date.replace(".", "-")
         getMemoryPhoto(modDate, giftData[giftIdx].time)
         Log.d("modDate","$modDate")
@@ -374,7 +377,15 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
 
     private fun parseUri(selectedImageUri: Uri) {
         val fileForName = File(selectedImageUri.toString())
-        filename = fileForName.nameWithoutExtension
+        val currentTime : Long = System.currentTimeMillis() // ms로 반환
+        println(currentTime)
+        val dateFormat = SimpleDateFormat("HHmmss")
+
+        val formattedTime: String = dateFormat.format(Date(currentTime))
+
+        // Print the formatted time
+        println(formattedTime)
+        filename = fileForName.nameWithoutExtension+formattedTime
         ext = fileForName.extension
 //        Log.d("fileForName", "$fileForName")
 //        Log.d("filename, ext", "$filename $ext")
