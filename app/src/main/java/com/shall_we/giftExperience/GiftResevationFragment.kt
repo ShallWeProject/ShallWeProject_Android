@@ -109,11 +109,14 @@ class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickLis
                 count--
                 binding.exgiftText06.text = count.toString()
             }
+
         }
 
         binding.exgiftBtn02.setOnClickListener {
-            count++
-            binding.exgiftText06.text = count.toString()
+            if(count < 10){
+                count++
+                binding.exgiftText06.text = count.toString()
+            }
         }
 
         calendarView = binding.calendar
