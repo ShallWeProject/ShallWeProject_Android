@@ -1,7 +1,7 @@
 package com.shall_we.retrofit
 
 object API {
-    const val BASE_URL : String = "http://13.124.44.109/"
+    const val BASE_URL : String = "https://api.shallwes.com/"
 
     const val EXPERIENCE_GIFT_SEARCH = "api/v1/experience/gift/search"
 
