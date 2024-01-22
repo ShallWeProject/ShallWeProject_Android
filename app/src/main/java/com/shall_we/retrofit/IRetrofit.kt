@@ -108,7 +108,7 @@ interface IRetrofit {
 
 data class ValidVerificationArray(val verificationCode: String, val phoneNumber:String)
 
-data class SendOneArray(val phoneNumber: String)
+data class SendOneArray(val receivePhoneNumber: String)
 
 data class RefreshTokenArray(val refreshToken:String)
 
