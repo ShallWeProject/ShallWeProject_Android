@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
-import com.shall_we.ExperienceDetail.ExperienceDetailFragment
 import com.shall_we.R
 import com.shall_we.databinding.FragmentProductListBinding
 import com.shall_we.retrofit.RESPONSE_STATE
@@ -20,27 +19,11 @@ import com.shall_we.retrofit.RetrofitManager
 import com.shall_we.utils.initProductRecycler
 
 
-class ProductListFragment : Fragment() , ProductAdapter.OnItemClickListener{
+class ProductListFragment : Fragment() {
     var category : Boolean = true
     var spinnerString : String = "인기순"
     var tabPosition : Int = 0
     lateinit var rvProduct : RecyclerView
-
-    override fun onItemClick(item: ProductData) {
-
-        // 클릭된 아이템의 정보를 사용하여 다른 프래그먼트로 전환하는 로직을 작성
-        val newFragment = ExperienceDetailFragment() // 전환할 다른 프래그먼트 객체 생성
-        val bundle = Bundle()
-        bundle.putInt("id", item.giftid) // 클릭된 아이템의 이름을 "title" 키로 전달
-        newFragment.arguments = bundle
-        // 프래그먼트 전환
-        parentFragmentManager.beginTransaction()
-            .add(R.id.home_layout, newFragment)
-            .addToBackStack(null)
-            .commit()
-
-    }
-
 
     override fun onResume() {
         super.onResume()
@@ -50,7 +33,6 @@ class ProductListFragment : Fragment() , ProductAdapter.OnItemClickListener{
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(
@@ -218,7 +200,7 @@ class ProductListFragment : Fragment() , ProductAdapter.OnItemClickListener{
                                 )
                             }
                         }
-                        initProductRecycler(rvProduct,productDataList,this)
+                        initProductRecycler(rvProduct,productDataList)
 
                     }
 
@@ -254,7 +236,7 @@ class ProductListFragment : Fragment() , ProductAdapter.OnItemClickListener{
                                 productDataList.add(ProductData(title=title, subtitle = subtitle, price = formattedPrice, img = giftImgUrl, giftid = giftid))
                             }
                         }
-                        initProductRecycler(rvProduct, productDataList,this)
+                        initProductRecycler(rvProduct, productDataList)
                     }
                     RESPONSE_STATE.FAIL -> {
                         Log.d("retrofit", "api 호출 에러")
@@ -263,7 +245,4 @@ class ProductListFragment : Fragment() , ProductAdapter.OnItemClickListener{
             })
         }
     }
-
-
-
 }

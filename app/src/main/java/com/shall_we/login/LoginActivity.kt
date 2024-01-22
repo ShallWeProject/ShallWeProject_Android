@@ -43,17 +43,17 @@ class LoginActivity : AppCompatActivity(),ILoginEvent{
 
         checkAutoLogin()
 
-        val sharedPref = this.getSharedPreferences("MY_APP_PREFS", Context.MODE_PRIVATE)
+        val sharedPref = this.getSharedPreferences("com.shall_we", Context.MODE_PRIVATE)
         
-        App.refreshToken = sharedPref.getString("REFRESH_TOKEN", null)
-        App.accessToken = sharedPref.getString("ACCESS_TOKEN", null)
+        App.refreshToken = sharedPref.getString("refresh_token", null)
+        App.accessToken = sharedPref.getString("access_token", null)
 
     }
     private fun checkAutoLogin() {
-        val sharedPref = this.getSharedPreferences("MY_APP_PREFS", Context.MODE_PRIVATE)
+        val sharedPref = this.getSharedPreferences("com.shall_we", Context.MODE_PRIVATE)
 
-        val accessToken = sharedPref.getString("ACCESS_TOKEN", null)
-        val refreshToken = sharedPref.getString("ACCESS_TOKEN", null)
+        val accessToken = sharedPref.getString("access_token", null)
+        val refreshToken = sharedPref.getString("refresh_token", null)
         if (accessToken != null && accessToken.isNotEmpty()) {
             Log.d("login","$accessToken")
             // accessToken이 존재할 경우 자동 로그인 처리

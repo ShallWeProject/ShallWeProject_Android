@@ -109,12 +109,12 @@ class DeleteAccountFragment : Fragment() {
             when (responseState) {
                 RESPONSE_STATE.OKAY -> {
                     // 토큰 리셋
-                    val sharedPref = context?.getSharedPreferences("MY_APP_PREFS", Context.MODE_PRIVATE)
-                    sharedPref?.edit()?.putString("ACCESS_TOKEN", null)?.apply()
-                    sharedPref?.edit()?.putString("REFRESH_TOKEN", null)?.apply()
+                    val sharedPref = context?.getSharedPreferences("com.shall_we", Context.MODE_PRIVATE)
+                    sharedPref?.edit()?.putString("access_token", null)?.apply()
+                    sharedPref?.edit()?.putString("refresh_token", null)?.apply()
 
-                    App.accessToken = sharedPref?.getString("ACCESS_TOKEN", null)
-                    App.refreshToken = sharedPref?.getString("REFRESH_TOKEN", null)
+                    App.accessToken = sharedPref?.getString("access_token", null)
+                    App.refreshToken = sharedPref?.getString("refresh_token", null)
                     //로그인 화면으로 돌아가기
                     val intent = Intent(requireContext(), LoginActivity::class.java)
                     startActivity(intent)

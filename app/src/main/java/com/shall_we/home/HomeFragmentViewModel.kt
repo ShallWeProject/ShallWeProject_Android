@@ -10,7 +10,6 @@ class HomeFragmentViewModel : ViewModel() {
     val bannerItemList: LiveData<List<BannerItem>>
         get() = _bannerItemList
 
-
     fun setBannerItems(list: List<BannerItem>){
         _bannerItemList.value = list
     }

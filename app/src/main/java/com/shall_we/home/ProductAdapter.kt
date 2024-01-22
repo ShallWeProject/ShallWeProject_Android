@@ -1,6 +1,8 @@
 package com.shall_we.home
 
 import android.content.Context
+import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,8 +10,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.shall_we.ExperienceDetail.ExperienceDetailFragment
 import com.shall_we.R
 
 class ProductAdapter(private val context: Context) : RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
@@ -38,6 +42,8 @@ class ProductAdapter(private val context: Context) : RecyclerView.Adapter<Produc
     override fun getItemCount(): Int = datas.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        Log.d("RecyclerView", "onBindViewHolder called for position: $position")
+
         holder.bind(datas[position])
 
     }
@@ -70,14 +76,26 @@ class ProductAdapter(private val context: Context) : RecyclerView.Adapter<Produc
                 if (position != RecyclerView.NO_POSITION) {
                     val item = datas[position]
                     itemClickListener?.onItemClick(item)
+                    navigateToExperienceDetail(item)
                 }
             }
         }
-
-
+    }
+    fun navigateToExperienceDetail(item: ProductData) {
+        val newFragment = ExperienceDetailFragment()
+        val bundle = Bundle()
+        bundle.putInt("id", item.giftid)
+        newFragment.arguments = bundle
+        // Get the activity from the context
+        val activity = context as? FragmentActivity
+        activity?.supportFragmentManager?.beginTransaction()
+            ?.add(R.id.nav_host_fragment, newFragment)  // Use replace instead of add
+            ?.addToBackStack(null)?.commit()
     }
 
-
-
+    override fun onViewRecycled(holder: ViewHolder) {
+        super.onViewRecycled(holder)
+        Log.d("RecyclerView", "onViewRecycled called for position: ${holder.adapterPosition}")
+    }
 }
 

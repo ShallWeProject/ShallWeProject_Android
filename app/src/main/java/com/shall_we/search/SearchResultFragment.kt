@@ -77,7 +77,7 @@ class SearchResultFragment : BaseFragment<FragmentSearchResultBinding>(R.layout.
             }
             rv_search_result.visibility = View.VISIBLE
             no_result.visibility = View.GONE
-            initProductRecycler(rv_search_result, productDataList,this)
+            initProductRecycler(rv_search_result, productDataList)
         }
     }
 

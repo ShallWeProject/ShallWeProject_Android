@@ -30,7 +30,7 @@ class App : Application() {
 
         KakaoSdk.init(this, getString(R.string.kakao_app_key))
         sharedPreferences =
-            applicationContext.getSharedPreferences("", MODE_PRIVATE)
+            applicationContext.getSharedPreferences("com.shall_we", MODE_PRIVATE)
     }
 
 }

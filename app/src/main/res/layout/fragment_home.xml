@@ -22,7 +22,7 @@
         android:focusable="false"
         app:closeIcon="@drawable/ic_search_close"
         app:iconifiedByDefault="false"
-        app:layout_constraintBottom_toTopOf="@id/scrollview2"
+        app:layout_constraintBottom_toTopOf="@id/rv_main"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_weight="257"
         app:layout_constraintStart_toStartOf="parent"
@@ -31,8 +31,8 @@
         app:queryHint="찾고있는 경험이 있나요?"
         app:searchIcon="@drawable/ic_search" />
 
-    <ScrollView
-        android:id="@+id/scrollview2"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_main"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="12dp"
@@ -40,103 +40,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_searchView">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/viewPager2"
-                android:layout_width="match_parent"
-                android:layout_height="250dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-            </androidx.viewpager2.widget.ViewPager2>
-
-            <TextView
-                android:id="@+id/tv_page_number"
-                android:layout_width="42dp"
-                android:layout_height="18dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="17dp"
-                android:background="@drawable/viewpager_page_bg"
-                android:gravity="center"
-                android:text="1 | 10"
-                android:textColor="#fff"
-                android:textSize="10sp"
-                app:layout_constraintBottom_toBottomOf="@+id/viewPager2"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/fragmentContainerView"
-                android:name="com.shall_we.home.HomeRecomFragment"
-                android:layout_width="match_parent"
-                android:layout_height="154dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/viewPager2" />
-
-<!--            <androidx.fragment.app.FragmentContainerView-->
-<!--                android:id="@+id/fragmentContainerView2"-->
-<!--                android:name="com.shall_we.home.HomeRealtimeFragment"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toBottomOf="@id/fragmentContainerView" />-->
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/homeRealtime_layout"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/fragmentContainerView" >
-
-                <TextView
-                    android:id="@+id/realtimeText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:text="실시간 인기 경험"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_category"
-                    android:layout_width="0dp"
-                    android:layout_height="28dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginEnd="16dp"
-                    android:orientation="horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/realtimeText"
-                    app:layout_constraintTop_toBottomOf="@+id/realtimeText"
-                    tools:listitem="@layout/item_realtime_category" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_realtime"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginEnd="16dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/rv_category"
-                    app:layout_constraintTop_toBottomOf="@+id/rv_category"
-                    tools:listitem="@layout/item_product" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+        app:layout_constraintTop_toBottomOf="@+id/main_searchView"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

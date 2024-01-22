@@ -212,14 +212,14 @@ class LoginFragment : Fragment() , IAuthSign {
     }
 
     private fun setUserData(response: AuthResponse){
-        val sharedPref = context?.getSharedPreferences("MY_APP_PREFS", Context.MODE_PRIVATE)
+        val sharedPref = context?.getSharedPreferences("com.shall_we", Context.MODE_PRIVATE)
         val accessToken = response.data.accessToken
-        sharedPref?.edit()?.putString("ACCESS_TOKEN", accessToken)?.apply()
+        sharedPref?.edit()?.putString("access_token", accessToken)?.apply()
         val refreshToken = response.data.refreshToken
-        sharedPref?.edit()?.putString("REFRESH_TOKEN", refreshToken)?.apply()
+        sharedPref?.edit()?.putString("refresh_token", refreshToken)?.apply()
 
-        App.accessToken = sharedPref?.getString("ACCESS_TOKEN", null)
-        App.refreshToken = sharedPref?.getString("REFRESH_TOKEN", null)
+        App.accessToken = sharedPref?.getString("access_token", null)
+        App.refreshToken = sharedPref?.getString("refresh_token", null)
 
         Log.d("login","access token ${App.accessToken}")
         Log.d("login", "refresh token ${App.refreshToken}")
