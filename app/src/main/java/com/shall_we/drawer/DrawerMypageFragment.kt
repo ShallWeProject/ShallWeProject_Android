@@ -14,7 +14,6 @@ import com.shall_we.MainActivity
 import com.shall_we.mypage.MypageFragment
 import com.shall_we.R
 import com.shall_we.databinding.FragmentDrawerMypageBinding
-import com.shall_we.home.HomeRecomFragment
 import com.shall_we.myAlbum.MyAlbumFragment
 import com.shall_we.utils.HorizontalSpaceItemDecoration
 import com.shall_we.utils.dpToPx

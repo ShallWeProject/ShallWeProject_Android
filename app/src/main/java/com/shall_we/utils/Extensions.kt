@@ -21,10 +21,10 @@ fun String?.isJsonArray() : Boolean {
     return this?.startsWith("{") == true && this.endsWith("}")
 }
 
-fun initProductRecycler(rv: RecyclerView, resultData: ArrayList<ProductData>, itemClickListener: ProductAdapter.OnItemClickListener) {
+fun initProductRecycler(rv: RecyclerView, resultData: ArrayList<ProductData>) {
     val resultAdapter = ProductAdapter(rv.context)
     val layoutManager = GridLayoutManager(rv.context, 2, GridLayoutManager.VERTICAL, false)
-    resultAdapter.setOnItemClickListener(itemClickListener)
+//    resultAdapter.setOnItemClickListener(itemClickListener)
     layoutManager.recycleChildrenOnDetach = true
     rv.layoutManager = layoutManager
     rv.adapter = resultAdapter

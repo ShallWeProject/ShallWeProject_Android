@@ -661,7 +661,6 @@ class RetrofitManager {
                 }else{
                     try{
                         Log.e("login", "Request failed with response code: ${response.code()}")
-
                         completion(RESPONSE_STATE.OKAY, null)
 
                     }catch(e:Exception){
