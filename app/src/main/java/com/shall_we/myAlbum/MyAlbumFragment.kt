@@ -212,8 +212,9 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
                     RESPONSE_STATE.OKAY -> {
                         Log.d("retrofit", "mygift api : ${responseBody?.size}")
                         if (responseBody?.size == 0 && size == 0) {
-                            noData()
+                            emptyOrNot(true)
                         } else {
+                            emptyOrNot(false)
                             giftBoxData.addAll(responseBody!!)
                             getGiftData(giftBoxData)
                             //getGiftData(responseBody!!)
@@ -228,13 +229,15 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
         )
     }
 
-    private fun noData() {
-        val noDataFragment = MyAlbumEmptyFragment()
-        val fragmentTransaction = parentFragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.mypage_layout, noDataFragment, "myAlbumFragment")
-        fragmentTransaction.addToBackStack(null)
-        fragmentTransaction.commitAllowingStateLoss()
-        Log.d("noData","noData")
+    private fun emptyOrNot(boolean: Boolean) {
+        if (boolean) {
+            binding.tvNoData.visibility = View.VISIBLE
+            binding.cvAlbum.visibility = View.GONE
+        }
+        else {
+            binding.tvNoData.visibility = View.GONE
+            binding.cvAlbum.visibility = View.VISIBLE
+        }
     }
 
     private fun extractHour(time: String): String {
