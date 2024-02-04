@@ -26,9 +26,9 @@ class MypageFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         val myVPAdapter = super.getActivity()?.let { MypageVPAdapter(fragmentActivity = it) }
-        binding.viewpager?.apply {
-                adapter = myVPAdapter
-            }
+        binding.viewpager.apply {
+            adapter = myVPAdapter
+        }
 
         val tabTitleArray = arrayOf(
             "보낸 선물함",
@@ -38,46 +38,13 @@ class MypageFragment : Fragment() {
         TabLayoutMediator(binding.tabs, binding.viewpager) { tab, position ->
             tab.text = tabTitleArray[position]
         }.attach()
-
-        val position = arguments?.getInt("position",0)
-        if(position != null){
-            setSelectedTab(binding.tabs, position!!-1)
-            if (position == 2) {
-                binding.fabAlbum.visibility = View.VISIBLE
-            }
-            else {
-                binding.fabAlbum.visibility = View.GONE
-            }
-        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        binding.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                // 선택된 탭의 인덱스를 얻습니다.
-                val selectedTabIndex = tab?.position ?: 2
-                // 이제 선택된 탭에 대한 작업을 수행할 수 있습니다.
-                // 예: 선택된 탭의 인덱스를 이용해 데이터를 업데이트하거나 다른 동작 수행.
-                if (selectedTabIndex == 1) {
-                    binding.fabAlbum.visibility = View.VISIBLE
-                }
-                else {
-                    binding.fabAlbum.visibility = View.GONE
-                }
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-            }
-        })
-
+    ): View {
         binding.fabAlbum.setOnClickListener {
-
             val tabs = requireActivity().findViewById<View>(R.id.tabs)
             tabs.visibility = View.GONE
             binding.fabAlbum.visibility = View.GONE
@@ -101,24 +68,11 @@ class MypageFragment : Fragment() {
                 isTabLayoutVisible = true
             } else {
                 requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, this)
-                // 기본 동작 수행 (프래그먼트 종료 또는 이전 상태로 돌아가기)
             }
         }
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-    }
-
-    private fun setSelectedTab(tabLayout: TabLayout, selectedTabIndex: Int) {
-        val tabCount = tabLayout.tabCount
-        if (selectedTabIndex in 0 until tabCount) {
-            val tab = tabLayout.getTabAt(selectedTabIndex)
-            tab?.select()
-        }
     }
 }
