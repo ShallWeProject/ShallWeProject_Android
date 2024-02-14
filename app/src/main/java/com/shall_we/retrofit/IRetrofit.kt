@@ -17,6 +17,7 @@ import com.shall_we.dto.catergoryResponse
 import com.shall_we.login.data.UserInactiveReq
 import com.shall_we.login.signup.UserData
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.http.DELETE
 import retrofit2.http.Header
 import retrofit2.http.Multipart
@@ -96,9 +97,8 @@ interface IRetrofit {
     @POST("/default/presignedURL-lambda")
     fun getImgUrl(@Body data: BodyData): Call<JsonElement>
   
-    @Multipart
     @PUT
-    fun uploadImg(@Url url: String, @Part image: MultipartBody.Part): Call<JsonElement>
+    fun uploadImg(@Url url: String, @Body image: RequestBody): Call<JsonElement>
 
     // 유저 회원탈퇴
     @POST(API.USER_INACTIVE)

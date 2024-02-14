@@ -23,7 +23,7 @@
         android:id="@+id/iv_photo"
         android:layout_width="350dp"
         android:layout_height="500dp"
-        android:scaleType="centerCrop"
+        android:scaleType="fitCenter"
         app:layout_constraintStart_toStartOf="@id/layout_context"
         app:layout_constraintEnd_toEndOf="@id/layout_context"
         android:layout_marginBottom="24dp"/>
@@ -59,19 +59,3 @@
         android:textStyle="bold"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <!--<?xml version="1.0" encoding="utf-8"?>-->
-    <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--    android:gravity="center"-->
-    <!--    android:layout_width="wrap_content"-->
-    <!--    android:layout_height="wrap_content"-->
-    <!--    android:layout_margin="20dp"-->
-    <!--    android:background="@drawable/iv_photo_viewer"-->
-    <!--        android:backgroundTint="@color/white">-->
-
-    <!--    <ImageView-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:id="@+id/iv_photo"/>-->
-
-    <!--</LinearLayout>-->
