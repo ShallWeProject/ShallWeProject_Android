@@ -200,9 +200,9 @@ class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickLis
             // 전환할 프래그먼트 인스턴스 생성
             giftExperienceFragment.arguments = bundle
             // 기존 프래그먼트를 숨기고 새로운 프래그먼트로 교체
-            binding.exgiftBtn01.visibility = View.GONE
-            binding.exgiftBtn02.visibility = View.GONE
-            binding.exgiftBtn03.visibility = View.GONE
+//            binding.exgiftBtn01.visibility = View.GONE
+//            binding.exgiftBtn02.visibility = View.GONE
+//            binding.exgiftBtn03.visibility = View.GONE
             fragmentTransaction.add(
                 R.id.nav_host_fragment,
                 giftExperienceFragment,
@@ -210,7 +210,7 @@ class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickLis
             )
 
             fragmentTransaction.addToBackStack(null)
-            fragmentTransaction.commitAllowingStateLoss()
+            fragmentTransaction.commit()
         }
 
         return binding.root

@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.JsonElement
+import com.shall_we.dto.ExperienceExpCategoryRes
 import com.shall_we.dto.Reservation
 import com.shall_we.dto.ReservationItem
 import com.shall_we.dto.ReservationRequest
@@ -79,7 +80,7 @@ class ReservationViewModel:ViewModel() {
         })
     }
 
-    fun set_experience_gift(reservationRequest: ReservationRequest) {
+    fun set_experience_gift(reservationRequest: ReservationRequest, completion: (RESPONSE_STATE, Int?) -> Unit) {
         ReservationService.reservationService?.set_experience_gift(
             ReservationRequest(
                 reservationRequest.experienceGiftId,
@@ -100,16 +101,21 @@ class ReservationViewModel:ViewModel() {
                 if (response.isSuccessful) {
                     response.body()?.let {
                         Log.d("set_experience_gift", it.toString())
+                        completion(RESPONSE_STATE.OKAY, response.code())
                     }
                 } else {
                     // 실패한 응답 코드와 메시지 출력
                     Log.d("set_experience_gift", "Error code: ${response.code()}, error message: ${response.message()}")
+                    completion(RESPONSE_STATE.OKAY, response.code())
+
                 }
             }
 
             override fun onFailure(call: Call<JsonElement>, t: Throwable) {
                 // 상세한 오류 메시지 출력
                 Log.d("whatisthis", "_experience_gift_data, 호출 실패: ${t.localizedMessage}")
+                completion(RESPONSE_STATE.FAIL, null)
+
             }
         })
     }

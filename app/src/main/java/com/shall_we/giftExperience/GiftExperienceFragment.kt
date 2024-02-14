@@ -16,6 +16,7 @@ import com.shall_we.R
 import com.shall_we.databinding.FragmentGiftExperienceBinding
 import com.shall_we.dto.ReservationRequest
 import com.shall_we.dto.ReservationStatus
+import com.shall_we.retrofit.RESPONSE_STATE
 
 
 class GiftExperienceFragment : Fragment() {
@@ -161,13 +162,6 @@ class GiftExperienceFragment : Fragment() {
 
 
         binding.giftreserveBtn02.setOnClickListener(){
-            binding.giftreserveBtn02.visibility = View.GONE
-           // binding.exgiftBtn02.visibility=View.GONE
-
-            binding.etInvitationComment.visibility=View.GONE
-
-            binding.giftreserveBtn02.visibility=View.GONE
-            //val phoneNum = String.format("%s-%s-%s", phonenum1, phonenum2, phonenum3)
             val phoneNum = phonenum1+phonenum2+phonenum3
             reservationRequest = ReservationRequest(
                 experienceGiftId = experienceGiftId,
@@ -183,18 +177,29 @@ class GiftExperienceFragment : Fragment() {
             experienceDetailViewModel =
                 ViewModelProvider(this).get(ExperienceDetailViewModel::class.java)
             reservationViewModel = ViewModelProvider(this).get(ReservationViewModel::class.java)
-            reservationViewModel.set_experience_gift(reservationRequest)
-
-
-            val giftFragment = GiftFragment() // 전환할 프래그먼트 인스턴스 생성
-            val bundle = Bundle()
-            giftFragment.arguments = bundle
-
-            val fragmentTransaction = parentFragmentManager.beginTransaction()
-            fragmentTransaction.replace(R.id.nav_host_fragment, giftFragment, "gift")
-
-            fragmentTransaction.addToBackStack(null)
-            fragmentTransaction.commitAllowingStateLoss()
+            reservationViewModel.set_experience_gift(reservationRequest = reservationRequest, completion = { responseState, responseCode ->
+                when (responseState) {
+                    RESPONSE_STATE.OKAY -> {
+                        Log.d("retrofit", "reservation api : ${responseCode}")
+                        if(responseCode==200){
+                            val giftFragment = GiftFragment() // 전환할 프래그먼트 인스턴스 생성
+                            val fragmentTransaction = parentFragmentManager.beginTransaction()
+                            fragmentTransaction.replace(R.id.nav_host_fragment, giftFragment, "gift")
+                            fragmentTransaction.addToBackStack(null)
+                            fragmentTransaction.commit()
+                        }
+                        else if(responseCode==400){
+                            Toast.makeText(requireContext(), "예약에 실패했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
+                        }
+                        else if(responseCode==500){
+                            Toast.makeText(requireContext(), "예약에 실패했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                    RESPONSE_STATE.FAIL -> {
+                        Log.d("retrofit", "api 호출 에러")
+                    }
+                }
+            })
         }
         return binding.root
     }
