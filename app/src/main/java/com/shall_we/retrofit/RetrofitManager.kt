@@ -22,12 +22,9 @@ import com.shall_we.login.data.UserInactiveReq
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import com.shall_we.myAlbum.MyAlbumData
-import com.shall_we.myAlbum.PhotoInfo
 import com.shall_we.mypage.MyGiftData
-import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import java.text.SimpleDateFormat
-import java.util.Locale
 
 class RetrofitManager {
     companion object {
@@ -511,19 +508,17 @@ class RetrofitManager {
         })
     }
 
-    fun uploadImg(image: MultipartBody.Part, url: String, endPoint:String, completion:(RESPONSE_STATE) -> Unit){
+    fun uploadImg(image: RequestBody, url: String, endPoint:String, completion:(RESPONSE_STATE, Int?) -> Unit){
         val getRetrofit = RetrofitClient.getClient2(url)?.create(IRetrofit::class.java)
-        val call = getRetrofit?.uploadImg(url =endPoint, image = image) ?:return
-
-
-        call.enqueue(object : retrofit2.Callback<JsonElement>{
+        val call = getRetrofit?.uploadImg(url =endPoint, image = image) ?.enqueue(object :
+            Callback<JsonElement>{
             // 응답 성공
             override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
                 Log.d("retrofit","RetrofitManager - onResponse() called / response : ${response}")
 
                 when(response.code()){
                     200 -> {
-                        completion(RESPONSE_STATE.OKAY)
+                        completion(RESPONSE_STATE.OKAY, response.code())
                     }
                 }
             }
@@ -531,7 +526,7 @@ class RetrofitManager {
             // 응답 실패
             override fun onFailure(call: Call<JsonElement>, t: Throwable) {
                 Log.d("retrofit","RetrofitManager - onFailure() called / t: $t")
-                completion(RESPONSE_STATE.FAIL)
+                completion(RESPONSE_STATE.FAIL, null)
             }
         })
     }
@@ -573,37 +568,7 @@ class RetrofitManager {
                     200 -> {
                         Log.d("getMemoryPhoto response, date", "${response.body()}, $date")
                         response.body()?.let {
-////                            var parsedMyAlbumDataArray = mutableListOf<PhotoInfo>()
-//                            val body = it.asJsonObject
-//                            val data = body.getAsJsonArray("data")
-//                            data?.forEach { resultItem ->
-//                                val resultItemObject = resultItem.asJsonObject
-//                                val memoryPhotoImagesArray =
-//                                    resultItemObject.getAsJsonArray("memoryPhotoImages")
-//
-//                                memoryPhotoImagesArray?.forEach { photoItem ->
-//                                    val photoItemObject = photoItem.asJsonObject
-//                                    val isUploader =
-//                                        photoItemObject.get("isUploader").asBoolean
-//                                    val memoryPhotoImgUrl =
-//                                        photoItemObject.get("memoryPhotoImgUrl").asString
-//
-//                                    // Create MyAlbumPhotoData object and add to the list
-//                                    val photoData =
-//                                        PhotoInfo(isUploader, memoryPhotoImgUrl)
-//                                    Log.d("photoData","$photoData")
-//                                    parsedMyAlbumDataArray.add(photoData)
-////
-//                                val myAlbumItem = MyAlbumData(date = date, memoryImgs = memoryPhotoImages.toList())
-//
-//                                parsedMyAlbumDataArray.add(myAlbumItem)
-////
-////                                //val myalbum = it.asJsonObject
-                            //    }
-                            //parsedMyAlbumDataArray
-
-                            //}
-                            Log.d("getMemoryBody","${it}")
+                            Log.d("getMemoryBody","${response.body()}")
                             completion(RESPONSE_STATE.OKAY, response.body())
 
                         }
@@ -628,10 +593,6 @@ class RetrofitManager {
             override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
                 when(response.code()){
                     200 -> {
-//                        response.body()?.let{
-//                            val body = it.asJsonObject
-//
-//                        }
                         completion(RESPONSE_STATE.OKAY, response.body())
                     }
                 }

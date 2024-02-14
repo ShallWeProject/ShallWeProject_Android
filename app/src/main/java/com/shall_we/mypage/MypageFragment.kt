@@ -38,6 +38,12 @@ class MypageFragment : Fragment() {
         TabLayoutMediator(binding.tabs, binding.viewpager) { tab, position ->
             tab.text = tabTitleArray[position]
         }.attach()
+
+
+        val position = arguments?.getInt("position",0)
+        if(position != null){
+            setSelectedTab(binding.tabs, position-1)
+        }
     }
 
     override fun onCreateView(
@@ -74,5 +80,13 @@ class MypageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
+    }
+
+    private fun setSelectedTab(tabLayout: TabLayout, selectedTabIndex: Int) {
+        val tabCount = tabLayout.tabCount
+        if (selectedTabIndex in 0 until tabCount) {
+            val tab = tabLayout.getTabAt(selectedTabIndex)
+            tab?.select()
+        }
     }
 }
