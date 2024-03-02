@@ -33,10 +33,10 @@ class GiftExperienceFragment : Fragment() {
     private var receiverName:String="땡땡땡"
     private var senderName:String="땡땡땡떙"
     private var phonenum1:String="010"
-    private var phonenum2:String="000"
-    private var phonenum3:String="000"
+    private var phonenum2:String=""
+    private var phonenum3:String=""
     private var imageKey:String="?"
-    private var invitationComment: String="환영해!"
+    private var invitationComment: String=""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,8 +48,6 @@ class GiftExperienceFragment : Fragment() {
         binding.giftreserveBtn02.isEnabled = false
 
         arguments?.let {
-
-
             experienceGiftId = it.getInt("id") // id 키로 giftid 값을 불러와 저장하게 됩니다.
             persons=it.getInt("persons")
             selectedDate=it.getString("Date")
@@ -78,6 +76,33 @@ class GiftExperienceFragment : Fragment() {
                 receiverName = s.toString()
             }
         })
+
+        //번호2
+        binding.etSecNum.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                phonenum2=s.toString()
+                if(phonenum2.length==4){
+                    binding.etLastNum.requestFocus()
+                    setEditTextBackground(binding.etSecNum, s)
+                }
+            }
+        })
+
+        //번호3
+        binding.etLastNum.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                phonenum3=s.toString()
+                if (phonenum3.length == 4) {
+                    binding.etInvitationComment.requestFocus()
+                    setEditTextBackground(binding.etLastNum, s)
+                }
+            }
+        })
+
         binding.etInvitationComment.bringToFront()
         //초대장 내용
         binding.etInvitationComment.addTextChangedListener(object : TextWatcher {
@@ -104,26 +129,6 @@ class GiftExperienceFragment : Fragment() {
             }
         })
 
-        //번호2
-        binding.etSecNum.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: Editable?) {
-                setEditTextBackground(binding.etSecNum, s)
-                phonenum2=s.toString()
-            }
-        })
-
-        //번호3
-        binding.etLastNum.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: Editable?) {
-                setEditTextBackground(binding.etLastNum, s)
-                phonenum3=s.toString()
-            }
-        })
-
         // 모든 EditText들을 담는 리스트
         val editTextList = listOf(
             binding.etSenderName,
@@ -140,9 +145,8 @@ class GiftExperienceFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {
                 // 모든 EditText들이 채워져 있는지 확인
                 val allFilled = editTextList.all { it.text.toString().isNotEmpty() }
-
                 // 버튼 디자인 변경
-                if (allFilled) {
+                if (allFilled&&phonenum2.length==4&&phonenum3.length==4) {
                     binding.giftreserveBtn02.setBackgroundResource(R.drawable.gift_btn)
                     binding.giftreserveBtn02.isEnabled = true
                 } else {
