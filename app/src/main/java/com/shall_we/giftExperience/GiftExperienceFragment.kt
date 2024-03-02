@@ -45,6 +45,8 @@ class GiftExperienceFragment : Fragment() {
     ): View? {
         binding = FragmentGiftExperienceBinding.inflate(inflater, container, false)  // Binding 객체 초기화
 
+        binding.giftreserveBtn02.isEnabled = false
+
         arguments?.let {
 
 
@@ -122,13 +124,6 @@ class GiftExperienceFragment : Fragment() {
             }
         })
 
-//        // 스피너 어댑터 생성
-//        val spinneradapter =
-//            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, numdata)
-//
-//        // 스피너 드롭다운 레이아웃 설정
-//        spinneradapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
         // 모든 EditText들을 담는 리스트
         val editTextList = listOf(
             binding.etSenderName,
@@ -149,10 +144,10 @@ class GiftExperienceFragment : Fragment() {
                 // 버튼 디자인 변경
                 if (allFilled) {
                     binding.giftreserveBtn02.setBackgroundResource(R.drawable.gift_btn)
-                    binding.giftreserveBtn02.isClickable = true
+                    binding.giftreserveBtn02.isEnabled = true
                 } else {
                     binding.giftreserveBtn02.setBackgroundResource(R.drawable.gift_btn_black)
-                    binding.giftreserveBtn02.isClickable=false
+                    binding.giftreserveBtn02.isEnabled = false
                 }
             }
         }
@@ -211,6 +206,5 @@ class GiftExperienceFragment : Fragment() {
             editText.setBackgroundResource(R.drawable.edittext_design)
         }
     }
-
 
 }

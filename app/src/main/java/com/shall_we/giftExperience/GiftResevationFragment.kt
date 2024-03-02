@@ -59,6 +59,8 @@ class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickLis
         binding =
             FragmentGiftResevationBinding.inflate(inflater, container, false)  // Binding 객체 초기화
 
+        binding.exgiftBtn03.isEnabled = false
+
         arguments?.let { // 아규먼트로부터 데이터를 불러옴
             experienceGiftId = it.getInt("id") // id 키로 giftid 값을 불러와 저장하게 됩니다.
         }
@@ -119,6 +121,8 @@ class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickLis
             }
         }
 
+        binding.exgiftBtn03.isEnabled = false
+
         calendarView = binding.calendar
 
         var dayDecorator = DayDecorator(requireContext())
@@ -134,7 +138,7 @@ class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickLis
             ) {
                 if (selected) {
                     time = null
-                    binding.exgiftBtn03.isClickable = false
+                    binding.exgiftBtn03.isEnabled = false
                     binding.exgiftBtn03.setBackgroundResource(R.drawable.gift_btn_black)
 
                     val year = date.year
@@ -255,15 +259,10 @@ class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickLis
     override fun onItemClick(position: Int, text: String) {
         Log.d("time",text)
         time = text
-        binding.exgiftBtn03.isClickable = true
+        binding.exgiftBtn03.isEnabled = true
         binding.exgiftBtn03.setBackgroundResource(R.drawable.gift_btn)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        val fab = requireActivity().findViewById<ExtendedFloatingActionButton>(R.id.fab)
-        fab.visibility = View.VISIBLE
-    }
 }
 
 /* 선택된 날짜의 background를 설정하는 클래스 */
