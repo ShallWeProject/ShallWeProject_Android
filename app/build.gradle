@@ -113,4 +113,8 @@ dependencies {
     // concat adapter
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
 
+    // rounded imageview
+    implementation 'com.makeramen:roundedimageview:2.3.0'
+
+
 }
