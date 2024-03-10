@@ -68,6 +68,7 @@ class PhoneAuthFragment : Fragment() {
             ) {
                 // 문자열이 변경될 때마다 호출되는 메소드
                 val length = s?.length ?: 0
+
                 if (length>0){
                     nameFlag = true
                 }
@@ -102,7 +103,7 @@ class PhoneAuthFragment : Fragment() {
                 nameTxt = binding.nameEt.text.toString()
                 phoneNumberTxt = binding.phonenumberEt.text.toString()
 
-//                sendRetrofitCall()
+                sendRetrofitCall()
                 timerTv.visibility = View.VISIBLE
                 startTimer()
             }else if(!nameFlag){
@@ -115,10 +116,11 @@ class PhoneAuthFragment : Fragment() {
         }
 
         binding.nextBtn.setOnClickListener {
-//            validRetrofitCall()
+            validRetrofitCall()
 
             val newFragment = AgreementFragment() // 전환할 다른 프래그먼트 객체 생성
             val bundle = Bundle()
+            bundle.putString("name",nameTxt)
             bundle.putString("phone",phoneNumber)
             newFragment.arguments = bundle
             // 프래그먼트 전환
