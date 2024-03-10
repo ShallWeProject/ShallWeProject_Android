@@ -386,7 +386,7 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
 
                     Log.d("imageKey", "$imageKey")
                     // 파일의 MIME 유형 가져오기 (예: text/plain, image/jpeg 등)
-                    val mediaType = "image/*".toMediaTypeOrNull() // 파일의 MIME 유형에 따라 변경
+                    val mediaType = "image/${ext}".toMediaTypeOrNull() // 파일의 MIME 유형에 따라 변경
 
                     // RequestBody로 파일을 래핑
                     requestBody = file.asRequestBody(mediaType)
@@ -461,7 +461,6 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
             Log.e("retrofit", "uploadImg 호출 에러", e)
         }
     }
-
 
     override fun onDestroy() {
         super.onDestroy()
