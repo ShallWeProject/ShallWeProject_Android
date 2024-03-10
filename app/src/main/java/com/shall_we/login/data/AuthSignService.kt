@@ -54,7 +54,7 @@ class AuthSignService(val authSignInterface: IAuthSign) {
         })
     }
     fun postAuthSignUp(auth: Auth){
-        iRetrofit?.authSignUp(Auth(auth.providerId,auth.nickname,auth.email,auth.profileImgUrl))?.enqueue(object: Callback<AuthResponse> {
+        iRetrofit?.authSignUp(Auth(auth.providerId,auth.provider,auth.nickname,auth.email,auth.profileImgUrl))?.enqueue(object: Callback<AuthResponse> {
             override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
                 if(response.code() == 200){
                     val authResponse = response.body()

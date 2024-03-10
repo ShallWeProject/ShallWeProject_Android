@@ -19,7 +19,7 @@ class App : Application() {
 
         var accessToken:String? = ACCESS_TOKEN
         var refreshToken:String? = REFRESH_TOKEN
-        var auth = Auth("PROVIDER_ID", "USER_EMAIL", "USER_NAME", "USER_IMG_URL")
+        var auth = Auth("PROVIDER_ID", "PROVIDER","NICKNAME","USER_EMAIL", "USER_IMG_URL")
     }
 
     override fun onCreate() {

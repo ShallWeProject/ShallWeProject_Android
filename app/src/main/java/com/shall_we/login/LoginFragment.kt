@@ -131,6 +131,7 @@ class LoginFragment : Fragment() , IAuthSign {
             val nickname = account?.displayName
             val email = account?.email
             val profileImgUrl = account?.photoUrl
+            val provider = "GOOGLE"
 
             // 이메일 또는 필요한 정보를 사용합니다.
             Log.w("login", providerId.toString())
@@ -141,6 +142,7 @@ class LoginFragment : Fragment() , IAuthSign {
 
             auth = Auth(
                 providerId.toString(),
+                provider,
                 nickname.toString(),
                 email.toString(),
                 profileImgUrl.toString())
@@ -175,10 +177,11 @@ class LoginFragment : Fragment() , IAuthSign {
                         "\n닉네임: ${user.kakaoAccount?.profile?.nickname}" +
                         "\n프로필사진: ${user.kakaoAccount?.profile?.thumbnailImageUrl}")
                 auth = Auth(
-                    (user.id).toString(),
-                    user.kakaoAccount?.profile?.nickname!!,
-                    user.kakaoAccount?.email!!,
-                    user.kakaoAccount?.profile?.thumbnailImageUrl!!)
+                    providerId = (user.id).toString(),
+                    provider = "KAKAO",
+                    nickname = user.kakaoAccount?.profile?.nickname!!,
+                    email = user.kakaoAccount?.email!!,
+                    profileImgUrl = user.kakaoAccount?.profile?.thumbnailImageUrl!!)
                 Log.d("login","$auth")
                 AuthSignService(this).postAuthSignUp(auth)
             }
