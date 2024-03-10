@@ -40,20 +40,16 @@ class DeleteAccountFragment : Fragment() {
         val binding = FragmentDeleteAccountBinding.inflate(inflater,container,false)
 
         binding.spinner2.dropDownVerticalOffset = dpToPx(6) // spinner와 dropdown 간
-        initSpinner(binding.spinner2)
+        initSpinner(binding.spinner2,binding)
 
         binding.btnDelete.setOnClickListener {
-            if(spinnerString == ""){
-                Toast.makeText(context,"불편한 점을 선택해주세요.",Toast.LENGTH_LONG).show()
-            }
-            else{
-                cuDialog(it)
-            }
+            cuDialog(it)
+            Log.d("spinner",spinnerString)
         }
         return binding.root
     }
 
-    private fun initSpinner(spinner : Spinner) {
+    private fun initSpinner(spinner : Spinner, binding: FragmentDeleteAccountBinding) {
         //spinner
 
         val spinnerItems = arrayOf("탈퇴하시는 이유를 선택해주세요.","자주 사용하지 않아요.",
@@ -77,8 +73,16 @@ class DeleteAccountFragment : Fragment() {
             ) {
                 spinneradapter.resetSpinnerOpenState()
                 //아이템이 클릭 되면 맨 위부터 position 0번부터 순서대로 동작하게 됩니다.
+                Log.d("spinner",position.toString())
                 if(position != 0){
                     spinnerString = spinnerItems[position]
+                    binding.btnDelete.isEnabled = true
+                    binding.btnDelete.setBackgroundResource(R.drawable.gift_btn)
+                }
+                else{
+                    spinnerString = ""
+                    binding.btnDelete.isEnabled = false
+                    binding.btnDelete.setBackgroundResource(R.drawable.gift_btn_black)
                 }
             }
             override fun onNothingSelected(parent: AdapterView<*>) {
