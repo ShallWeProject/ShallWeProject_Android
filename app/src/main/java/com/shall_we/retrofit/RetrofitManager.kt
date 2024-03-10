@@ -393,37 +393,11 @@ class RetrofitManager {
         })
     }
 
-    fun tokenRefresh(refreshToken: RefreshTokenArray, completion: (RESPONSE_STATE, AuthTokenData?) -> Unit) {
-        val call = iRetrofit?.tokenRefresh(refreshToken) ?: return
-        call.enqueue(object : Callback<AuthResponse> {
-            // 응답 성공인 경우
-            override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
-                if(response.code() == 200){
-                    val authResponse = response.body()
-                    if (authResponse != null) {
-                        Log.e("login", "Success: ${authResponse}")
-                        completion(RESPONSE_STATE.OKAY, authResponse.data)
-                    } else {
-                        completion(RESPONSE_STATE.OKAY, null)
-
-                    }
-                }else{
-                    try{
-                        Log.e("login", "Request failed with response code: ${response.code()}")
-
-                        completion(RESPONSE_STATE.OKAY, null)
-
-                    }catch(e:Exception){
-                        completion(RESPONSE_STATE.OKAY, null)
-
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
-            }
-        })
+    suspend fun tokenRefresh(refreshToken: RefreshTokenArray): Response<AuthResponse> {
+        return iRetrofit?.tokenRefresh(refreshToken) ?: error("IRetrofit is not initialized")
     }
+
+
     fun deleteReservation(id : Int, completion:(RESPONSE_STATE) -> Unit){
         val call = iRetrofit?.deleteReservation(id = id) ?:return
 
@@ -697,3 +671,8 @@ class RetrofitManager {
 
 
 }
+
+data class ResponseWrapper<T>(
+    val status: RESPONSE_STATE,
+    val data: T?
+)

@@ -24,8 +24,6 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState
 import com.amazonaws.regions.Regions
 import com.google.android.material.tabs.TabLayout
-import com.shall_we.BuildConfig.access_key
-import com.shall_we.BuildConfig.secret_key
 import com.shall_we.R
 import com.shall_we.databinding.FragmentMyAlbumBinding
 import com.shall_we.mypage.MyGiftData

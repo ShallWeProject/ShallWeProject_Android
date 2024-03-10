@@ -121,8 +121,6 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             android.R.id.home -> {
                 //toolbar의 back키 눌렀을 때 동작
-                // 액티비티 이동
-//                Log.d("toolbar","툴바 뒤로가기 버튼 클릭")
                 if (supportFragmentManager.backStackEntryCount > 1) {
                     supportFragmentManager.popBackStackImmediate(null, 0)
                 }else{

@@ -48,6 +48,8 @@ class PhoneAuthFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val binding = FragmentPhoneAuthBinding.inflate(inflater,container,false)
+        binding.nextBtn.isEnabled = false
+        
         timerTv = binding.timer
 
         var maxLength = 6
@@ -85,7 +87,7 @@ class PhoneAuthFragment : Fragment() {
                 if (length==6 ){
                     binding.nextBtn.setBackgroundResource(R.drawable.btn_next)
                     verificationCode = binding.codeEt.text.toString()
-                    binding.nextBtn.isClickable = true
+                    binding.nextBtn.isEnabled = true
                 }
             }
             override fun afterTextChanged(s: Editable?) {}
@@ -100,7 +102,7 @@ class PhoneAuthFragment : Fragment() {
                 nameTxt = binding.nameEt.text.toString()
                 phoneNumberTxt = binding.phonenumberEt.text.toString()
 
-                sendRetrofitCall()
+//                sendRetrofitCall()
                 timerTv.visibility = View.VISIBLE
                 startTimer()
             }else if(!nameFlag){
@@ -113,8 +115,17 @@ class PhoneAuthFragment : Fragment() {
         }
 
         binding.nextBtn.setOnClickListener {
-            // 인증번호 검증 -> 번호 맞을때만 다음 프래그먼트로 넘기기
-            validRetrofitCall()
+//            validRetrofitCall()
+
+            val newFragment = AgreementFragment() // 전환할 다른 프래그먼트 객체 생성
+            val bundle = Bundle()
+            bundle.putString("phone",phoneNumber)
+            newFragment.arguments = bundle
+            // 프래그먼트 전환
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView3, newFragment)
+                .addToBackStack(null)
+                .commit()
         }
         return binding.root
     }

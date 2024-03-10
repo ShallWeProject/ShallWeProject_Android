@@ -169,8 +169,8 @@ class HomeRealtimeAdapter :
                                         )
                                     )
                                 }
+                                initProductRecycler(rv, productDataList)
                             }
-                            initProductRecycler(rv, productDataList)
                         }
 
                         RESPONSE_STATE.FAIL -> {

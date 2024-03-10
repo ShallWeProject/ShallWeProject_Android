@@ -24,6 +24,8 @@ class ProfileFragment : Fragment() {
 
     private fun initProfile() {
 
+        binding.btnNextProfile.isEnabled = false
+
         fun checkRbChecked(): Boolean {
             if (binding.btnMan.isChecked || binding.btnWoman.isChecked || binding.btnNone.isChecked) {
                 return true
@@ -109,11 +111,11 @@ class ProfileFragment : Fragment() {
     fun changeBtnClickable(boolean: Boolean){
         if (boolean) {
             binding.btnNextProfile.setBackgroundResource(R.drawable.btn_next)
-            binding.btnNextProfile.isClickable = true
+            binding.btnNextProfile.isEnabled = true
         }
         else {
             binding.btnNextProfile.setBackgroundResource(R.drawable.btn_next_black)
-            binding.btnNextProfile.isClickable = false
+            binding.btnNextProfile.isEnabled = false
         }
     }
 

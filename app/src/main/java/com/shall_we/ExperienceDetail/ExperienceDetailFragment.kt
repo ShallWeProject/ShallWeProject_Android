@@ -86,8 +86,6 @@ class ExperienceDetailFragment: Fragment(){
         )
 
         binding.fab.setOnClickListener() {
-            binding.fab.visibility = View.GONE
-
             val bundle = Bundle().apply {
                 putInt("id", experienceGiftId) // 클릭된 아이템의 이름을 "title" 키로 전달
             }

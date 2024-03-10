@@ -26,6 +26,8 @@ class AgreementFragment : Fragment() {
 
     fun initAgreement() {
 
+        binding.btnNext.isEnabled = false
+
         val checkList = listOf(
             binding.cbAgree1,
             binding.cbAgree2,
@@ -55,31 +57,31 @@ class AgreementFragment : Fragment() {
         binding.cbAgree1.setOnCheckedChangeListener { button, ischecked ->
             if (ischecked && checkAllChecked()) {
                 binding.btnNext.setBackgroundResource(R.drawable.btn_next)
-                binding.btnNext.isClickable = true
+                binding.btnNext.isEnabled = true
             }
             else {
                 binding.btnNext.setBackgroundResource(R.drawable.btn_next_black)
-                binding.btnNext.isClickable = false
+                binding.btnNext.isEnabled = false
             }
         }
         binding.cbAgree2.setOnCheckedChangeListener { button, ischecked ->
             if (ischecked && checkAllChecked()) {
                 binding.btnNext.setBackgroundResource(R.drawable.btn_next)
-                binding.btnNext.isClickable = true
+                binding.btnNext.isEnabled = true
             }
             else {
                 binding.btnNext.setBackgroundResource(R.drawable.btn_next_black)
-                binding.btnNext.isClickable = false
+                binding.btnNext.isEnabled = false
             }
         }
         binding.cbAgree3.setOnCheckedChangeListener { button, ischecked ->
             if (ischecked && checkAllChecked()) {
                 binding.btnNext.setBackgroundResource(R.drawable.btn_next)
-                binding.btnNext.isClickable = true
+                binding.btnNext.isEnabled = true
             }
             else {
                 binding.btnNext.setBackgroundResource(R.drawable.btn_next_black)
-                binding.btnNext.isClickable = false
+                binding.btnNext.isEnabled = false
             }
         }
         binding.cbAgree4.setOnCheckedChangeListener { button, ischecked ->
