@@ -4,21 +4,15 @@ import android.content.Context
 import android.util.Log
 import com.shall_we.App
 import com.shall_we.App.Companion.context
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+
 import kotlinx.coroutines.runBlocking
 
-import okhttp3.Authenticator
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Request
 import okhttp3.Response
-import okhttp3.Route
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.lang.Exception
 
 // 싱글턴
 object RetrofitClient {
