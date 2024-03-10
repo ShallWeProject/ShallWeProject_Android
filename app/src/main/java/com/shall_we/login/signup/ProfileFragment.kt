@@ -17,6 +17,7 @@ import com.shall_we.retrofit.RetrofitManager
 class ProfileFragment : Fragment() {
     private lateinit var binding: FragmentProfileBinding
 
+    var name : String = ""
     var phone: String = ""
     var age: Int = 0
     var gender: String = ""
@@ -70,6 +71,7 @@ class ProfileFragment : Fragment() {
         binding.btnNextProfile.setOnClickListener {
             //Todo: 앞에서 번호 받아와서 업데이트
             phone = arguments?.getString("phone", "").toString()
+            name = arguments?.getString("name","").toString()
             age = binding.edtAge.text.toString().toInt()
             gender = "UNKNOWN"
             if (binding.btnMan.isChecked) gender = "MALE"
@@ -80,15 +82,12 @@ class ProfileFragment : Fragment() {
             if (isChecked == true) marketingAgree = true
             else marketingAgree = false
 
-            var userData : UserData = UserData(phone, marketingAgree, age, gender)
-            Log.d("retrofit", "api 호출 성공 : ${userData}")
-
             usersPatchApiCall()
         }
     }
     private fun usersPatchApiCall(){
         //레트로핏 연결
-        var userData : UserData = UserData(phone, marketingAgree, age, gender)
+        var userData = UserData(phoneNumber = phone, name = name, marketingConsent =  marketingAgree, age =  age, gender =  gender)
 
         RetrofitManager.instance.usersPatch(userData, completion = { responseState, responseCode ->
             when (responseState) {

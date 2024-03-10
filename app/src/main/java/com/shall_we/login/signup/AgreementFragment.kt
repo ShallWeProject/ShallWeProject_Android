@@ -23,6 +23,7 @@ class AgreementFragment : Fragment() {
     private lateinit var binding: FragmentAgreementBinding
 
     private lateinit var phone : String
+    private lateinit var name : String
 
     fun initAgreement() {
 
@@ -97,6 +98,7 @@ class AgreementFragment : Fragment() {
         binding.btnNext.setOnClickListener {
             val bundle = Bundle()
             bundle.putString("phone", phone)
+            bundle.putString("name", name)
             bundle.putBoolean("isChecked", binding.cbAgree4.isChecked)
             val newFragment = ProfileFragment() // 전환할 다른 프래그먼트 객체 생성
             newFragment.arguments = bundle
@@ -166,6 +168,7 @@ class AgreementFragment : Fragment() {
         binding = FragmentAgreementBinding.inflate(inflater, container, false)
 
         phone = arguments?.getString("phone", "").toString()
+        name = arguments?.getString("name","").toString()
 
         return binding.root
     }
