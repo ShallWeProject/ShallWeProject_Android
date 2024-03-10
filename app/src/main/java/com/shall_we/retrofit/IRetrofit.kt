@@ -18,6 +18,7 @@ import com.shall_we.login.data.UserInactiveReq
 import com.shall_we.login.signup.UserData
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import retrofit2.Response
 import retrofit2.http.DELETE
 import retrofit2.http.Header
 import retrofit2.http.Multipart
@@ -75,7 +76,7 @@ interface IRetrofit {
 
     // 토큰갱신
     @POST(API.AUTH_REFRESH)
-    fun tokenRefresh(@Body refreshTokenArray :RefreshTokenArray): Call<AuthResponse>
+    suspend fun tokenRefresh(@Body refreshTokenArray: RefreshTokenArray): Response<AuthResponse>
 
     // 인증 문자 전송
     @POST(API.SEND_ONE)
