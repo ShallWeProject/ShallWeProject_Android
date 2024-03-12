@@ -13,12 +13,14 @@
 
             <TextView
                 android:id="@+id/exdetail_description"
-                android:layout_width="343dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="60dp"
+                android:layout_marginEnd="16dp"
                 android:textColor="@color/black"
                 android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -37,15 +39,17 @@
 
             <TextView
                 android:id="@+id/fir_stage"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="25dp"
+                android:layout_marginStart="41dp"
                 android:layout_marginTop="17dp"
+                android:layout_marginEnd="41dp"
+                android:text="1단계: "
+                android:textColor="@color/black"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                android:textColor="@color/black"
-                android:text="1단계: "
-                app:layout_constraintStart_toStartOf="@+id/textView19"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView19" />
 
             <ImageView
@@ -76,15 +80,17 @@
 
             <TextView
                 android:id="@+id/sec_stage"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="25dp"
+                android:layout_marginStart="41dp"
                 android:layout_marginTop="17dp"
+                android:layout_marginEnd="41dp"
+                android:text="2단계: "
+                android:textColor="@color/black"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                android:textColor="@color/black"
-                android:text="2단계: "
-                app:layout_constraintStart_toStartOf="@+id/textView19"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/fir_description" />
 
             <ImageView
@@ -114,15 +120,17 @@
 
             <TextView
                 android:id="@+id/thr_stage"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="25dp"
+                android:layout_marginStart="41dp"
                 android:layout_marginTop="17dp"
+                android:layout_marginEnd="41dp"
+                android:text="3단계: "
+                android:textColor="@color/black"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                android:textColor="@color/black"
-                android:text="3단계: "
-                app:layout_constraintStart_toStartOf="@+id/textView19"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/sec_description" />
 
             <ImageView
