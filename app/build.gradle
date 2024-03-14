@@ -6,6 +6,9 @@ plugins {
 
 }
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
 android {
     namespace 'com.shall_we'
     compileSdk 33
@@ -19,10 +22,13 @@ android {
         applicationId "com.shall_we"
         minSdk 29
         targetSdk 33
-        versionCode 3
+        versionCode 7
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "GOOGLE_CLIENT_SECRET", properties['google_client_secret']
+        buildConfigField "String", "GOOGLE_CLIENT_ID", properties['google_client_id']
 
     }
 
@@ -45,6 +51,8 @@ android {
     buildFeatures{
         buildConfig = true
     }
+
+
 
 }
 

@@ -9,8 +9,6 @@ object API {
 
     const val EXPERIENCE_GIFT_EXPCATEGORY = "api/v1/experience/gift/exp-category/{ExpCategoryId}"
 
-    const val AUTH_SIGN_UP = "auth/sign-up"
-
     const val AUTH_SIGN_IN = "auth/sign-in"
 
     const val AUTH_SIGN_OUT = "auth/sign-out"

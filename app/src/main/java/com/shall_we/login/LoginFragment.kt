@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -22,24 +23,33 @@ import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.common.util.Utility
 import com.kakao.sdk.user.UserApiClient
 import com.shall_we.App
+import com.shall_we.BuildConfig
 import com.shall_we.R
 import com.shall_we.databinding.FragmentLoginBinding
 import com.shall_we.login.data.Auth
 import com.shall_we.login.data.AuthResponse
 import com.shall_we.login.data.AuthSignService
 import com.shall_we.login.data.IAuthSign
+import com.shall_we.login.data.LoginGoogleResult
 import com.shall_we.login.signin.LoginSuccessFragment
 import com.shall_we.login.signup.PhoneAuthFragment
 import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RetrofitManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() , IAuthSign {
+
 
     private lateinit var auth : Auth
     private var loginEvent: ILoginEvent? = null
 
-    private lateinit var mGoogleSignInClient: GoogleSignInClient
     private val RC_SIGN_IN = 9001
+
+    private val googleSignInClient: GoogleSignInClient by lazy { getGoogleClient() }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,10 +80,6 @@ class LoginFragment : Fragment() , IAuthSign {
         binding.btnKakaoLogin.setOnClickListener {
             Log.d("test", "key hash: ${Utility.getKeyHash(requireContext())}")
 
-//            여러 명이 하나의 프로젝트를 개발하는 경우 모든 사람들이 각자의 디버그 키 해시 값을 구해서 다 등록해야 함.
-//            배포 시에는 디버그 키가 아닌 릴리즈 키 해시 값을 등록해야 함
-
-            // 카카오톡이 설치되어 있으면 카카오톡으로 로그인, 아니면 카카오계정으로 로그인
             if (UserApiClient.instance.isKakaoTalkLoginAvailable(requireContext())) {
                 UserApiClient.instance.loginWithKakaoTalk(requireContext()) { token, error ->
                     if (error != null) {
@@ -100,17 +106,24 @@ class LoginFragment : Fragment() , IAuthSign {
             onGoogleLoginClick()
         }
 
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestEmail()
-            .build()
-
-        mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
 
         return binding.root
     }
 
+    private fun getGoogleClient(): GoogleSignInClient {
+
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .requestServerAuthCode(BuildConfig.GOOGLE_CLIENT_ID)
+            .build()
+
+
+        return GoogleSignIn.getClient(requireActivity(), gso)
+    }
+
     fun onGoogleLoginClick() {
-        val signInIntent = mGoogleSignInClient.signInIntent
+        googleSignInClient.signOut()
+        val signInIntent = googleSignInClient.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)
     }
 
@@ -119,42 +132,50 @@ class LoginFragment : Fragment() , IAuthSign {
 
         if (requestCode == RC_SIGN_IN) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            handleSignInResult(task)
+            CoroutineScope(Dispatchers.Main).launch {
+                handleSignInResult(task)
+            }
         }
     }
 
-    private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
+    private suspend fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account = completedTask.getResult(ApiException::class.java)
             val providerId = account?.id
-            val nickname = account?.displayName
             val email = account?.email
-            val profileImgUrl = account?.photoUrl
+            val token = account?.serverAuthCode
             val provider = "GOOGLE"
 
-            // 이메일 또는 필요한 정보를 사용합니다.
-            Log.w("login", providerId.toString())
-            Log.w("login", nickname.toString())
-            Log.w("login", email.toString())
-            Log.w("login", profileImgUrl.toString())
+            lifecycleScope.launch {
+                try {
+                    val result = AuthSignService(this@LoginFragment).fetchGoogleAuthInfo(account.serverAuthCode.toString())
 
+                    // 결과를 처리
+                    when (result) {
+                        is LoginGoogleResult.Success -> {
+                            val loginGoogleRes = result.data
+                            auth = Auth(
+                                providerId = providerId.toString(),
+                                provider = provider,
+                                email = email,
+                                refreshToken = loginGoogleRes.refresh_token)
 
-            auth = Auth(
-                providerId.toString(),
-                provider,
-                nickname.toString(),
-                email.toString(),
-                profileImgUrl.toString())
+                            AuthSignService(this@LoginFragment).postAuthSignIn(auth)
+                        }
+                        is LoginGoogleResult.Error -> {
+                            Log.d("handleSignInResult","error")
+                        }
 
-            Log.d("login","$auth")
-            AuthSignService(this).postAuthSignUp(auth)
-
-            // 로그인 성공 시 작업 수행
-            // 예: 사용자 정보를 가져와서 처리
+                        else -> {}
+                    }
+                } catch (e: Exception) {
+                    // 예외 처리
+                    e.printStackTrace()
+                }
+            }
 
         } catch (e: ApiException) {
             Log.w("login", "signInResult:failed code=" + e.statusCode)
-            // 로그인 실패 시 예외 처리
         }
     }
 
@@ -178,11 +199,11 @@ class LoginFragment : Fragment() , IAuthSign {
                 auth = Auth(
                     providerId = (user.id).toString(),
                     provider = "KAKAO",
-                    nickname = user.kakaoAccount?.profile?.nickname!!,
-                    email = user.kakaoAccount?.email!!,
-                    profileImgUrl = user.kakaoAccount?.profile?.thumbnailImageUrl!!)
+                    email = user.kakaoAccount?.email.toString(),
+                    refreshToken = null)
+
                 Log.d("login","$auth")
-                AuthSignService(this).postAuthSignUp(auth)
+                AuthSignService(this).postAuthSignIn(auth)
             }
         }
     }
@@ -200,9 +221,8 @@ class LoginFragment : Fragment() , IAuthSign {
 
     override fun onPostAuthSignUpSuccess(response: AuthResponse) {
         Log.d("login","onPostAuthSignUpSuccess ${response.toString()}")
-        setUserData(response)
         loginEvent?.onLoginSuccess()
-        fragmentChangeSignUp()
+        fragmentChangeSignUp(response)
 
     }
 
@@ -229,44 +249,7 @@ class LoginFragment : Fragment() , IAuthSign {
 
     private fun fragmentChangeLogin(){
         Log.d("login","fragmentChangeLogin")
-        RetrofitManager.instance.getUserInfo(completion = { responseState, responseBody ->
-            when (responseState) {
-                RESPONSE_STATE.OKAY -> {
-                    Log.d("retrofit", "${responseBody}")
-                    if(responseBody == "null"){
-                        val newFragment = PhoneAuthFragment() // 전환할 다른 프래그먼트 객체 생성
-                        val bundle = Bundle()
-                        newFragment.arguments = bundle
-                        // 프래그먼트 전환
-                        parentFragmentManager.beginTransaction()
-                            .replace(R.id.fragmentContainerView3, newFragment)
-                            .addToBackStack(null)
-                            .commit()
-                    }
-                    else{
-                        val newFragment = LoginSuccessFragment() // 전환할 다른 프래그먼트 객체 생성
-                        val bundle = Bundle()
-                        newFragment.arguments = bundle
-                        // 프래그먼트 전환
-                        parentFragmentManager.beginTransaction()
-                            .replace(R.id.fragmentContainerView3, newFragment)
-                            .addToBackStack(null)
-                            .commit()
-                    }
-                }
-
-                RESPONSE_STATE.FAIL -> {
-                    Log.d("retrofit", "api 호출 에러")
-
-                }
-            }
-        })
-
-
-    }
-
-    private fun fragmentChangeSignUp(){
-        val newFragment = PhoneAuthFragment() // 전환할 다른 프래그먼트 객체 생성
+        val newFragment = LoginSuccessFragment() // 전환할 다른 프래그먼트 객체 생성
         val bundle = Bundle()
         newFragment.arguments = bundle
         // 프래그먼트 전환
@@ -274,7 +257,19 @@ class LoginFragment : Fragment() , IAuthSign {
             .replace(R.id.fragmentContainerView3, newFragment)
             .addToBackStack(null)
             .commit()
+
     }
 
+    private fun fragmentChangeSignUp(response: AuthResponse){
+        val newFragment = PhoneAuthFragment() // 전환할 다른 프래그먼트 객체 생성
+        val bundle = Bundle()
+//        bundle.putParcelable("token",response)
+        newFragment.arguments = bundle
+        // 프래그먼트 전환
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainerView3, newFragment)
+            .addToBackStack(null)
+            .commit()
+    }
 
 }

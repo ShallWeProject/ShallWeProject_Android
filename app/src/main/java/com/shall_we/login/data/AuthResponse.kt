@@ -16,6 +16,8 @@ data class AuthResponse(
 )
 
 data class AuthTokenData(
+    @SerializedName("isSignUpComplete")
+    val isSignUpComplete: Boolean,
     @SerializedName("accessToken")
     val accessToken: String,
     @SerializedName("refreshToken")

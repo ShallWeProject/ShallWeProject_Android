@@ -8,27 +8,24 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import com.shall_we.login.data.Auth
-import com.shall_we.login.data.AuthLogin
 import com.shall_we.login.data.AuthResponse
 import com.shall_we.login.data.AuthSignOutResponse
 import com.shall_we.dto.UpdateReservationReq
 import com.shall_we.dto.UserDetail
 import com.shall_we.dto.catergoryResponse
+import com.shall_we.login.data.LoginGoogleReq
+import com.shall_we.login.data.LoginGoogleRes
 import com.shall_we.login.data.UserInactiveReq
 import com.shall_we.login.signup.UserData
-import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.DELETE
 import retrofit2.http.Header
-import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
-import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 import retrofit2.http.Url
-import java.time.LocalDate
 
 interface IRetrofit {
 
@@ -62,27 +59,18 @@ interface IRetrofit {
     @PUT(API.DELETE_RESERVATION)
     fun putUpdateReservation(@Body updateReservationReq: UpdateReservationReq): Call<JsonElement>
 
-    //유저 로그인
     @POST(API.AUTH_SIGN_IN)
-    fun authSignIn(@Body auth: AuthLogin): Call<AuthResponse>
+    fun authSignIn(@Body auth: Auth): Call<AuthResponse>
 
-    // 유저 회원가입
-    @POST(API.AUTH_SIGN_UP)
-    fun authSignUp(@Body auth: Auth): Call<AuthResponse>
-
-    // 유저 로그아웃
     @POST(API.AUTH_SIGN_OUT)
     fun authSignOut(@Body refreshTokenArray :RefreshTokenArray): Call<AuthSignOutResponse>
 
-    // 토큰갱신
     @POST(API.AUTH_REFRESH)
     suspend fun tokenRefresh(@Body refreshTokenArray: RefreshTokenArray): Response<AuthResponse>
 
-    // 인증 문자 전송
     @POST(API.SEND_ONE)
     fun sendOne(@Body phoneNumber: SendOneArray): Call<JsonElement>
 
-    // 인증 번호 검증
     @POST(API.VALID_VERIFICATION)
     fun validVerification(@Body validVerificationArray : ValidVerificationArray): Call<JsonElement>
 
@@ -105,6 +93,10 @@ interface IRetrofit {
     @POST(API.USER_INACTIVE)
     fun userInactive(@Body complain : UserInactiveReq) : Call<JsonElement>
 
+    @POST("oauth2/v4/token")
+    suspend fun fetchGoogleAuthInfo(
+        @Body request: LoginGoogleReq
+    ): Response<LoginGoogleRes>?
 }
 
 data class ValidVerificationArray(val verificationCode: String, val phoneNumber:String)

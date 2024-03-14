@@ -57,6 +57,26 @@ object RetrofitClient {
         return retrofitClient
     }
 
+    fun provideRetrofit(baseUrl: String
+    ): Retrofit {
+        val loggingInterceptor = HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY // 요청 및 응답 바디를 포함한 모든 정보를 로그로 출력
+        }
+        val httpClient = OkHttpClient.Builder()
+            .addInterceptor(loggingInterceptor)
+            .build()
+
+        return Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(httpClient)
+            .baseUrl(baseUrl)
+            .build()
+    }
+
+    fun provideLoginService(retrofit: Retrofit): IRetrofit {
+        return retrofit.create(IRetrofit::class.java)
+    }
+
 }
 
 class TokenInterceptor : Interceptor {
