@@ -1,18 +1,11 @@
 package com.shall_we.ExperienceDetail
 
+import ExperienceDetailRes
 import com.google.gson.JsonElement
-import com.shall_we.dto.ExperienceDetailRes
-import com.shall_we.dto.ExperienceGiftDto
-import com.shall_we.dto.ExperienceMainRes
-import com.shall_we.dto.ExperienceReq
-import com.shall_we.dto.ReservationRequest
-import com.shall_we.dto.ValidTimeRes
 import com.shall_we.retrofit.API
 import com.shall_we.retrofit.RetrofitClient
 import retrofit2.Call
-import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.POST
 import retrofit2.http.Path
 
 object ExperienceDetailService {

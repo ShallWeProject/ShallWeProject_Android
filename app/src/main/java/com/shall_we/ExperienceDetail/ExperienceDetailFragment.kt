@@ -1,5 +1,6 @@
 package com.shall_we.ExperienceDetail
 
+import GiftDTO
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -18,7 +19,6 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.shall_we.R
 import com.shall_we.databinding.FragmentExperienceDetailBinding
 import com.shall_we.giftExperience.GiftResevationFragment
-import com.shall_we.giftExperience.ReservationTimeAdapter
 import com.shall_we.giftExperience.ReservationViewModel
 import com.shall_we.retrofit.RESPONSE_STATE
 
@@ -29,6 +29,8 @@ class ExperienceDetailFragment: Fragment(){
     lateinit var reservationViewModel: ReservationViewModel
     private var experienceGiftId: Int = 1
 
+    private lateinit var experienceDetailRes: GiftDTO
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -36,21 +38,23 @@ class ExperienceDetailFragment: Fragment(){
         binding = FragmentExperienceDetailBinding.inflate(inflater, container, false)
 
         // binding 초기화 후 initTab 함수 호출
-        initTab()
 
         arguments?.let { // 아규먼트로부터 데이터를 불러옴
             experienceGiftId = it.getInt("id") // id 키로 giftid 값을 불러와 저장하게 됩니다.
         }
 
         experienceDetailViewModel = ViewModelProvider(this).get(ExperienceDetailViewModel::class.java)
-       // reservationViewModel = ViewModelProvider(this).get(ReservationViewModel::class.java)
+        // reservationViewModel = ViewModelProvider(this).get(ReservationViewModel::class.java)
 
-        experienceDetailViewModel.get_experience_detail_data(
+        experienceDetailViewModel.getExperienceDetailData(
             experienceGiftId,
             completion = { responseState, responseBody ->
                 when (responseState) {
                     RESPONSE_STATE.OKAY -> {
                         responseBody?.let { item ->
+                            experienceDetailRes = item
+                            initTab()
+
                             binding.exdetailText01.text = item.subtitle
                             binding.exdetailText03.text = item.title
                             val formattedPrice = String.format("%,d", item.price.toInt())
@@ -104,7 +108,10 @@ class ExperienceDetailFragment: Fragment(){
     }
 
     private fun initTab() {
-        val mainVPAdapter = ExDetailVPAdapter(requireActivity(), arguments)
+        val bundle = Bundle()
+        bundle.putParcelable("experienceDetailRes", experienceDetailRes) // 데이터 추가 (원하는 형식으로)
+
+        val mainVPAdapter = ExDetailVPAdapter(requireActivity(), bundle)
 
         binding.vpMain.adapter = mainVPAdapter
 
@@ -140,7 +147,7 @@ class ExperienceDetailFragment: Fragment(){
 
         override fun createFragment(position: Int): Fragment {
             return when (position) {
-                0 -> ExDetailFragment().apply { arguments = this@ExDetailVPAdapter.bundle }
+                0 -> ExDetailFragment().apply { arguments = this@ExDetailVPAdapter.bundle}
                 1 -> ExDetailPresentFragment().apply { arguments = this@ExDetailVPAdapter.bundle }
                 else -> throw IllegalArgumentException("Invalid position: $position")
             }
