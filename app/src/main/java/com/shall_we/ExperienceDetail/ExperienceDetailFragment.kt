@@ -37,8 +37,6 @@ class ExperienceDetailFragment: Fragment(){
     ): View? {
         binding = FragmentExperienceDetailBinding.inflate(inflater, container, false)
 
-        // binding 초기화 후 initTab 함수 호출
-
         arguments?.let { // 아규먼트로부터 데이터를 불러옴
             experienceGiftId = it.getInt("id") // id 키로 giftid 값을 불러와 저장하게 됩니다.
         }
@@ -92,6 +90,7 @@ class ExperienceDetailFragment: Fragment(){
         binding.fab.setOnClickListener() {
             val bundle = Bundle().apply {
                 putInt("id", experienceGiftId) // 클릭된 아이템의 이름을 "title" 키로 전달
+                putParcelable("experienceDetailRes", experienceDetailRes)
             }
 
             val giftReservationFragment = GiftResevationFragment().apply {
@@ -109,7 +108,7 @@ class ExperienceDetailFragment: Fragment(){
 
     private fun initTab() {
         val bundle = Bundle()
-        bundle.putParcelable("experienceDetailRes", experienceDetailRes) // 데이터 추가 (원하는 형식으로)
+        bundle.putParcelable("experienceDetailRes", experienceDetailRes)
 
         val mainVPAdapter = ExDetailVPAdapter(requireActivity(), bundle)
 
