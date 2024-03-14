@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".ExperienceDetail.ExperienceDetailFragment">
 
         <ScrollView
@@ -23,7 +24,6 @@
                     android:backgroundTint="@color/white">
 
                         <androidx.viewpager2.widget.ViewPager2
-
                             android:id="@+id/exdetail_image"
                             android:layout_width="match_parent"
                             android:layout_height="252dp"
@@ -31,7 +31,6 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
-
 
                         <TextView
                             android:id="@+id/exdetail_text01"
@@ -86,7 +85,7 @@
                         <TextView
                             android:id="@+id/page"
                             android:layout_width="match_parent"
-                            android:layout_height="10dp"
+                            android:layout_height="4dp"
                             android:layout_marginTop="16dp"
                             android:background="@color/rose50"
                             app:layout_constraintTop_toBottomOf="@id/exdetail_text03" />
@@ -96,6 +95,7 @@
                             android:layout_width="0dp"
                             android:layout_height="42dp"
                             android:theme="@style/TabTheme"
+                            app:tabTextAppearance="@style/productDetailTabTextSize"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/page"

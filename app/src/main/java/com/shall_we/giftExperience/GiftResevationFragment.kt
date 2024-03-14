@@ -1,5 +1,6 @@
 package com.shall_we.giftExperience
 
+import GiftDTO
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
@@ -14,8 +15,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-import com.google.android.material.tabs.TabLayout
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.DayViewDecorator
 import com.prolificinteractive.materialcalendarview.DayViewFacade
@@ -26,19 +25,15 @@ import com.prolificinteractive.materialcalendarview.format.TitleFormatter
 import com.shall_we.ExperienceDetail.ExperienceDetailViewModel
 import com.shall_we.R
 import com.shall_we.databinding.FragmentGiftResevationBinding
-import com.shall_we.dto.LocalTime
 import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RetrofitManager
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.Calendar
-import java.util.Date
 import java.util.Locale
 
-
-
 class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickListener{
+    private lateinit var experienceDetailRes: GiftDTO
+
     private var count: Int = 2
     private lateinit var calendarView: MaterialCalendarView
     private var experienceGiftId: Int = 1
@@ -63,48 +58,34 @@ class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickLis
 
         arguments?.let { // 아규먼트로부터 데이터를 불러옴
             experienceGiftId = it.getInt("id") // id 키로 giftid 값을 불러와 저장하게 됩니다.
+            experienceDetailRes = it.getParcelable<GiftDTO>("experienceDetailRes")!!
         }
 
-        experienceDetailViewModel =
-            ViewModelProvider(this).get(ExperienceDetailViewModel::class.java)
-        experienceDetailViewModel.get_experience_detail_data(
-            experienceGiftId,
-            completion = { responseState, responseBody ->
-                when (responseState) {
-                    RESPONSE_STATE.OKAY -> {
-                        responseBody?.let { item ->
-                            binding.exgiftText02.text = item.subtitle
-                            binding.exgiftText04.text = item.title
-                            val giftImgUrlSize = item.giftImgUrl.size
-                            val formattedPrice = String.format("%,d", item.price.toInt())
-                            binding.tvPrice.text = formattedPrice.toString()+" 원"
+        if(experienceDetailRes != null){
+            binding.exgiftText02.text = experienceDetailRes.subtitle
+            binding.exgiftText04.text = experienceDetailRes.title
+            val giftImgUrlSize = experienceDetailRes.giftImgUrl.size
+            val formattedPrice = String.format("%,d", experienceDetailRes.price.toInt())
+            binding.tvPrice.text = formattedPrice.toString()+" 원"
 
-                            // 여러 개의 이미지 URL을 사용하는 경우
-                            val dummyImageUrls = mutableListOf<String>()
+            // 여러 개의 이미지 URL을 사용하는 경우
+            val dummyImageUrls = mutableListOf<String>()
 
-                            if(giftImgUrlSize == 0){
-                                dummyImageUrls.add("")
-                            }
-                            // giftImgUrl 배열의 크기만큼 반복하여 dummyImageUrls에 이미지 URL을 추가합니다.
-                            for (i in 0 until giftImgUrlSize) {
-                                if (i < item.giftImgUrl.size) {
-                                    dummyImageUrls.add(item.giftImgUrl[i])
-                                } else {
-                                    dummyImageUrls.add("") // 이 부분을 필요에 따라 수정해주세요.
-                                }
-                            }
-                            Glide.with(this)
-                                .load(dummyImageUrls[0])
-                                .into(binding.samplePic)
-
-                        }
-                    }
-
-                    RESPONSE_STATE.FAIL -> {
-                        Log.d("retrofit", "api 호출 에러")
-                    }
+            if(giftImgUrlSize == 0){
+                dummyImageUrls.add("")
+            }
+            // giftImgUrl 배열의 크기만큼 반복하여 dummyImageUrls에 이미지 URL을 추가합니다.
+            for (i in 0 until giftImgUrlSize) {
+                if (i < experienceDetailRes.giftImgUrl.size) {
+                    dummyImageUrls.add(experienceDetailRes.giftImgUrl[i])
+                } else {
+                    dummyImageUrls.add("")
                 }
-            })
+            }
+            Glide.with(this)
+                .load(dummyImageUrls[0])
+                .into(binding.samplePic)
+        }
 
         binding.exgiftBtn01.setOnClickListener {
             if(count>1){
