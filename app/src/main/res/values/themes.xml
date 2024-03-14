@@ -21,9 +21,13 @@
 
 
     </style>
-    <style name="tabTextSize" parent="TextAppearance.Design.Tab">
+    <style name="productListTabTextSize" parent="TextAppearance.Design.Tab">
         <item name="android:textSize">14sp</item>
     </style>
+    <style name="productDetailTabTextSize" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">12sp</item>
+    </style>
+
 
     <style name="TabTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/white</item>
