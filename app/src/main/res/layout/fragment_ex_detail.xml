@@ -176,11 +176,10 @@
                 android:layout_width="2dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="26dp"
-                android:layout_marginTop="26dp"
                 android:background="#F15F79"
                 app:layout_constraintBottom_toBottomOf="@+id/view11"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView19" />
+                app:layout_constraintTop_toTopOf="@+id/view8" />
 
             <View
                 android:id="@+id/view8"
