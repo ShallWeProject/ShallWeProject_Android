@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.shall_we.R
 import com.shall_we.databinding.FragmentAgreementBinding
+import com.shall_we.login.data.AuthTokenData
 import com.shall_we.login.signup.ProfileFragment
 
 
@@ -24,6 +25,8 @@ class AgreementFragment : Fragment() {
 
     private lateinit var phone : String
     private lateinit var name : String
+
+    private lateinit var token: AuthTokenData
 
     fun initAgreement() {
 
@@ -100,6 +103,7 @@ class AgreementFragment : Fragment() {
             bundle.putString("phone", phone)
             bundle.putString("name", name)
             bundle.putBoolean("isChecked", binding.cbAgree4.isChecked)
+            bundle.putParcelable("token",token)
             val newFragment = ProfileFragment() // 전환할 다른 프래그먼트 객체 생성
             newFragment.arguments = bundle
 
@@ -169,13 +173,11 @@ class AgreementFragment : Fragment() {
 
         phone = arguments?.getString("phone", "").toString()
         name = arguments?.getString("name","").toString()
+        token = arguments?.getParcelable<AuthTokenData>("token")!!
+
+        initAgreement()
 
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initAgreement()
     }
 
     override fun onResume() {

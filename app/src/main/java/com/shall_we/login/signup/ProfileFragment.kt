@@ -1,5 +1,6 @@
 package com.shall_we.login.signup
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -9,8 +10,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import com.shall_we.App
 import com.shall_we.R
 import com.shall_we.databinding.FragmentProfileBinding
+import com.shall_we.login.data.AuthResponse
+import com.shall_we.login.data.AuthTokenData
 import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RetrofitManager
 
@@ -22,6 +26,8 @@ class ProfileFragment : Fragment() {
     var age: Int = 0
     var gender: String = ""
     var marketingAgree: Boolean = false
+
+    private lateinit var token: AuthTokenData
 
     private fun initProfile() {
 
@@ -72,6 +78,8 @@ class ProfileFragment : Fragment() {
             //Todo: 앞에서 번호 받아와서 업데이트
             phone = arguments?.getString("phone", "").toString()
             name = arguments?.getString("name","").toString()
+            token = arguments?.getParcelable<AuthTokenData>("token")!!
+
             age = binding.edtAge.text.toString().toInt()
             gender = "UNKNOWN"
             if (binding.btnMan.isChecked) gender = "MALE"
@@ -86,7 +94,8 @@ class ProfileFragment : Fragment() {
         }
     }
     private fun usersPatchApiCall(){
-        //레트로핏 연결
+        setUserData()
+
         var userData = UserData(phoneNumber = phone, name = name, marketingConsent =  marketingAgree, age =  age, gender =  gender)
 
         RetrofitManager.instance.usersPatch(userData, completion = { responseState, responseCode ->
@@ -118,10 +127,20 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    private fun setUserData(){
+        val sharedPref = context?.getSharedPreferences("com.shall_we", Context.MODE_PRIVATE)
+        val accessToken = token.accessToken
+        sharedPref?.edit()?.putString("access_token", accessToken)?.apply()
+        val refreshToken = token.refreshToken
+        sharedPref?.edit()?.putString("refresh_token", refreshToken)?.apply()
 
+        App.accessToken = sharedPref?.getString("access_token", null)
+        App.refreshToken = sharedPref?.getString("refresh_token", null)
+
+        Log.d("login","access token ${App.accessToken}")
+        Log.d("login", "refresh token ${App.refreshToken}")
     }
+
     override fun onResume() {
         super.onResume()
         val supportActionBar = (requireActivity() as AppCompatActivity).supportActionBar

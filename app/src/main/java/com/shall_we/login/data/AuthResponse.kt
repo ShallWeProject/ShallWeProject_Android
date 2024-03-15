@@ -1,7 +1,10 @@
 package com.shall_we.login.data
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class AuthResponse(
     @SerializedName("data")
     val data: AuthTokenData,
@@ -13,8 +16,9 @@ data class AuthResponse(
     val description: String?,
     @SerializedName("statusCode")
     val statusCode: Int
-)
+): Parcelable
 
+@Parcelize
 data class AuthTokenData(
     @SerializedName("isSignUpComplete")
     val isSignUpComplete: Boolean,
@@ -24,4 +28,4 @@ data class AuthTokenData(
     val refreshToken: String,
     @SerializedName("tokenType")
     val tokenType: String
-)
+) : Parcelable
