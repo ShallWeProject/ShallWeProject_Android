@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.shall_we.R
 import com.shall_we.databinding.FragmentPhoneAuthBinding
+import com.shall_we.login.data.AuthTokenData
 import com.shall_we.retrofit.RESPONSE_STATE
 import com.shall_we.retrofit.RetrofitManager
 import com.shall_we.retrofit.SendOneArray
@@ -33,6 +34,8 @@ class PhoneAuthFragment : Fragment() {
     private lateinit var nameTxt : String
     private lateinit var phoneNumberTxt : String
 
+    private lateinit var token: AuthTokenData
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -48,6 +51,7 @@ class PhoneAuthFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val binding = FragmentPhoneAuthBinding.inflate(inflater,container,false)
+        token = arguments?.getParcelable<AuthTokenData>("token")!!
         binding.nextBtn.isEnabled = false
         
         timerTv = binding.timer
@@ -117,17 +121,6 @@ class PhoneAuthFragment : Fragment() {
 
         binding.nextBtn.setOnClickListener {
             validRetrofitCall()
-
-            val newFragment = AgreementFragment() // 전환할 다른 프래그먼트 객체 생성
-            val bundle = Bundle()
-            bundle.putString("name",nameTxt)
-            bundle.putString("phone",phoneNumber)
-            newFragment.arguments = bundle
-            // 프래그먼트 전환
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView3, newFragment)
-                .addToBackStack(null)
-                .commit()
         }
         return binding.root
     }
@@ -182,7 +175,9 @@ class PhoneAuthFragment : Fragment() {
                     if(responseBody.hashCode() == 200){
                         val newFragment = AgreementFragment() // 전환할 다른 프래그먼트 객체 생성
                         val bundle = Bundle()
+                        bundle.putString("name",nameTxt)
                         bundle.putString("phone",phoneNumber)
+                        bundle.putParcelable("token",token)
                         newFragment.arguments = bundle
                         // 프래그먼트 전환
                         parentFragmentManager.beginTransaction()

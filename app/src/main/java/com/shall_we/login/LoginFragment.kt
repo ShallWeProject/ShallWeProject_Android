@@ -29,6 +29,7 @@ import com.shall_we.databinding.FragmentLoginBinding
 import com.shall_we.login.data.Auth
 import com.shall_we.login.data.AuthResponse
 import com.shall_we.login.data.AuthSignService
+import com.shall_we.login.data.AuthTokenData
 import com.shall_we.login.data.IAuthSign
 import com.shall_we.login.data.LoginGoogleResult
 import com.shall_we.login.signin.LoginSuccessFragment
@@ -222,7 +223,7 @@ class LoginFragment : Fragment() , IAuthSign {
     override fun onPostAuthSignUpSuccess(response: AuthResponse) {
         Log.d("login","onPostAuthSignUpSuccess ${response.toString()}")
         loginEvent?.onLoginSuccess()
-        fragmentChangeSignUp(response)
+        fragmentChangeSignUp(response.data)
 
     }
 
@@ -260,10 +261,10 @@ class LoginFragment : Fragment() , IAuthSign {
 
     }
 
-    private fun fragmentChangeSignUp(response: AuthResponse){
+    private fun fragmentChangeSignUp(response: AuthTokenData){
         val newFragment = PhoneAuthFragment() // 전환할 다른 프래그먼트 객체 생성
         val bundle = Bundle()
-//        bundle.putParcelable("token",response)
+        bundle.putParcelable("token",response)
         newFragment.arguments = bundle
         // 프래그먼트 전환
         parentFragmentManager.beginTransaction()
