@@ -57,7 +57,6 @@ class MyGiftAdapter(private val context: Context, private val parentFragmentMana
         if (data.cancellable == false) {
             holder.binding.tvCancelReserv.visibility = View.GONE
             holder.binding.tvChangeReserv.visibility = View.GONE
-            holder.binding.tvTime.visibility = View.GONE
         }
 
         if (holder.binding.tvMessage.visibility == View.VISIBLE) {
