@@ -38,6 +38,7 @@ class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickLis
     private lateinit var calendarView: MaterialCalendarView
     private var experienceGiftId: Int = 1
     var formattedDate: String? = null
+    var totalPrice: Int?=0
     lateinit var experienceDetailViewModel: ExperienceDetailViewModel
     private val locale: Locale = Locale("ko")
     private lateinit var binding: FragmentGiftResevationBinding  // Binding 객체 추가
@@ -62,11 +63,12 @@ class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickLis
         }
 
         if(experienceDetailRes != null){
+            totalPrice= experienceDetailRes.price
             binding.exgiftText02.text = experienceDetailRes.subtitle
             binding.exgiftText04.text = experienceDetailRes.title
             val giftImgUrlSize = experienceDetailRes.giftImgUrl.size
-            val formattedPrice = String.format("%,d", experienceDetailRes.price.toInt())
-            binding.tvPrice.text = formattedPrice.toString()+" 원"
+            val formattedPrice = String.format("%,d 원", totalPrice)
+            binding.tvPrice.text=formattedPrice
 
             // 여러 개의 이미지 URL을 사용하는 경우
             val dummyImageUrls = mutableListOf<String>()
@@ -87,20 +89,44 @@ class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickLis
                 .into(binding.samplePic)
         }
 
-        binding.exgiftBtn01.setOnClickListener {
-            if(count>1){
-                count--
-                binding.exgiftText06.text = count.toString()
-            }
 
+
+
+        fun updatePriceDisplay() {
+
+            // 첫 번째와 두 번째 수량에 대한 가격 계산 (기본 가격의 2배)
+            val initialPrice = experienceDetailRes.price           // 세 번째 수량부터 추가되는 가격 계산
+            val additionalPrice = if (count > 2) {
+                (experienceDetailRes.price / 2) * (count - 2)
+            } else {
+                0
+            }
+            // 총 가격 계산
+            totalPrice = initialPrice + additionalPrice
+            // 계산된 총 가격을 포맷하여 화면에 표시
+            val formattedPrice = String.format("%,d 원", totalPrice)
+            binding.tvPrice.text = formattedPrice
+            // 선택한 수량을 TextView에 설정
+            binding.exgiftText06.text = count.toString()
         }
 
+// exgiftBtn01 클릭 리스너 설정 (수량 감소)
+        binding.exgiftBtn01.setOnClickListener {
+            if(count > 1){
+                count--
+                updatePriceDisplay()  // 가격 디스플레이 업데이트
+            }
+        }
+
+// exgiftBtn02 클릭 리스너 설정 (수량 증가)
         binding.exgiftBtn02.setOnClickListener {
             if(count < 10){
                 count++
-                binding.exgiftText06.text = count.toString()
+                updatePriceDisplay()  // 가격 디스플레이 업데이트
             }
         }
+
+
 
         binding.exgiftBtn03.isEnabled = false
 
@@ -168,6 +194,7 @@ class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickLis
             val giftExperienceFragment = GiftExperienceFragment() // 전환할 프래그먼트 인스턴스 생성
             val fragmentTransaction = parentFragmentManager.beginTransaction()
             val bundle = Bundle()
+            totalPrice?.let { it1 -> bundle.putInt("price", it1) }
             bundle.putInt("id", experienceGiftId) // 클릭된 아이템의 이름을 "title" 키로 전달
             bundle.putInt("persons", count)
             if (formattedDate != null) { // 선택된 날짜가 있으면
@@ -213,6 +240,8 @@ class GiftResevationFragment : Fragment(), ReservationTimeAdapter.OnItemClickLis
         reservationTimeAdapter.notifyDataSetChanged()
 
     }
+
+
 
     private fun retrofitCall(rvCategory: RecyclerView,date : String) {
         RetrofitManager.instance.get_reservation_date(ExperienceGiftId=experienceGiftId,date= date, completion = { // 카테고리별 경험으로 바꾸기
