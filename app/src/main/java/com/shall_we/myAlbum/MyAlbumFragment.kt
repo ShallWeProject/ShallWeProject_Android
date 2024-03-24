@@ -1,5 +1,6 @@
 package com.shall_we.myAlbum
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
@@ -9,6 +10,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,12 +19,15 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState
 import com.amazonaws.regions.Regions
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.shall_we.R
 import com.shall_we.databinding.FragmentMyAlbumBinding
@@ -300,16 +305,79 @@ class MyAlbumFragment : Fragment() ,MyAlbumAdapter.OnItemClickListener {
 
     // 사진 접근 권한 요청
     private fun requestPermission() {
-        val locationResultLauncher = registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) {
-            if (!it) {
-                Toast.makeText(view?.context, "스토리지에 접근 권한을 허가해주세요", Toast.LENGTH_SHORT).show()
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    android.Manifest.permission.READ_EXTERNAL_STORAGE
+                ) != android.content.pm.PackageManager.PERMISSION_GRANTED
+            ) {
+                if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    //이전에 거부한 경우 권한 필요성 설명 및 권한 요청
+                    Toast.makeText(requireContext(), "권한이 거부되었습니다. 설정(앱 정보)에서 권한을 허용해주세요.", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                    val uri = Uri.fromParts("package", requireContext().packageName, null)
+                    intent.data = uri
+                    startActivity(intent)
+
+                } else {
+                    //처음 요청하는 경우 그냥 권한 요청
+                    Toast.makeText(requireContext(), "스토리지에 접근 권한을 허용해주세요.", Toast.LENGTH_SHORT).show()
+                    ActivityCompat.requestPermissions(
+                        requireActivity(),
+                        arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
+                        200
+                    )
+                }
             }
         }
-        locationResultLauncher.launch(
-            android.Manifest.permission.READ_EXTERNAL_STORAGE
-        )
+        else {
+            if (ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    android.Manifest.permission.READ_MEDIA_IMAGES
+                ) != android.content.pm.PackageManager.PERMISSION_GRANTED
+            ) {
+
+                if (shouldShowRequestPermissionRationale(Manifest.permission.READ_MEDIA_IMAGES)) {
+                    //이전에 거부한 경우 권한 필요성 설명 및 권한 요청
+                    Toast.makeText(requireContext(), "권한이 거부되었습니다. 설정(앱 정보)에서 권한을 허용해주세요.", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                    val uri = Uri.fromParts("package", requireContext().packageName, null)
+                    intent.data = uri
+                    startActivity(intent)
+
+                } else {
+                    //처음 요청하는 경우 그냥 권한 요청
+                    Toast.makeText(requireContext(), "스토리지에 접근 권한을 허용해주세요.", Toast.LENGTH_SHORT).show()
+                    ActivityCompat.requestPermissions(
+                        requireActivity(),
+                        arrayOf(android.Manifest.permission.READ_MEDIA_IMAGES),
+                        200
+                    )
+                }
+            }
+        }
+//        ContextCompat.checkSelfPermission(
+//            requireContext(),
+//            android.Manifest.permission.READ_EXTERNAL_STORAGE
+//        )
+//        if(ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(),
+//                Manifest.permission.READ_EXTERNAL_STORAGE)){
+//            //이전에 거부한 경우 권한 필요성 설명 및 권한 요청
+//        } else{
+//            //처음 요청하는 경우 그냥 권한 요청
+//        }
+
+//        val locationResultLauncher = registerForActivityResult(
+//            ActivityResultContracts.RequestPermission()
+//        ) {
+//            if (!it) {
+//                Toast.makeText(view?.context, "스토리지에 접근 권한을 허가해주세요", Toast.LENGTH_SHORT).show()
+//            }
+//        }
+//
+//        locationResultLauncher.launch(
+//            android.Manifest.permission.READ_EXTERNAL_STORAGE
+//        )
     }
 
     private val PICK_IMAGE_REQUEST = 1 // 요청 코드
