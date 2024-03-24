@@ -9,6 +9,7 @@ import com.shall_we.dto.MainSttCategoryRes
 import com.shall_we.dto.PopularRes
 import com.shall_we.dto.ReservationItem
 import com.shall_we.dto.SttCategoryData
+import com.shall_we.dto.TokenRefreshRes
 import com.shall_we.dto.UpdateReservationReq
 import com.shall_we.dto.UserDetail
 import com.shall_we.dto.ValidTimeRes
@@ -393,7 +394,7 @@ class RetrofitManager {
         })
     }
 
-    suspend fun tokenRefresh(refreshToken: RefreshTokenArray): Response<AuthResponse> {
+    suspend fun tokenRefresh(refreshToken: RefreshTokenArray): Response<TokenRefreshRes> {
         return iRetrofit?.tokenRefresh(refreshToken) ?: error("IRetrofit is not initialized")
     }
 

@@ -3,6 +3,7 @@ package com.shall_we.retrofit
 import com.google.gson.JsonElement
 import com.shall_we.dto.PopularRes
 import com.shall_we.dto.SttCategoryData
+import com.shall_we.dto.TokenRefreshRes
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -66,7 +67,7 @@ interface IRetrofit {
     fun authSignOut(@Body refreshTokenArray :RefreshTokenArray): Call<AuthSignOutResponse>
 
     @POST(API.AUTH_REFRESH)
-    suspend fun tokenRefresh(@Body refreshTokenArray: RefreshTokenArray): Response<AuthResponse>
+    suspend fun tokenRefresh(@Body refreshTokenArray: RefreshTokenArray): Response<TokenRefreshRes>
 
     @POST(API.SEND_ONE)
     fun sendOne(@Body phoneNumber: SendOneArray): Call<JsonElement>
